@@ -7,7 +7,7 @@ export const client = new Client({
     exchanges: [fetchExchange, cacheExchange],
     fetchOptions() {
         return {
-            headers: { authorization: token ? `Bearer ${token}` : '' },
+            headers: { authorization: token ? `Bearer ${token}` : "" },
         }
     }
 });

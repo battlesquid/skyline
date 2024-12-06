@@ -1,69 +1,54 @@
-import { Canvas, MeshProps } from '@react-three/fiber';
+import { AppShell, Burger, Button, Group, LoadingOverlay, TextInput, useMantineTheme } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { useRef, useState } from 'react';
-import * as THREE from 'three';
 import { useQuery } from 'urql';
 import { ContributionQuery } from './api/query';
-import { CameraControls } from '@react-three/drei';
 import './App.css';
-
-interface BoxProps extends MeshProps {
-  x: number;
-  y: number;
-  height: number;
-}
-
-function Box(props: BoxProps) {
-  const { x, y, height, ...rest } = props;
-  // This reference will give us direct access to the THREE.Mesh object
-  const ref = useRef<THREE.Mesh>(null!)
-  // Hold state for hovered and clicked events
-  const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
-  // Rotate mesh every frame, this is outside of React without overhead
-  // useFrame((state, delta) => (ref.current.rotation.x += 0.01))
-
-  return (
-    <mesh
-      {...rest}
-      // ref={ref}
-      scale={clicked ? 1.5 : 1}
-      position={[x, height / 2, y]}
-
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}>
-      <boxGeometry args={[1, height, 1]} />
-      <meshStandardMaterial color={hovered ? '#2e6c80' : '#4287f5'} />
-    </mesh>
-  )
-}
+import { Skyline } from './components/skyline';
 
 export default function App() {
-  const year = 2024;
+  const [name, setName] = useState("Battlesquid");
+  const [year, setYear] = useState(new Date().getFullYear())
+
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure();
 
   const [result] = useQuery({
     query: ContributionQuery,
     variables: {
-      name: "Battlesquid",
+      name,
       start: `${year}-01-01T00:00:00Z`,
       end: `${year}-12-31T00:00:00Z`
     }
   });
 
+  const input = useRef<HTMLInputElement>(null!);
+
+  const theme = useMantineTheme();
+
   return (
-    <Canvas>
-      <ambientLight intensity={Math.PI / 2} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-      <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-      <CameraControls />
-      {!result.fetching && (
-        result.data?.user?.contributionsCollection.contributionCalendar.weeks.map((week, i) => (
-          week.contributionDays.map((day, j) => (
-            <Box key={day.date.toString()} x={i} y={j} height={day.contributionCount * 0.2 + 0.2} />
-          ))
-        ))
-      )}
-    </Canvas>
+    <AppShell
+      header={{ height: 60 }}
+      padding={"md"}
+      navbar={{
+        width: 300,
+        breakpoint: 'sm',
+        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+      }}>
+      <AppShell.Header>
+        <Group h="100%" px="md">
+          <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
+          <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
+          skyline
+          <TextInput ref={input} placeholder="Github Username" />
+          <Button onClick={() => setName(input.current.value.trim())} >Search</Button>
+        </Group>
+      </AppShell.Header>
+      <AppShell.Main style={{ height: "calc(100vh - 96px)", backgroundColor: theme.colors.dark[7] }}>
+        <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+        {!result.fetching && <Skyline weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks} />}
+      </AppShell.Main>
+    </AppShell>
   )
 }
 
