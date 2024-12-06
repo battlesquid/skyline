@@ -21,6 +21,7 @@
     "react-dom": "^18.3.1",
     "react-router": "^7.0.2",
     "three": "^0.169.0",
+    "tunnel-rat": "^0.1.2",
     "urql": "^4.2.1"
   },
   "devDependencies": {
