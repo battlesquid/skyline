@@ -1,19 +1,19 @@
-import { MeshProps } from '@react-three/fiber';
-import { useRef, useState } from 'react';
-import * as THREE from 'three';
+import { MeshProps } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import * as THREE from "three";
 
-import { t } from '../App';
-import { Card, Text } from '@mantine/core';
-import { ResultOf } from 'gql.tada';
-import { ContributionQuery } from '../api/query';
+import { t } from "../App";
+import { Card, Text } from "@mantine/core";
+import { ResultOf } from "gql.tada";
+import { ContributionQuery } from "../api/query";
 
 interface ContributionTowerProps extends MeshProps {
   x: number;
   y: number;
   height: number;
   day: NonNullable<
-    ResultOf<typeof ContributionQuery>['user']
-  >['contributionsCollection']['contributionCalendar']['weeks'][number]['contributionDays'][number];
+    ResultOf<typeof ContributionQuery>["user"]
+  >["contributionsCollection"]["contributionCalendar"]["weeks"][number]["contributionDays"][number];
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
@@ -69,13 +69,13 @@ export function ContributionTower(props: ContributionTowerProps) {
             key={`${x}:${y}`}
             className="animate-in"
             style={{
-              position: 'absolute',
+              position: "absolute",
               left: position.x,
               top: position.y,
             }}
           >
             <Card>
-              <Text fw={500}>{new Date(day.date).toLocaleDateString(undefined, { dateStyle: 'short' })}</Text>
+              <Text fw={500}>{new Date(day.date).toLocaleDateString(undefined, { dateStyle: "short" })}</Text>
               <Text size="sm" c="dimmed">
                 Contributions: {day.contributionCount}
               </Text>

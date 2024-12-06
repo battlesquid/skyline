@@ -1,12 +1,12 @@
-import { Billboard, CameraControls, Text } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { ResultOf } from 'gql.tada';
-import { ContributionQuery } from '../api/query';
-import { ContributionTower } from './contribution_tower';
-import { useMantineTheme } from '@mantine/core';
+import { Billboard, CameraControls, Text } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { ResultOf } from "gql.tada";
+import { ContributionQuery } from "../api/query";
+import { ContributionTower } from "./contribution_tower";
+import { useMantineTheme } from "@mantine/core";
 
 interface SkylineProps {
-  weeks: NonNullable<ResultOf<typeof ContributionQuery>['user']>['contributionsCollection']['contributionCalendar']['weeks'];
+  weeks: NonNullable<ResultOf<typeof ContributionQuery>["user"]>["contributionsCollection"]["contributionCalendar"]["weeks"];
 }
 
 export function Skyline(props: SkylineProps) {

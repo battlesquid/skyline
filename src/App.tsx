@@ -1,16 +1,16 @@
-import { AppShell, Burger, Button, Group, LoadingOverlay, TextInput, useMantineTheme } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { useRef, useState } from 'react';
-import { useQuery } from 'urql';
-import { ContributionQuery } from './api/query';
-import './App.css';
-import { Skyline } from './components/skyline';
+import { AppShell, Burger, Button, Group, LoadingOverlay, TextInput, useMantineTheme } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useRef, useState } from "react";
+import { useQuery } from "urql";
+import { ContributionQuery } from "./api/query";
+import "./App.css";
+import { Skyline } from "./components/skyline";
 
-import tunnel from 'tunnel-rat';
+import tunnel from "tunnel-rat";
 export const t = tunnel();
 
 export default function App() {
-  const [name, setName] = useState('Battlesquid');
+  const [name, setName] = useState("Battlesquid");
   const [year, setYear] = useState(new Date().getFullYear());
 
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -32,10 +32,10 @@ export default function App() {
   return (
     <AppShell
       header={{ height: 60 }}
-      padding={'md'}
+      padding={"md"}
       navbar={{
         width: 300,
-        breakpoint: 'sm',
+        breakpoint: "sm",
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
     >
@@ -48,10 +48,10 @@ export default function App() {
           <Button onClick={() => setName(input.current.value.trim())}>Search</Button>
         </Group>
       </AppShell.Header>
-      <AppShell.Main style={{ height: 'calc(100vh - 96px)', backgroundColor: theme.colors.dark[7] }}>
-        <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
+      <AppShell.Main style={{ height: "calc(100vh - 96px)", backgroundColor: theme.colors.dark[7] }}>
+        <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         {!result.fetching && <Skyline weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks} />}
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, pointerEvents: 'none' }}>
+        <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}>
           <t.Out />
         </div>
       </AppShell.Main>
