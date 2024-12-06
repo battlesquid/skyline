@@ -14,3 +14,25 @@ body,
 body {
   background: #f0f0f0;
 }
+
+@keyframes scaleAndFadeIn {
+  0% {
+    display: block;
+    transform: scale(0);
+    translate: 0 100%;
+    opacity: 0;
+  }
+  100% {
+    display: block;
+    transform: scale(1);
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: scaleAndFadeIn 0.2s ease-out forwards;
+  animation-delay: 0.25s;
+  translate: -50% calc(-100% - 10px);
+}

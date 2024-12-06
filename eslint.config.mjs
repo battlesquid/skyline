@@ -25,6 +25,7 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      'react/no-unknown-property': 'off',
     },
   },
   { ignores: ['dist/'] },
