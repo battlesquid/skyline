@@ -1,4 +1,4 @@
-import { AppShell, Burger, Button, Divider, Group, LoadingOverlay, NumberInput, Space, Stack, TextInput, Tooltip, useMantineTheme } from "@mantine/core";
+import { AppShell, Button, Divider, LoadingOverlay, NumberInput, Stack, TextInput, Tooltip, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useRef, useState } from "react";
 import { useQuery } from "urql";

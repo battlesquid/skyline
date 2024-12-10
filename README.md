@@ -1,4 +1,4 @@
-# Rsbuild Project
+# skyline
 
 ## Setup
 
@@ -27,3 +27,9 @@ Preview the production build locally:
 ```bash
 yarn preview
 ```
+
+
+## Licensing
+
+This project is licensed under GPL 3.0, with the exception of the following components:
+- `@skyline/worker`: ISC
