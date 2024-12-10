@@ -24,39 +24,39 @@
 
 "@cloudflare/kv-asset-handler@0.3.4":
   version "0.3.4"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.3.4.tgz#5cc152847c8ae4d280ec5d7f4f6ba8c976b585c3"
+  resolved "https://registry.npmjs.org/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.3.4.tgz#5cc152847c8ae4d280ec5d7f4f6ba8c976b585c3"
   integrity sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==
   dependencies:
     mime "^3.0.0"
 
 "@cloudflare/workerd-darwin-64@1.20241205.0":
   version "1.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workerd-darwin-64/-/workerd-darwin-64-1.20241205.0.tgz#44fac2be0c2088150ee08a8b063345d80b5063d1"
+  resolved "https://registry.npmjs.org/@cloudflare/workerd-darwin-64/-/workerd-darwin-64-1.20241205.0.tgz#44fac2be0c2088150ee08a8b063345d80b5063d1"
   integrity sha512-TArEZkSZkHJyEwnlWWkSpCI99cF6lJ14OVeEoI9Um/+cD9CKZLM9vCmsLeKglKheJ0KcdCnkA+DbeD15t3VaWg==
 
 "@cloudflare/workerd-darwin-arm64@1.20241205.0":
   version "1.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workerd-darwin-arm64/-/workerd-darwin-arm64-1.20241205.0.tgz#388323c215d341fee84da3f1dfa07a877609a88c"
+  resolved "https://registry.npmjs.org/@cloudflare/workerd-darwin-arm64/-/workerd-darwin-arm64-1.20241205.0.tgz#388323c215d341fee84da3f1dfa07a877609a88c"
   integrity sha512-u5eqKa9QRdA8MugfgCoD+ADDjY6EpKbv3hSYJETmmUh17l7WXjWBzv4pUvOKIX67C0UzMUy4jZYwC53MymhX3w==
 
 "@cloudflare/workerd-linux-64@1.20241205.0":
   version "1.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workerd-linux-64/-/workerd-linux-64-1.20241205.0.tgz#5d716a4cba8252746e91db1d4c6f71bd40689a89"
+  resolved "https://registry.npmjs.org/@cloudflare/workerd-linux-64/-/workerd-linux-64-1.20241205.0.tgz#5d716a4cba8252746e91db1d4c6f71bd40689a89"
   integrity sha512-OYA7S5zpumMamWEW+IhhBU6YojIEocyE5X/YFPiTOCrDE3dsfr9t6oqNE7hxGm1VAAu+Irtl+a/5LwmBOU681w==
 
 "@cloudflare/workerd-linux-arm64@1.20241205.0":
   version "1.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20241205.0.tgz#0242a5a13d7b8c9020680c90de85ac72e209beef"
+  resolved "https://registry.npmjs.org/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20241205.0.tgz#0242a5a13d7b8c9020680c90de85ac72e209beef"
   integrity sha512-qAzecONjFJGIAVJZKExQ5dlbic0f3d4A+GdKa+H6SoUJtPaWiE3K6WuePo4JOT7W3/Zfh25McmX+MmpMUUcM5Q==
 
 "@cloudflare/workerd-windows-64@1.20241205.0":
   version "1.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20241205.0.tgz#a2a15eef4d154076527ccb9049d216b4c80717fe"
+  resolved "https://registry.npmjs.org/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20241205.0.tgz#a2a15eef4d154076527ccb9049d216b4c80717fe"
   integrity sha512-BEab+HiUgCdl6GXAT7EI2yaRtDPiRJlB94XLvRvXi1ZcmQqsrq6awGo6apctFo4WUL29V7c09LxmN4HQ3X2Tvg==
 
 "@cloudflare/workers-shared@0.11.0":
   version "0.11.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workers-shared/-/workers-shared-0.11.0.tgz#e08c21e0634d54f9dbb32c0ffaa9b27119b59a9c"
+  resolved "https://registry.npmjs.org/@cloudflare/workers-shared/-/workers-shared-0.11.0.tgz#e08c21e0634d54f9dbb32c0ffaa9b27119b59a9c"
   integrity sha512-A+lQ8xp7992qSeMmuQ0ssL6CPmm+ZmAv6Ddikan0n1jjpMAic+97l7xtVIsswSn9iLMFPYQ9uNN/8Fl0AgARIQ==
   dependencies:
     mime "^3.0.0"
@@ -64,24 +64,24 @@
 
 "@cloudflare/workers-types@^4.20241205.0":
   version "4.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@cloudflare/workers-types/-/workers-types-4.20241205.0.tgz#210d532063d9a11e91ee9c8615f9a666674e08d6"
+  resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-4.20241205.0.tgz#210d532063d9a11e91ee9c8615f9a666674e08d6"
   integrity sha512-pj1VKRHT/ScQbHOIMFODZaNAlJHQHdBSZXNIdr9ebJzwBff9Qz8VdqhbhggV7f+aUEh8WSbrsPIo4a+WtgjUvw==
 
 "@cspotcode/source-map-support@0.8.1":
   version "0.8.1"
-  resolved "https://mirrors.garmin.com/repository/npm/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
+  resolved "https://registry.npmjs.org/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
   integrity sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
 "@esbuild-plugins/node-globals-polyfill@^0.2.3":
   version "0.2.3"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild-plugins/node-globals-polyfill/-/node-globals-polyfill-0.2.3.tgz#0e4497a2b53c9e9485e149bc92ddb228438d6bcf"
+  resolved "https://registry.npmjs.org/@esbuild-plugins/node-globals-polyfill/-/node-globals-polyfill-0.2.3.tgz#0e4497a2b53c9e9485e149bc92ddb228438d6bcf"
   integrity sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==
 
 "@esbuild-plugins/node-modules-polyfill@^0.2.2":
   version "0.2.2"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild-plugins/node-modules-polyfill/-/node-modules-polyfill-0.2.2.tgz#cefa3dc0bd1c16277a8338b52833420c94987327"
+  resolved "https://registry.npmjs.org/@esbuild-plugins/node-modules-polyfill/-/node-modules-polyfill-0.2.2.tgz#cefa3dc0bd1c16277a8338b52833420c94987327"
   integrity sha512-LXV7QsWJxRuMYvKbiznh+U1ilIop3g2TeKRzUxOG5X3YITc8JyyTa90BmLwqqv0YnX4v32CSlG+vsziZp9dMvA==
   dependencies:
     escape-string-regexp "^4.0.0"
@@ -89,112 +89,112 @@
 
 "@esbuild/android-arm64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/android-arm64/-/android-arm64-0.17.19.tgz#bafb75234a5d3d1b690e7c2956a599345e84a2fd"
+  resolved "https://registry.npmjs.org/@esbuild/android-arm64/-/android-arm64-0.17.19.tgz#bafb75234a5d3d1b690e7c2956a599345e84a2fd"
   integrity sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==
 
 "@esbuild/android-arm@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/android-arm/-/android-arm-0.17.19.tgz#5898f7832c2298bc7d0ab53701c57beb74d78b4d"
+  resolved "https://registry.npmjs.org/@esbuild/android-arm/-/android-arm-0.17.19.tgz#5898f7832c2298bc7d0ab53701c57beb74d78b4d"
   integrity sha512-rIKddzqhmav7MSmoFCmDIb6e2W57geRsM94gV2l38fzhXMwq7hZoClug9USI2pFRGL06f4IOPHHpFNOkWieR8A==
 
 "@esbuild/android-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/android-x64/-/android-x64-0.17.19.tgz#658368ef92067866d95fb268719f98f363d13ae1"
+  resolved "https://registry.npmjs.org/@esbuild/android-x64/-/android-x64-0.17.19.tgz#658368ef92067866d95fb268719f98f363d13ae1"
   integrity sha512-uUTTc4xGNDT7YSArp/zbtmbhO0uEEK9/ETW29Wk1thYUJBz3IVnvgEiEwEa9IeLyvnpKrWK64Utw2bgUmDveww==
 
 "@esbuild/darwin-arm64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/darwin-arm64/-/darwin-arm64-0.17.19.tgz#584c34c5991b95d4d48d333300b1a4e2ff7be276"
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.17.19.tgz#584c34c5991b95d4d48d333300b1a4e2ff7be276"
   integrity sha512-80wEoCfF/hFKM6WE1FyBHc9SfUblloAWx6FJkFWTWiCoht9Mc0ARGEM47e67W9rI09YoUxJL68WHfDRYEAvOhg==
 
 "@esbuild/darwin-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/darwin-x64/-/darwin-x64-0.17.19.tgz#7751d236dfe6ce136cce343dce69f52d76b7f6cb"
+  resolved "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.17.19.tgz#7751d236dfe6ce136cce343dce69f52d76b7f6cb"
   integrity sha512-IJM4JJsLhRYr9xdtLytPLSH9k/oxR3boaUIYiHkAawtwNOXKE8KoU8tMvryogdcT8AU+Bflmh81Xn6Q0vTZbQw==
 
 "@esbuild/freebsd-arm64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/freebsd-arm64/-/freebsd-arm64-0.17.19.tgz#cacd171665dd1d500f45c167d50c6b7e539d5fd2"
+  resolved "https://registry.npmjs.org/@esbuild/freebsd-arm64/-/freebsd-arm64-0.17.19.tgz#cacd171665dd1d500f45c167d50c6b7e539d5fd2"
   integrity sha512-pBwbc7DufluUeGdjSU5Si+P3SoMF5DQ/F/UmTSb8HXO80ZEAJmrykPyzo1IfNbAoaqw48YRpv8shwd1NoI0jcQ==
 
 "@esbuild/freebsd-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/freebsd-x64/-/freebsd-x64-0.17.19.tgz#0769456eee2a08b8d925d7c00b79e861cb3162e4"
+  resolved "https://registry.npmjs.org/@esbuild/freebsd-x64/-/freebsd-x64-0.17.19.tgz#0769456eee2a08b8d925d7c00b79e861cb3162e4"
   integrity sha512-4lu+n8Wk0XlajEhbEffdy2xy53dpR06SlzvhGByyg36qJw6Kpfk7cp45DR/62aPH9mtJRmIyrXAS5UWBrJT6TQ==
 
 "@esbuild/linux-arm64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-arm64/-/linux-arm64-0.17.19.tgz#38e162ecb723862c6be1c27d6389f48960b68edb"
+  resolved "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.17.19.tgz#38e162ecb723862c6be1c27d6389f48960b68edb"
   integrity sha512-ct1Tg3WGwd3P+oZYqic+YZF4snNl2bsnMKRkb3ozHmnM0dGWuxcPTTntAF6bOP0Sp4x0PjSF+4uHQ1xvxfRKqg==
 
 "@esbuild/linux-arm@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-arm/-/linux-arm-0.17.19.tgz#1a2cd399c50040184a805174a6d89097d9d1559a"
+  resolved "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.17.19.tgz#1a2cd399c50040184a805174a6d89097d9d1559a"
   integrity sha512-cdmT3KxjlOQ/gZ2cjfrQOtmhG4HJs6hhvm3mWSRDPtZ/lP5oe8FWceS10JaSJC13GBd4eH/haHnqf7hhGNLerA==
 
 "@esbuild/linux-ia32@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-ia32/-/linux-ia32-0.17.19.tgz#e28c25266b036ce1cabca3c30155222841dc035a"
+  resolved "https://registry.npmjs.org/@esbuild/linux-ia32/-/linux-ia32-0.17.19.tgz#e28c25266b036ce1cabca3c30155222841dc035a"
   integrity sha512-w4IRhSy1VbsNxHRQpeGCHEmibqdTUx61Vc38APcsRbuVgK0OPEnQ0YD39Brymn96mOx48Y2laBQGqgZ0j9w6SQ==
 
 "@esbuild/linux-loong64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-loong64/-/linux-loong64-0.17.19.tgz#0f887b8bb3f90658d1a0117283e55dbd4c9dcf72"
+  resolved "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.17.19.tgz#0f887b8bb3f90658d1a0117283e55dbd4c9dcf72"
   integrity sha512-2iAngUbBPMq439a+z//gE+9WBldoMp1s5GWsUSgqHLzLJ9WoZLZhpwWuym0u0u/4XmZ3gpHmzV84PonE+9IIdQ==
 
 "@esbuild/linux-mips64el@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-mips64el/-/linux-mips64el-0.17.19.tgz#f5d2a0b8047ea9a5d9f592a178ea054053a70289"
+  resolved "https://registry.npmjs.org/@esbuild/linux-mips64el/-/linux-mips64el-0.17.19.tgz#f5d2a0b8047ea9a5d9f592a178ea054053a70289"
   integrity sha512-LKJltc4LVdMKHsrFe4MGNPp0hqDFA1Wpt3jE1gEyM3nKUvOiO//9PheZZHfYRfYl6AwdTH4aTcXSqBerX0ml4A==
 
 "@esbuild/linux-ppc64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-ppc64/-/linux-ppc64-0.17.19.tgz#876590e3acbd9fa7f57a2c7d86f83717dbbac8c7"
+  resolved "https://registry.npmjs.org/@esbuild/linux-ppc64/-/linux-ppc64-0.17.19.tgz#876590e3acbd9fa7f57a2c7d86f83717dbbac8c7"
   integrity sha512-/c/DGybs95WXNS8y3Ti/ytqETiW7EU44MEKuCAcpPto3YjQbyK3IQVKfF6nbghD7EcLUGl0NbiL5Rt5DMhn5tg==
 
 "@esbuild/linux-riscv64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-riscv64/-/linux-riscv64-0.17.19.tgz#7f49373df463cd9f41dc34f9b2262d771688bf09"
+  resolved "https://registry.npmjs.org/@esbuild/linux-riscv64/-/linux-riscv64-0.17.19.tgz#7f49373df463cd9f41dc34f9b2262d771688bf09"
   integrity sha512-FC3nUAWhvFoutlhAkgHf8f5HwFWUL6bYdvLc/TTuxKlvLi3+pPzdZiFKSWz/PF30TB1K19SuCxDTI5KcqASJqA==
 
 "@esbuild/linux-s390x@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-s390x/-/linux-s390x-0.17.19.tgz#e2afd1afcaf63afe2c7d9ceacd28ec57c77f8829"
+  resolved "https://registry.npmjs.org/@esbuild/linux-s390x/-/linux-s390x-0.17.19.tgz#e2afd1afcaf63afe2c7d9ceacd28ec57c77f8829"
   integrity sha512-IbFsFbxMWLuKEbH+7sTkKzL6NJmG2vRyy6K7JJo55w+8xDk7RElYn6xvXtDW8HCfoKBFK69f3pgBJSUSQPr+4Q==
 
 "@esbuild/linux-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/linux-x64/-/linux-x64-0.17.19.tgz#8a0e9738b1635f0c53389e515ae83826dec22aa4"
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.17.19.tgz#8a0e9738b1635f0c53389e515ae83826dec22aa4"
   integrity sha512-68ngA9lg2H6zkZcyp22tsVt38mlhWde8l3eJLWkyLrp4HwMUr3c1s/M2t7+kHIhvMjglIBrFpncX1SzMckomGw==
 
 "@esbuild/netbsd-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/netbsd-x64/-/netbsd-x64-0.17.19.tgz#c29fb2453c6b7ddef9a35e2c18b37bda1ae5c462"
+  resolved "https://registry.npmjs.org/@esbuild/netbsd-x64/-/netbsd-x64-0.17.19.tgz#c29fb2453c6b7ddef9a35e2c18b37bda1ae5c462"
   integrity sha512-CwFq42rXCR8TYIjIfpXCbRX0rp1jo6cPIUPSaWwzbVI4aOfX96OXY8M6KNmtPcg7QjYeDmN+DD0Wp3LaBOLf4Q==
 
 "@esbuild/openbsd-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/openbsd-x64/-/openbsd-x64-0.17.19.tgz#95e75a391403cb10297280d524d66ce04c920691"
+  resolved "https://registry.npmjs.org/@esbuild/openbsd-x64/-/openbsd-x64-0.17.19.tgz#95e75a391403cb10297280d524d66ce04c920691"
   integrity sha512-cnq5brJYrSZ2CF6c35eCmviIN3k3RczmHz8eYaVlNasVqsNY+JKohZU5MKmaOI+KkllCdzOKKdPs762VCPC20g==
 
 "@esbuild/sunos-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/sunos-x64/-/sunos-x64-0.17.19.tgz#722eaf057b83c2575937d3ffe5aeb16540da7273"
+  resolved "https://registry.npmjs.org/@esbuild/sunos-x64/-/sunos-x64-0.17.19.tgz#722eaf057b83c2575937d3ffe5aeb16540da7273"
   integrity sha512-vCRT7yP3zX+bKWFeP/zdS6SqdWB8OIpaRq/mbXQxTGHnIxspRtigpkUcDMlSCOejlHowLqII7K2JKevwyRP2rg==
 
 "@esbuild/win32-arm64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/win32-arm64/-/win32-arm64-0.17.19.tgz#9aa9dc074399288bdcdd283443e9aeb6b9552b6f"
+  resolved "https://registry.npmjs.org/@esbuild/win32-arm64/-/win32-arm64-0.17.19.tgz#9aa9dc074399288bdcdd283443e9aeb6b9552b6f"
   integrity sha512-yYx+8jwowUstVdorcMdNlzklLYhPxjniHWFKgRqH7IFlUEa0Umu3KuYplf1HUZZ422e3NU9F4LGb+4O0Kdcaag==
 
 "@esbuild/win32-ia32@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/win32-ia32/-/win32-ia32-0.17.19.tgz#95ad43c62ad62485e210f6299c7b2571e48d2b03"
+  resolved "https://registry.npmjs.org/@esbuild/win32-ia32/-/win32-ia32-0.17.19.tgz#95ad43c62ad62485e210f6299c7b2571e48d2b03"
   integrity sha512-eggDKanJszUtCdlVs0RB+h35wNlb5v4TWEkq4vZcmVt5u/HiDZrTXe2bWFQUez3RgNHwx/x4sk5++4NSSicKkw==
 
 "@esbuild/win32-x64@0.17.19":
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/@esbuild/win32-x64/-/win32-x64-0.17.19.tgz#8cfaf2ff603e9aabb910e9c0558c26cf32744061"
+  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.17.19.tgz#8cfaf2ff603e9aabb910e9c0558c26cf32744061"
   integrity sha512-lAhycmKnVOuRYNtRtatQR1LPQf2oYCkRGkSFnseDAKPl8lu5SOsK/e1sXe5a0Pc5kHIHe6P2I/ilntNv2xf3cA==
 
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
@@ -264,7 +264,7 @@
 
 "@fastify/busboy@^2.0.0":
   version "2.1.1"
-  resolved "https://mirrors.garmin.com/repository/npm/@fastify/busboy/-/busboy-2.1.1.tgz#b9da6a878a371829a0502c9b6c1c143ef6663f4d"
+  resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.1.tgz#b9da6a878a371829a0502c9b6c1c143ef6663f4d"
   integrity sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==
 
 "@floating-ui/core@^1.6.0":
@@ -349,17 +349,17 @@
 
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.1.2"
-  resolved "https://mirrors.garmin.com/repository/npm/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz#7a0ee601f60f99a20c7c7c5ff0c80388c1189bd6"
+  resolved "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz#7a0ee601f60f99a20c7c7c5ff0c80388c1189bd6"
   integrity sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==
 
 "@jridgewell/sourcemap-codec@^1.4.10":
   version "1.5.0"
-  resolved "https://mirrors.garmin.com/repository/npm/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.0.tgz#3188bcb273a414b0d215fd22a58540b989b9409a"
+  resolved "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.0.tgz#3188bcb273a414b0d215fd22a58540b989b9409a"
   integrity sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==
 
 "@jridgewell/trace-mapping@0.3.9":
   version "0.3.9"
-  resolved "https://mirrors.garmin.com/repository/npm/@jridgewell/trace-mapping/-/trace-mapping-0.3.9.tgz#6534fd5933a53ba7cbf3a17615e273a0d1273ff9"
+  resolved "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.9.tgz#6534fd5933a53ba7cbf3a17615e273a0d1273ff9"
   integrity sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==
   dependencies:
     "@jridgewell/resolve-uri" "^3.0.3"
@@ -729,14 +729,14 @@
 
 "@types/node-forge@^1.3.0":
   version "1.3.11"
-  resolved "https://mirrors.garmin.com/repository/npm/@types/node-forge/-/node-forge-1.3.11.tgz#0972ea538ddb0f4d9c2fa0ec5db5724773a604da"
+  resolved "https://registry.npmjs.org/@types/node-forge/-/node-forge-1.3.11.tgz#0972ea538ddb0f4d9c2fa0ec5db5724773a604da"
   integrity sha512-FQx220y22OKNTqaByeBGqHWYz4cl94tpcxeFdvBo3wjG6XPBuZ0BNgNZRV5J5TFmmcsJ4IzsLkmGRiQbnYsBEQ==
   dependencies:
     "@types/node" "*"
 
 "@types/node@*":
   version "22.10.1"
-  resolved "https://mirrors.garmin.com/repository/npm/@types/node/-/node-22.10.1.tgz#41ffeee127b8975a05f8c4f83fb89bcb2987d766"
+  resolved "https://registry.npmjs.org/@types/node/-/node-22.10.1.tgz#41ffeee127b8975a05f8c4f83fb89bcb2987d766"
   integrity sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==
   dependencies:
     undici-types "~6.20.0"
@@ -778,9 +778,9 @@
     csstype "^3.0.2"
 
 "@types/react@^18.3.11":
-  version "18.3.14"
-  resolved "https://registry.npmjs.org/@types/react/-/react-18.3.14.tgz#7ce43bbca0e15e1c4f67ad33ea3f83d75aa6756b"
-  integrity sha512-NzahNKvjNhVjuPBQ+2G7WlxstQ+47kXZNHlUvFakDViuIEfGY926GqhMueQFZ7woG+sPiQKlF36XfrIUVSUfFg==
+  version "18.3.15"
+  resolved "https://registry.npmjs.org/@types/react/-/react-18.3.15.tgz#14674f041072c2b17062ae2edb0eb95a45787f98"
+  integrity sha512-XQzbwkCwrsabawgWsvDDwsDTRuH1sf6Uj1fnFYoG03ZXfT54/aBvlylKR9ix70pXAtTn8dFzj358zVcZN4m83w==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
@@ -932,7 +932,7 @@ acorn-jsx@^5.3.2:
 
 acorn-walk@^8.2.0:
   version "8.3.4"
-  resolved "https://mirrors.garmin.com/repository/npm/acorn-walk/-/acorn-walk-8.3.4.tgz#794dd169c3977edf4ba4ea47583587c5866236b7"
+  resolved "https://registry.npmjs.org/acorn-walk/-/acorn-walk-8.3.4.tgz#794dd169c3977edf4ba4ea47583587c5866236b7"
   integrity sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==
   dependencies:
     acorn "^8.11.0"
@@ -1043,7 +1043,7 @@ arraybuffer.prototype.slice@^1.0.3:
 
 as-table@^1.0.36:
   version "1.0.55"
-  resolved "https://mirrors.garmin.com/repository/npm/as-table/-/as-table-1.0.55.tgz#dc984da3937745de902cea1d45843c01bdbbec4f"
+  resolved "https://registry.npmjs.org/as-table/-/as-table-1.0.55.tgz#dc984da3937745de902cea1d45843c01bdbbec4f"
   integrity sha512-xvsWESUJn0JN421Xb9MQw6AsMHRCUknCe0Wjlxvjud80mU4E6hQf1A6NzQKcYNmYw62MfzEtXc+badstZP3JpQ==
   dependencies:
     printable-characters "^1.0.42"
@@ -1074,7 +1074,7 @@ bidi-js@^1.0.2:
 
 blake3-wasm@^2.1.5:
   version "2.1.5"
-  resolved "https://mirrors.garmin.com/repository/npm/blake3-wasm/-/blake3-wasm-2.1.5.tgz#b22dbb84bc9419ed0159caa76af4b1b132e6ba52"
+  resolved "https://registry.npmjs.org/blake3-wasm/-/blake3-wasm-2.1.5.tgz#b22dbb84bc9419ed0159caa76af4b1b132e6ba52"
   integrity sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g==
 
 brace-expansion@^1.1.7:
@@ -1147,7 +1147,7 @@ caniuse-lite@^1.0.30001616:
 
 capnp-ts@^0.7.0:
   version "0.7.0"
-  resolved "https://mirrors.garmin.com/repository/npm/capnp-ts/-/capnp-ts-0.7.0.tgz#16fd8e76b667d002af8fcf4bf92bf15d1a7b54a9"
+  resolved "https://registry.npmjs.org/capnp-ts/-/capnp-ts-0.7.0.tgz#16fd8e76b667d002af8fcf4bf92bf15d1a7b54a9"
   integrity sha512-XKxXAC3HVPv7r674zP0VC3RTXz+/JKhfyw94ljvF80yynK6VkTnqE3jMuN8b3dUVmmc43TjyxjW4KTsmB3c86g==
   dependencies:
     debug "^4.3.1"
@@ -1163,7 +1163,7 @@ chalk@^4.0.0:
 
 chokidar@^4.0.1:
   version "4.0.1"
-  resolved "https://mirrors.garmin.com/repository/npm/chokidar/-/chokidar-4.0.1.tgz#4a6dff66798fb0f72a94f616abbd7e1a19f31d41"
+  resolved "https://registry.npmjs.org/chokidar/-/chokidar-4.0.1.tgz#4a6dff66798fb0f72a94f616abbd7e1a19f31d41"
   integrity sha512-n8enUVCED/KVRQlab1hr3MVpcVMvxtZjmEa956u+4YijlmQED223XMSYj2tLuKvr4jcCTzNNMpQDUer72MMmzA==
   dependencies:
     readdirp "^4.0.1"
@@ -1192,7 +1192,7 @@ concat-map@0.0.1:
 
 cookie@^0.7.1:
   version "0.7.2"
-  resolved "https://mirrors.garmin.com/repository/npm/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
+  resolved "https://registry.npmjs.org/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
   integrity sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==
 
 cookie@^1.0.1:
@@ -1233,7 +1233,7 @@ csstype@^3.0.2:
 
 data-uri-to-buffer@^2.0.0:
   version "2.0.2"
-  resolved "https://mirrors.garmin.com/repository/npm/data-uri-to-buffer/-/data-uri-to-buffer-2.0.2.tgz#d296973d5a4897a5dbe31716d118211921f04770"
+  resolved "https://registry.npmjs.org/data-uri-to-buffer/-/data-uri-to-buffer-2.0.2.tgz#d296973d5a4897a5dbe31716d118211921f04770"
   integrity sha512-ND9qDTLc6diwj+Xe5cdAgVTbLVdXbtxTJRXRhli8Mowuaan+0EJOtdqJ0QCHNSSPyoXGx9HX2/VMnKeC34AChA==
 
 data-view-buffer@^1.0.1:
@@ -1265,7 +1265,7 @@ data-view-byte-offset@^1.0.0:
 
 date-fns@^4.1.0:
   version "4.1.0"
-  resolved "https://mirrors.garmin.com/repository/npm/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  resolved "https://registry.npmjs.org/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
   integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
 
 debounce@^1.2.1:
@@ -1305,7 +1305,7 @@ define-properties@^1.1.3, define-properties@^1.2.0, define-properties@^1.2.1:
 
 defu@^6.1.4:
   version "6.1.4"
-  resolved "https://mirrors.garmin.com/repository/npm/defu/-/defu-6.1.4.tgz#4e0c9cf9ff68fe5f3d7f2765cc1a012dfdcb0479"
+  resolved "https://registry.npmjs.org/defu/-/defu-6.1.4.tgz#4e0c9cf9ff68fe5f3d7f2765cc1a012dfdcb0479"
   integrity sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==
 
 detect-gpu@^5.0.56:
@@ -1465,7 +1465,7 @@ es-to-primitive@^1.2.1:
 
 esbuild@0.17.19:
   version "0.17.19"
-  resolved "https://mirrors.garmin.com/repository/npm/esbuild/-/esbuild-0.17.19.tgz#087a727e98299f0462a3d0bcdd9cd7ff100bd955"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.17.19.tgz#087a727e98299f0462a3d0bcdd9cd7ff100bd955"
   integrity sha512-XQ0jAPFkK/u3LcVRcvVHQcTIqD6E2H1fvZMA5dQPSOWb3suUbWbfbRf94pjc0bNzRYLfIrDRQXr7X+LHIm5oHw==
   optionalDependencies:
     "@esbuild/android-arm" "0.17.19"
@@ -1613,7 +1613,7 @@ estraverse@^5.1.0, estraverse@^5.2.0, estraverse@^5.3.0:
 
 estree-walker@^0.6.1:
   version "0.6.1"
-  resolved "https://mirrors.garmin.com/repository/npm/estree-walker/-/estree-walker-0.6.1.tgz#53049143f40c6eb918b23671d1fe3219f3a1b362"
+  resolved "https://registry.npmjs.org/estree-walker/-/estree-walker-0.6.1.tgz#53049143f40c6eb918b23671d1fe3219f3a1b362"
   integrity sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==
 
 esutils@^2.0.2:
@@ -1623,7 +1623,7 @@ esutils@^2.0.2:
 
 exit-hook@^2.2.1:
   version "2.2.1"
-  resolved "https://mirrors.garmin.com/repository/npm/exit-hook/-/exit-hook-2.2.1.tgz#007b2d92c6428eda2b76e7016a34351586934593"
+  resolved "https://registry.npmjs.org/exit-hook/-/exit-hook-2.2.1.tgz#007b2d92c6428eda2b76e7016a34351586934593"
   integrity sha512-eNTPlAD67BmP31LDINZ3U7HSF8l57TxOY2PmBJ1shpCvpnxBF93mWCE8YHBnXs8qiUZJc9WDcWIeC3a2HIAMfw==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
@@ -1713,7 +1713,7 @@ for-each@^0.3.3:
 
 fsevents@~2.3.2:
   version "2.3.3"
-  resolved "https://mirrors.garmin.com/repository/npm/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
@@ -1757,7 +1757,7 @@ get-nonce@^1.0.0:
 
 get-source@^2.0.12:
   version "2.0.12"
-  resolved "https://mirrors.garmin.com/repository/npm/get-source/-/get-source-2.0.12.tgz#0b47d57ea1e53ce0d3a69f4f3d277eb8047da944"
+  resolved "https://registry.npmjs.org/get-source/-/get-source-2.0.12.tgz#0b47d57ea1e53ce0d3a69f4f3d277eb8047da944"
   integrity sha512-X5+4+iD+HoSeEED+uwrQ07BOQr0kEDFMVqqpBuI+RaZBpBpHCuXxo70bjar6f0b0u/DQJsJ7ssurpP0V60Az+w==
   dependencies:
     data-uri-to-buffer "^2.0.0"
@@ -1788,7 +1788,7 @@ glob-parent@^6.0.2:
 
 glob-to-regexp@^0.4.1:
   version "0.4.1"
-  resolved "https://mirrors.garmin.com/repository/npm/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz#c75297087c851b9a578bd217dd59a92f59fe546e"
+  resolved "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz#c75297087c851b9a578bd217dd59a92f59fe546e"
   integrity sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==
 
 globals@^14.0.0:
@@ -2149,7 +2149,7 @@ its-fine@^1.0.6:
 
 itty-time@^1.0.6:
   version "1.0.6"
-  resolved "https://mirrors.garmin.com/repository/npm/itty-time/-/itty-time-1.0.6.tgz#a6eeda619f19d2f4c480ceddd013b93acb05714d"
+  resolved "https://registry.npmjs.org/itty-time/-/itty-time-1.0.6.tgz#a6eeda619f19d2f4c480ceddd013b93acb05714d"
   integrity sha512-+P8IZaLLBtFv8hCkIjcymZOp4UJ+xW6bSlQsXGqrkmJh7vSiMFSlNne0mCYagEE0N7HDNR5jJBRxwN0oYv61Rw==
 
 "js-tokens@^3.0.0 || ^4.0.0":
@@ -2237,7 +2237,7 @@ maath@^0.10.8:
 
 magic-string@^0.25.3:
   version "0.25.9"
-  resolved "https://mirrors.garmin.com/repository/npm/magic-string/-/magic-string-0.25.9.tgz#de7f9faf91ef8a1c91d02c2e5314c8277dbcdd1c"
+  resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.25.9.tgz#de7f9faf91ef8a1c91d02c2e5314c8277dbcdd1c"
   integrity sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==
   dependencies:
     sourcemap-codec "^1.4.8"
@@ -2267,12 +2267,12 @@ micromatch@^4.0.4:
 
 mime@^3.0.0:
   version "3.0.0"
-  resolved "https://mirrors.garmin.com/repository/npm/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
+  resolved "https://registry.npmjs.org/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
   integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
 
 miniflare@3.20241205.0:
   version "3.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/miniflare/-/miniflare-3.20241205.0.tgz#602546d4bdcc22f2f3efdd0dc2c44cbd895e4430"
+  resolved "https://registry.npmjs.org/miniflare/-/miniflare-3.20241205.0.tgz#602546d4bdcc22f2f3efdd0dc2c44cbd895e4430"
   integrity sha512-Z0cTtIf6ZrcAJ3SrOI9EUM3s4dkGhNeU6Ubl8sroYhsPVD+rtz3m5+p6McHFWCkcMff1o60X5XEKVTmkz0gbpA==
   dependencies:
     "@cspotcode/source-map-support" "0.8.1"
@@ -2309,7 +2309,7 @@ ms@^2.1.3:
 
 mustache@^4.2.0:
   version "4.2.0"
-  resolved "https://mirrors.garmin.com/repository/npm/mustache/-/mustache-4.2.0.tgz#e5892324d60a12ec9c2a73359edca52972bf6f64"
+  resolved "https://registry.npmjs.org/mustache/-/mustache-4.2.0.tgz#e5892324d60a12ec9c2a73359edca52972bf6f64"
   integrity sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==
 
 nanoid@^3.3.3, nanoid@^3.3.7:
@@ -2324,7 +2324,7 @@ natural-compare@^1.4.0:
 
 node-forge@^1:
   version "1.3.1"
-  resolved "https://mirrors.garmin.com/repository/npm/node-forge/-/node-forge-1.3.1.tgz#be8da2af243b2417d5f646a770663a92b7e9ded3"
+  resolved "https://registry.npmjs.org/node-forge/-/node-forge-1.3.1.tgz#be8da2af243b2417d5f646a770663a92b7e9ded3"
   integrity sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==
 
 object-assign@^4.1.1:
@@ -2382,7 +2382,7 @@ object.values@^1.1.6, object.values@^1.2.0:
 
 ohash@^1.1.4:
   version "1.1.4"
-  resolved "https://mirrors.garmin.com/repository/npm/ohash/-/ohash-1.1.4.tgz#ae8d83014ab81157d2c285abf7792e2995fadd72"
+  resolved "https://registry.npmjs.org/ohash/-/ohash-1.1.4.tgz#ae8d83014ab81157d2c285abf7792e2995fadd72"
   integrity sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==
 
 optionator@^0.9.3:
@@ -2435,12 +2435,12 @@ path-parse@^1.0.7:
 
 path-to-regexp@^6.3.0:
   version "6.3.0"
-  resolved "https://mirrors.garmin.com/repository/npm/path-to-regexp/-/path-to-regexp-6.3.0.tgz#2b6a26a337737a8e1416f9272ed0766b1c0389f4"
+  resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-6.3.0.tgz#2b6a26a337737a8e1416f9272ed0766b1c0389f4"
   integrity sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==
 
 pathe@^1.1.2:
   version "1.1.2"
-  resolved "https://mirrors.garmin.com/repository/npm/pathe/-/pathe-1.1.2.tgz#6c4cb47a945692e48a1ddd6e4094d170516437ec"
+  resolved "https://registry.npmjs.org/pathe/-/pathe-1.1.2.tgz#6c4cb47a945692e48a1ddd6e4094d170516437ec"
   integrity sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==
 
 picocolors@^1.1.1:
@@ -2523,13 +2523,13 @@ prelude-ls@^1.2.1:
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
 prettier@^3.3.3:
-  version "3.4.1"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-3.4.1.tgz#e211d451d6452db0a291672ca9154bc8c2579f7b"
-  integrity sha512-G+YdqtITVZmOJje6QkXQWzl3fSfMxFwm1tjTyo9exhkmWSqC4Yhd1+lug++IlR2mvRVAxEDDWYkQdeSztajqgg==
+  version "3.4.2"
+  resolved "https://registry.npmjs.org/prettier/-/prettier-3.4.2.tgz#a5ce1fb522a588bf2b78ca44c6e6fe5aa5a2b13f"
+  integrity sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==
 
 printable-characters@^1.0.42:
   version "1.0.42"
-  resolved "https://mirrors.garmin.com/repository/npm/printable-characters/-/printable-characters-1.0.42.tgz#3f18e977a9bd8eb37fcc4ff5659d7be90868b3d8"
+  resolved "https://registry.npmjs.org/printable-characters/-/printable-characters-1.0.42.tgz#3f18e977a9bd8eb37fcc4ff5659d7be90868b3d8"
   integrity sha512-dKp+C4iXWK4vVYZmYSd0KBH5F/h1HoZRsbJ82AVKRO3PEo8L4lBS/vLwhVtpwwuYcoIsVY+1JYKR268yn480uQ==
 
 promise-worker-transferable@^1.0.4:
@@ -2653,7 +2653,7 @@ react@^18.3.1:
 
 readdirp@^4.0.1:
   version "4.0.2"
-  resolved "https://mirrors.garmin.com/repository/npm/readdirp/-/readdirp-4.0.2.tgz#388fccb8b75665da3abffe2d8f8ed59fe74c230a"
+  resolved "https://registry.npmjs.org/readdirp/-/readdirp-4.0.2.tgz#388fccb8b75665da3abffe2d8f8ed59fe74c230a"
   integrity sha512-yDMz9g+VaZkqBYS/ozoBJwaBhTbZo3UNYQHNRw1D3UFQB8oHB4uS/tAODO+ZLjGWmUbKnIlOWO+aaIiAxrUWHA==
 
 reflect.getprototypeof@^1.0.4, reflect.getprototypeof@^1.0.6:
@@ -2697,7 +2697,7 @@ resolve-from@^4.0.0:
 
 resolve@^1.22.8:
   version "1.22.8"
-  resolved "https://mirrors.garmin.com/repository/npm/resolve/-/resolve-1.22.8.tgz#b6c87a9f2aa06dfab52e3d70ac8cde321fa5a48d"
+  resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.8.tgz#b6c87a9f2aa06dfab52e3d70ac8cde321fa5a48d"
   integrity sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==
   dependencies:
     is-core-module "^2.13.0"
@@ -2720,7 +2720,7 @@ reusify@^1.0.4:
 
 rollup-plugin-inject@^3.0.0:
   version "3.0.2"
-  resolved "https://mirrors.garmin.com/repository/npm/rollup-plugin-inject/-/rollup-plugin-inject-3.0.2.tgz#e4233855bfba6c0c12a312fd6649dff9a13ee9f4"
+  resolved "https://registry.npmjs.org/rollup-plugin-inject/-/rollup-plugin-inject-3.0.2.tgz#e4233855bfba6c0c12a312fd6649dff9a13ee9f4"
   integrity sha512-ptg9PQwzs3orn4jkgXJ74bfs5vYz1NCZlSQMBUA0wKcGp5i5pA1AO3fOUEte8enhGUC+iapTCzEWw2jEFFUO/w==
   dependencies:
     estree-walker "^0.6.1"
@@ -2729,14 +2729,14 @@ rollup-plugin-inject@^3.0.0:
 
 rollup-plugin-node-polyfills@^0.2.1:
   version "0.2.1"
-  resolved "https://mirrors.garmin.com/repository/npm/rollup-plugin-node-polyfills/-/rollup-plugin-node-polyfills-0.2.1.tgz#53092a2744837164d5b8a28812ba5f3ff61109fd"
+  resolved "https://registry.npmjs.org/rollup-plugin-node-polyfills/-/rollup-plugin-node-polyfills-0.2.1.tgz#53092a2744837164d5b8a28812ba5f3ff61109fd"
   integrity sha512-4kCrKPTJ6sK4/gLL/U5QzVT8cxJcofO0OU74tnB19F40cmuAKSzH5/siithxlofFEjwvw1YAhPmbvGNA6jEroA==
   dependencies:
     rollup-plugin-inject "^3.0.0"
 
 rollup-pluginutils@^2.8.1:
   version "2.8.2"
-  resolved "https://mirrors.garmin.com/repository/npm/rollup-pluginutils/-/rollup-pluginutils-2.8.2.tgz#72f2af0748b592364dbd3389e600e5a9444a351e"
+  resolved "https://registry.npmjs.org/rollup-pluginutils/-/rollup-pluginutils-2.8.2.tgz#72f2af0748b592364dbd3389e600e5a9444a351e"
   integrity sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==
   dependencies:
     estree-walker "^0.6.1"
@@ -2783,7 +2783,7 @@ scheduler@^0.23.2:
 
 selfsigned@^2.0.1:
   version "2.4.1"
-  resolved "https://mirrors.garmin.com/repository/npm/selfsigned/-/selfsigned-2.4.1.tgz#560d90565442a3ed35b674034cec4e95dceb4ae0"
+  resolved "https://registry.npmjs.org/selfsigned/-/selfsigned-2.4.1.tgz#560d90565442a3ed35b674034cec4e95dceb4ae0"
   integrity sha512-th5B4L2U+eGLq1TVh7zNRGBapioSORUeymIydxgFpwww9d2qyKvtuPU2jJuHvYAwwqi2Y596QBL3eEqcPEYL8Q==
   dependencies:
     "@types/node-forge" "^1.3.0"
@@ -2855,12 +2855,12 @@ source-map-js@^1.2.1:
 
 source-map@^0.6.1:
   version "0.6.1"
-  resolved "https://mirrors.garmin.com/repository/npm/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
+  resolved "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
 sourcemap-codec@^1.4.8:
   version "1.4.8"
-  resolved "https://mirrors.garmin.com/repository/npm/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
+  resolved "https://registry.npmjs.org/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
   integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
 stackframe@^1.3.4:
@@ -2870,7 +2870,7 @@ stackframe@^1.3.4:
 
 stacktracey@^2.1.8:
   version "2.1.8"
-  resolved "https://mirrors.garmin.com/repository/npm/stacktracey/-/stacktracey-2.1.8.tgz#bf9916020738ce3700d1323b32bd2c91ea71199d"
+  resolved "https://registry.npmjs.org/stacktracey/-/stacktracey-2.1.8.tgz#bf9916020738ce3700d1323b32bd2c91ea71199d"
   integrity sha512-Kpij9riA+UNg7TnphqjH7/CzctQ/owJGNbFkfEeve4Z4uxT5+JapVLFXcsurIfN34gnTWZNJ/f7NMG0E8JDzTw==
   dependencies:
     as-table "^1.0.36"
@@ -2891,7 +2891,7 @@ stats.js@^0.17.0:
 
 stoppable@^1.1.0:
   version "1.1.0"
-  resolved "https://mirrors.garmin.com/repository/npm/stoppable/-/stoppable-1.1.0.tgz#32da568e83ea488b08e4d7ea2c3bcc9d75015d5b"
+  resolved "https://registry.npmjs.org/stoppable/-/stoppable-1.1.0.tgz#32da568e83ea488b08e4d7ea2c3bcc9d75015d5b"
   integrity sha512-KXDYZ9dszj6bzvnEMRYvxgeTHU74QBFL54XKtP3nyMuJ81CFYtABZ3bAzL2EdFUaEwJOBOgENyFj3R7oTzDyyw==
 
 string.prototype.matchall@^4.0.11:
@@ -3129,7 +3129,7 @@ typescript@^5.6.3:
 
 ufo@^1.5.4:
   version "1.5.4"
-  resolved "https://mirrors.garmin.com/repository/npm/ufo/-/ufo-1.5.4.tgz#16d6949674ca0c9e0fbbae1fa20a71d7b1ded754"
+  resolved "https://registry.npmjs.org/ufo/-/ufo-1.5.4.tgz#16d6949674ca0c9e0fbbae1fa20a71d7b1ded754"
   integrity sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==
 
 unbox-primitive@^1.0.2:
@@ -3144,19 +3144,19 @@ unbox-primitive@^1.0.2:
 
 undici-types@~6.20.0:
   version "6.20.0"
-  resolved "https://mirrors.garmin.com/repository/npm/undici-types/-/undici-types-6.20.0.tgz#8171bf22c1f588d1554d55bf204bc624af388433"
+  resolved "https://registry.npmjs.org/undici-types/-/undici-types-6.20.0.tgz#8171bf22c1f588d1554d55bf204bc624af388433"
   integrity sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==
 
 undici@^5.28.4:
   version "5.28.4"
-  resolved "https://mirrors.garmin.com/repository/npm/undici/-/undici-5.28.4.tgz#6b280408edb6a1a604a9b20340f45b422e373068"
+  resolved "https://registry.npmjs.org/undici/-/undici-5.28.4.tgz#6b280408edb6a1a604a9b20340f45b422e373068"
   integrity sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==
   dependencies:
     "@fastify/busboy" "^2.0.0"
 
 "unenv@npm:unenv-nightly@2.0.0-20241204-140205-a5d5190":
   version "2.0.0-20241204-140205-a5d5190"
-  resolved "https://mirrors.garmin.com/repository/npm/unenv-nightly/-/unenv-nightly-2.0.0-20241204-140205-a5d5190.tgz#e0fd0d1315a03764f1f20fece9c8546ae8019f48"
+  resolved "https://registry.npmjs.org/unenv-nightly/-/unenv-nightly-2.0.0-20241204-140205-a5d5190.tgz#e0fd0d1315a03764f1f20fece9c8546ae8019f48"
   integrity sha512-jpmAytLeiiW01pl5bhVn9wYJ4vtiLdhGe10oXlJBuQEX8mxjxO8BlEXGHU4vr4yEikjFP1wsomTHt/CLU8kUwg==
   dependencies:
     defu "^6.1.4"
@@ -3316,7 +3316,7 @@ word-wrap@^1.2.5:
 
 workerd@1.20241205.0:
   version "1.20241205.0"
-  resolved "https://mirrors.garmin.com/repository/npm/workerd/-/workerd-1.20241205.0.tgz#db66f5ef2c0b7c5ddd993b22e4c8cc9b446d72b6"
+  resolved "https://registry.npmjs.org/workerd/-/workerd-1.20241205.0.tgz#db66f5ef2c0b7c5ddd993b22e4c8cc9b446d72b6"
   integrity sha512-vso/2n0c5SdBDWiD+Sx5gM7unA6SiZXRVUHDqH1euoP/9mFVHZF8icoYsNLB87b/TX8zNgpae+I5N/xFpd9v0g==
   optionalDependencies:
     "@cloudflare/workerd-darwin-64" "1.20241205.0"
@@ -3327,7 +3327,7 @@ workerd@1.20241205.0:
 
 wrangler@^3.95.0:
   version "3.95.0"
-  resolved "https://mirrors.garmin.com/repository/npm/wrangler/-/wrangler-3.95.0.tgz#920af5dba125263ab58f4bf9affc01bf425f0dda"
+  resolved "https://registry.npmjs.org/wrangler/-/wrangler-3.95.0.tgz#920af5dba125263ab58f4bf9affc01bf425f0dda"
   integrity sha512-3w5852i3FNyDz421K2Qk4v5L8jjwegO5O8E1+VAQmjnm82HFNxpIRUBq0bmM7CTLvOPI/Jjcmj/eAWjQBL7QYg==
   dependencies:
     "@cloudflare/kv-asset-handler" "0.3.4"
@@ -3353,12 +3353,12 @@ wrangler@^3.95.0:
 
 ws@^8.18.0:
   version "8.18.0"
-  resolved "https://mirrors.garmin.com/repository/npm/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
   integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 xxhash-wasm@^1.0.1:
   version "1.1.0"
-  resolved "https://mirrors.garmin.com/repository/npm/xxhash-wasm/-/xxhash-wasm-1.1.0.tgz#ffe7f0b98220a4afac171e3fb9b6d1f8771f015e"
+  resolved "https://registry.npmjs.org/xxhash-wasm/-/xxhash-wasm-1.1.0.tgz#ffe7f0b98220a4afac171e3fb9b6d1f8771f015e"
   integrity sha512-147y/6YNh+tlp6nd/2pWq38i9h6mz/EuQ6njIrmW8D1BS5nCqs0P6DG+m6zTGnNz5I+uhZ0SHxBs9BsPrwcKDA==
 
 yocto-queue@^0.1.0:
@@ -3368,7 +3368,7 @@ yocto-queue@^0.1.0:
 
 youch@^3.2.2:
   version "3.3.4"
-  resolved "https://mirrors.garmin.com/repository/npm/youch/-/youch-3.3.4.tgz#f13ee0966846c6200e7fb9ece89306d95df5e489"
+  resolved "https://registry.npmjs.org/youch/-/youch-3.3.4.tgz#f13ee0966846c6200e7fb9ece89306d95df5e489"
   integrity sha512-UeVBXie8cA35DS6+nBkls68xaBBXCye0CNznrhszZjTbRVnJKQuNsyLKBTTL4ln1o1rh2PKtv35twV7irj5SEg==
   dependencies:
     cookie "^0.7.1"
@@ -3377,7 +3377,7 @@ youch@^3.2.2:
 
 zod@^3.22.3:
   version "3.24.0"
-  resolved "https://mirrors.garmin.com/repository/npm/zod/-/zod-3.24.0.tgz#babb32313f7c5f4a99812feee806d186b4f76bde"
+  resolved "https://registry.npmjs.org/zod/-/zod-3.24.0.tgz#babb32313f7c5f4a99812feee806d186b4f76bde"
   integrity sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==
 
 zustand@^3.7.1:
