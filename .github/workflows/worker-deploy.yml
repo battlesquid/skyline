@@ -5,16 +5,23 @@ on:
     branches:
       - master
 
+defaults:
+  run:
+    working-directory: packages/worker
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 20.11.0
+            registry-url: https://registry.npmjs.org/
+      - run: yarn install --focus
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./packages/worker
           packageManager: yarn
-          preCommands: yarn install --focus
