@@ -15,4 +15,5 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: "packages/worker"
+          workingDirectory: ./packages/worker
+          packageManager: yarn
