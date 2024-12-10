@@ -18,9 +18,5 @@
     "moduleDetection": "force",
     "isolatedModules": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "test"
-  ]
+  "include": ["src/**/*.ts"]
 }

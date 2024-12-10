@@ -3,7 +3,7 @@
  * https://github.com/gr2m/cloudflare-worker-github-oauth-login
  */
 
-import { ExportedHandler, Response } from "@cloudflare/workers-types"
+import { type ExportedHandler } from "@cloudflare/workers-types"
 
 interface Env {
     CLIENT_ID: string;
@@ -50,7 +50,7 @@ export default {
                     }),
                 }
             );
-            const result = await response.json();
+            const result = await response.json<{ error: string, access_token: string }>();
             const headers = {
                 "Access-Control-Allow-Origin": "*",
             };
@@ -63,7 +63,7 @@ export default {
                 status: 201,
                 headers,
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             return new Response(error.message, {
                 status: 500,

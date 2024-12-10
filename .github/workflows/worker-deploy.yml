@@ -21,3 +21,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           packageManager: yarn
+          workingDirectory: ./packages/worker
