@@ -17,3 +17,4 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./packages/worker
           packageManager: yarn
+          preCommands: yarn install --focus
