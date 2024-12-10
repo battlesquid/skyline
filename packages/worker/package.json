@@ -1,6 +1,7 @@
 {
   "name": "@skyline/oauth-worker",
   "version": "1.0.0",
+  "main": "src/index.ts",
   "private": true,
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241205.0",
