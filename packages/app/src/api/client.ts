@@ -11,6 +11,7 @@ const getToken = async (): Promise<string | null> => {
   if (code === null) {
     return null;
   }
+
   const path =
     location.pathname +
     location.search.replace(/\bcode=\w+/, "").replace(/\?$/, "");
@@ -49,11 +50,13 @@ export const client = new Client({
             console.log("no token found");
             return operation;
           }
+          console.log("appending token to header");
           return utils.appendHeaders(operation, {
             Authorization: `Bearer ${token}`
           })
         },
         didAuthError(error, operation) {
+          console.log(error);
           return true;
         },
         async refreshAuth() {
