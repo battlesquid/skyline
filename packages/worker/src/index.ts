@@ -40,7 +40,7 @@ export default {
                     method: "POST",
                     headers: {
                         "content-type": "application/json",
-                        "user-agent": "cloudflare-worker-github-oauth-login",
+                        "user-agent": "gh-skyline-worker",
                         accept: "application/json",
                     },
                     body: JSON.stringify({

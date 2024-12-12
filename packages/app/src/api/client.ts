@@ -56,8 +56,7 @@ export const client = new Client({
           })
         },
         didAuthError(error, operation) {
-          console.log(error);
-          return true;
+          return localStorage.getItem("token") === null;
         },
         async refreshAuth() {
 
