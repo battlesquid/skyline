@@ -40,7 +40,6 @@ const getToken = async (): Promise<string | null> => {
 export const client = new Client({
   url: "https://api.github.com/graphql",
   exchanges: [
-    fetchExchange,
     cacheExchange,
     authExchange(async utils => {
       const token = await getToken();
@@ -62,6 +61,7 @@ export const client = new Client({
 
         },
       }
-    })
+    }),
+    fetchExchange,
   ]
 });
