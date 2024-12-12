@@ -46,6 +46,7 @@ export const client = new Client({
       return {
         addAuthToOperation(operation) {
           if (!token) {
+            console.log("no token found");
             return operation;
           }
           return utils.appendHeaders(operation, {
