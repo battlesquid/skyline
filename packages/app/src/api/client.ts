@@ -17,7 +17,7 @@ const getToken = async (): Promise<string | null> => {
     location.search.replace(/\bcode=\w+/, "").replace(/\?$/, "");
   history.pushState({}, "", path);
 
-  const response = await fetch("https://gh-skyline.battlesquid.workers.dev/", {
+  const response = await fetch(import.meta.env.PUBLIC_WORKER_URL, {
     method: "POST",
     mode: "cors",
     headers: {
@@ -46,10 +46,8 @@ export const client = new Client({
       return {
         addAuthToOperation(operation) {
           if (!token) {
-            console.log("no token found");
             return operation;
           }
-          console.log("appending token to header");
           return utils.appendHeaders(operation, {
             Authorization: `Bearer ${token}`
           })
