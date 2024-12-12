@@ -26,7 +26,7 @@ export default {
         // redirect GET requests to the OAuth login page on github.com
         if (request.method === "GET") {
             return Response.redirect(
-                `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}`,
+                `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}&scope=read:user`,
                 302
             );
         }
