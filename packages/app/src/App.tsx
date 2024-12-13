@@ -42,8 +42,8 @@ export default function App() {
 
   useEffect(() => {
     setReady(
-      !result.fetching
-      && localStorage.getItem("token") !== null
+      localStorage.getItem("token") !== null
+      && !result.fetching
     )
   }, [result.fetching]);
 
@@ -93,7 +93,7 @@ export default function App() {
   const appContent = ready
     ? (
       <>
-        <Skyline weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks} />
+        <Skyline user={name} year={`${year}`} weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks} />
         <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
       </>
     )

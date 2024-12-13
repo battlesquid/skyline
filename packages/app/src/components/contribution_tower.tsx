@@ -59,7 +59,7 @@ export function ContributionTower(props: ContributionTowerProps) {
           hover(false);
         }}
       >
-        <boxGeometry args={[1, height, 1]} />
+        <boxGeometry args={[0.5, height, 0.5]} />
         {/* <meshStandardMaterial color={hovered ? '#2e6c80' : '#4287f5'} /> */}
         <meshStandardMaterial color={towerColor} />
       </mesh>
