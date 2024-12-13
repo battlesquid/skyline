@@ -1,6 +1,6 @@
 import { AppShell, Button, Divider, LoadingOverlay, NumberInput, Stack, TextInput, Tooltip, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "urql";
 import { ContributionQuery } from "./api/query";
 import "./App.css";
@@ -8,6 +8,14 @@ import { Skyline } from "./components/skyline";
 
 import tunnel from "tunnel-rat";
 export const t = tunnel();
+
+function LoginSidebar() {
+
+}
+
+function ControlsSidebar() {
+  return
+}
 
 export default function App() {
   const [name, setName] = useState("Battlesquid");
@@ -30,24 +38,25 @@ export default function App() {
 
   const theme = useMantineTheme();
 
-  return (
-    <AppShell
-      header={{ height: 0 }}
-      padding={"md"}
-      navbar={{
-        width: 300,
-        breakpoint: "sm",
-        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
-      }}
-    >
-      <AppShell.Navbar p="md">
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setReady(
+      !result.fetching
+      && localStorage.getItem("token") !== null
+    )
+  }, [result.fetching]);
+
+  const sidebar = ready
+    ? (
+      <>
         <AppShell.Section h="100%">
           <Stack gap={5}>
             <h2>skyline</h2>
             {/* <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
             <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" /> */}
-            <TextInput ref={usernameRef} label="Github Username" placeholder="Github Username"  />
-            <NumberInput ref={yearRef} min={2015} max={new Date().getFullYear()} label="Year" placeholder="Year"  />
+            <TextInput ref={usernameRef} label="Github Username" placeholder="Github Username" />
+            <NumberInput ref={yearRef} min={2015} max={new Date().getFullYear()} label="Year" placeholder="Year" />
             <Button
               fullWidth
               onClick={() => {
@@ -64,14 +73,52 @@ export default function App() {
             <Button fullWidth>Export</Button>
           </Tooltip>
         </AppShell.Section>
+      </>
+    )
+    : (
+      <>
+        <AppShell.Section h="100%">
+          <Stack gap={5}>
+            <h2>skyline</h2>
+          </Stack>
+          <Button
+            component="a"
+            href={import.meta.env.PUBLIC_WORKER_URL}
+            fullWidth={true}
+          >Login to Github</Button>
+        </AppShell.Section>
+      </>
+    );
+
+  const appContent = ready
+    ? (
+      <>
+        <Skyline weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks} />
+        <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
+      </>
+    )
+    : (
+      <></>
+    )
+
+  return (
+    <AppShell
+      header={{ height: 0 }}
+      padding={"md"}
+      navbar={{
+        width: 300,
+        breakpoint: "sm",
+        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+      }}
+    >
+      <AppShell.Navbar p="md">
+        {sidebar}
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        {!result.fetching && <Skyline weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks} />}
-        <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}>
-          <t.Out />
-        </div>
+        {appContent}
+        <t.Out />
       </AppShell.Main>
-    </AppShell>
+    </AppShell >
   );
 }
