@@ -35,25 +35,27 @@ export function Skyline(props: SkylineProps) {
           </mesh>
           <Text3D
             font={"/Inter_Bold.json"}
-            position={[0, 0 - platform_height / 2 - 0.5, 3.8]}
+            position={[0, 0 - platform_height / 2 - 0.5, 3.5]}
             letterSpacing={-0.1}
             lineHeight={3}
+            height={0.5}
           >
             {user}
-            <meshStandardMaterial color={"#1a1b26"} />
+            <meshStandardMaterial color={"#302e86"} />
           </Text3D>
           <Text3D
             font={"/Inter_Bold.json"}
-            position={[22, 0 - platform_height / 2 - 0.55, 3.8]}
+            position={[22, 0 - platform_height / 2 - 0.55, 3.5]}
             letterSpacing={-0.1}
             lineHeight={3}
+            height={0.5}
           >
             {year}
-            <meshStandardMaterial color={"#1a1b26"} />
-          </Text3D>
+            <meshStandardMaterial color={"#302e86"} />
+          </Text3D>/
         </Bounds>
       </Stage>
-      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 1.75} />
+      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} />
     </Canvas>
   );
 }

@@ -6,6 +6,7 @@ import { t } from "../App";
 import { Card, Text } from "@mantine/core";
 import { ResultOf } from "gql.tada";
 import { ContributionQuery } from "../api/query";
+import { MeshTransmissionMaterial } from "@react-three/drei";
 
 interface ContributionTowerProps extends MeshProps {
   x: number;
@@ -61,7 +62,7 @@ export function ContributionTower(props: ContributionTowerProps) {
       >
         <boxGeometry args={[0.5, height, 0.5]} />
         {/* <meshStandardMaterial color={hovered ? '#2e6c80' : '#4287f5'} /> */}
-        <meshStandardMaterial color={towerColor} />
+        <meshStandardMaterial color={towerColor} roughness={0.4} />
       </mesh>
       <t.In>
         {hovered && (
