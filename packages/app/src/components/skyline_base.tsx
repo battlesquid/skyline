@@ -12,17 +12,6 @@ interface SkylineBaseProps {
     padding: number;
 }
 
-let font: Font | null = null;
-
-const loadFont = async () => {
-    if (font !== null) {
-        return font;
-    }
-    const loader = new FontLoader();
-    font = await loader.loadAsync("/Inter_Bold.json");
-    return font;
-}
-
 export function SkylineBase(props: SkylineBaseProps) {
     const font = useFont("/Inter_Bold.json");
     // const username = new TextGeometry(props.username, {

@@ -9,14 +9,6 @@ import { Skyline } from "./components/skyline";
 import tunnel from "tunnel-rat";
 export const t = tunnel();
 
-function LoginSidebar() {
-
-}
-
-function ControlsSidebar() {
-  return
-}
-
 export default function App() {
   const [name, setName] = useState("Battlesquid");
   const [year, setYear] = useState(new Date().getFullYear());
