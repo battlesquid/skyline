@@ -2,11 +2,10 @@ import { MeshProps } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import * as THREE from "three";
 
-import { t } from "../App";
 import { Card, Text } from "@mantine/core";
 import { ResultOf } from "gql.tada";
-import { ContributionQuery } from "../api/query";
-import { MeshTransmissionMaterial } from "@react-three/drei";
+import { ContributionQuery } from "../../api/query";
+import { t } from "../../App";
 
 interface ContributionTowerProps extends MeshProps {
   x: number;

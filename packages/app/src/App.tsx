@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useQuery } from "urql";
 import { ContributionQuery } from "./api/query";
 import "./App.css";
-import { Skyline } from "./components/skyline";
+import { Skyline } from "./components/three/skyline";
 
 import tunnel from "tunnel-rat";
-import { GenerateOptions, Sidebar } from "./components/sidebar";
+import { GenerateOptions, Sidebar } from "./components/ui/sidebar";
 export const t = tunnel();
 
 export default function App() {
@@ -60,7 +60,13 @@ export default function App() {
       }}
     >
       <AppShell.Navbar p="md">
-        <Sidebar ready={ready} onSubmit={setOpts} />
+        <Sidebar
+          ready={ready}
+          onSubmit={setOpts}
+          onExport={() => {
+
+          }}
+        />
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />

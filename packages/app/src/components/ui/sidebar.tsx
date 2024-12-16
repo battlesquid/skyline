@@ -1,4 +1,4 @@
-import { AppShell, Stack, TextInput, NumberInput, Button, Divider, Tooltip } from "@mantine/core";
+import { AppShell, Button, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
 import { useRef } from "react";
 
 export interface GenerateOptions {
@@ -9,18 +9,17 @@ export interface GenerateOptions {
 interface SidebarProps {
     ready: boolean;
     onSubmit(options: GenerateOptions): void;
+    onExport(): void;
 }
 
 export function Sidebar(props: SidebarProps) {
     const username = useRef<HTMLInputElement>(null!);
     const year = useRef<HTMLInputElement>(null!);
-    
+
     if (!props.ready) {
         return (
             <AppShell.Section h="100%">
-                <Stack gap={5}>
-                    <h2>skyline</h2>
-                </Stack>
+                <h2>skyline</h2>
                 <Button
                     component="a"
                     href={import.meta.env.PUBLIC_WORKER_URL}

@@ -16,6 +16,7 @@
     "@octokit/graphql": "^8.1.1",
     "@react-three/drei": "^9.119.0",
     "@react-three/fiber": "^8.17.10",
+    "@tabler/icons-react": "^3.26.0",
     "@urql/exchange-auth": "^2.2.0",
     "gql.tada": "^1.8.10",
     "react": "^18.3.1",
@@ -23,7 +24,8 @@
     "react-router": "^7.0.2",
     "three": "^0.169.0",
     "tunnel-rat": "^0.1.2",
-    "urql": "^4.2.1"
+    "urql": "^4.2.1",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.0",
