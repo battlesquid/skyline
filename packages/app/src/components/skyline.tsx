@@ -31,7 +31,7 @@ export function Skyline(props: SkylineProps) {
           )}
           <mesh position={[13, 0 - platform_height / 2, 1.5]}>
             <boxGeometry args={[length + padding, platform_height, width + padding]} />
-            {/* <meshStandardMaterial wireframe={true} /> */}
+            <meshStandardMaterial color={"#575757"} />
           </mesh>
           <Text3D
             font={"/Inter_Bold.json"}
@@ -41,7 +41,7 @@ export function Skyline(props: SkylineProps) {
             height={0.5}
           >
             {user}
-            <meshStandardMaterial color={"#302e86"} />
+            <meshStandardMaterial color={"#575757"} />
           </Text3D>
           <Text3D
             font={"/Inter_Bold.json"}
@@ -51,8 +51,8 @@ export function Skyline(props: SkylineProps) {
             height={0.5}
           >
             {year}
-            <meshStandardMaterial color={"#302e86"} />
-          </Text3D>/
+            <meshStandardMaterial color={"#575757"} />
+          </Text3D>
         </Bounds>
       </Stage>
       <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} />
