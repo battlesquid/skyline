@@ -1,7 +1,6 @@
 import { MeshProps } from "@react-three/fiber";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import * as THREE from "three";
-
 import { Card, Text } from "@mantine/core";
 import { ResultOf } from "gql.tada";
 import { ContributionQuery } from "../../api/query";
@@ -12,20 +11,22 @@ interface ContributionTowerProps extends MeshProps {
   y: number;
   height: number;
   size: number;
+  defaultColor: string;
+  showContributionColor: boolean;
   day: NonNullable<
     ResultOf<typeof ContributionQuery>["user"]
   >["contributionsCollection"]["contributionCalendar"]["weeks"][number]["contributionDays"][number];
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
-  const { x, y, height, day, size, ...rest } = props;
+  const { x, y, height, day, size, showContributionColor, defaultColor, ...rest } = props;
   const [hovered, hover] = useState(false);
   const [clicked, click] = useState(false);
-
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  // useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
-  const color = new THREE.Color(day.color);
+  const color = showContributionColor ?
+    new THREE.Color(day.color)
+    : new THREE.Color(defaultColor);
   const towerColor = hovered ? color.multiplyScalar(1.3) : color;
 
   return (

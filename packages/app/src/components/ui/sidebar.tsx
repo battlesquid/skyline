@@ -1,5 +1,6 @@
-import { AppShell, Button, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
-import { useRef } from "react";
+import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
+import { SkylineModelParameters } from "../../App";
+import { useState } from "react";
 
 export interface GenerateOptions {
     name: string;
@@ -8,15 +9,18 @@ export interface GenerateOptions {
 
 interface SidebarProps {
     ready: boolean;
-    onSubmit(options: GenerateOptions): void;
+    // onSubmit(options: GenerateOptions): void;
+    setParameters: React.Dispatch<React.SetStateAction<SkylineModelParameters>>;
+    parameters: SkylineModelParameters;
     onExport(): void;
 }
 
 export function Sidebar(props: SidebarProps) {
-    const username = useRef<HTMLInputElement>(null!);
-    const year = useRef<HTMLInputElement>(null!);
+    const { ready, parameters, setParameters, onExport } = props;
+    const [name, setName] = useState(parameters.name);
+    const [year, setYear] = useState(parameters.year);
 
-    if (!props.ready) {
+    if (!ready) {
         return (
             <AppShell.Section h="100%">
                 <h2>skyline</h2>
@@ -35,18 +39,65 @@ export function Sidebar(props: SidebarProps) {
                     <h2>skyline</h2>
                     {/* <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
         <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" /> */}
-                    <TextInput ref={username} label="Github Username" placeholder="Github Username" />
-                    <NumberInput ref={year} min={2015} max={new Date().getFullYear()} label="Year" placeholder="Year" />
+                    <TextInput
+                        label="Github Username"
+                        placeholder="Github Username"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+                    <NumberInput
+                        label="Year"
+                        placeholder="Year"
+                        min={2015}
+                        max={new Date().getFullYear()}
+                        stepHoldDelay={500}
+                        stepHoldInterval={100}
+                        value={year}
+                        onChange={value => setYear(parseInt(`${value}`))}
+                    />
                     <Button
                         fullWidth
                         onClick={() => {
-                            props.onSubmit({
-                                name: username.current.value.trim(),
-                                year: parseInt(year.current.value)
+                            setParameters({
+                                ...parameters,
+                                name,
+                                year
                             })
                         }}>
                         Generate
                     </Button>
+                    <Divider />
+                    <NumberInput
+                        label="Tower Size"
+                        placeholder="Tower Size"
+                        min={0.5}
+                        step={0.1}
+                        value={parameters.towerSize}
+                        onChange={(value) => {
+                            console.log(value)
+                            setParameters({ ...parameters, towerSize: parseInt(`${value}`) })
+                        }}
+                    />
+                    <NumberInput
+                        label="Tower Dampening"
+                        placeholder="Tower Dampening"
+                        min={1}
+                        allowDecimal={false}
+                        value={parameters.towerDampening}
+                        onChange={(value) => setParameters({ ...parameters, towerDampening: parseInt(`${value}`) })}
+                    />
+                    <Divider />
+                    <ColorInput
+                        label="Render Color"
+                        value={parameters.color}
+                        disabled={parameters.showContributionColor}
+                        onChange={(color) => setParameters({ ...parameters, color })}
+                    />
+                    <Checkbox
+                        label="Show Contribution Colors"
+                        checked={parameters.showContributionColor}
+                        onChange={() => setParameters({ ...parameters, showContributionColor: !parameters.showContributionColor })}
+                    />
                 </Stack>
             </AppShell.Section>
             <Divider mb={10} />
