@@ -11,21 +11,18 @@ interface ContributionTowerProps extends MeshProps {
   x: number;
   y: number;
   height: number;
+  size: number;
   day: NonNullable<
     ResultOf<typeof ContributionQuery>["user"]
   >["contributionsCollection"]["contributionCalendar"]["weeks"][number]["contributionDays"][number];
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
-  const { x, y, height, day, ...rest } = props;
-  // This reference will give us direct access to the THREE.Mesh object
-  const ref = useRef<THREE.Mesh>(null!);
-  // Hold state for hovered and clicked events
+  const { x, y, height, day, size, ...rest } = props;
   const [hovered, hover] = useState(false);
   const [clicked, click] = useState(false);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  // Rotate mesh every frame, this is outside of React without overhead
   // useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
   const color = new THREE.Color(day.color);
@@ -35,7 +32,6 @@ export function ContributionTower(props: ContributionTowerProps) {
     <>
       <mesh
         {...rest}
-        // ref={ref}
         position={[x, height / 2, y]}
         onClick={(event) => {
           event.stopPropagation();
@@ -59,8 +55,7 @@ export function ContributionTower(props: ContributionTowerProps) {
           hover(false);
         }}
       >
-        <boxGeometry args={[0.5, height, 0.5]} />
-        {/* <meshStandardMaterial color={hovered ? '#2e6c80' : '#4287f5'} /> */}
+        <boxGeometry args={[size, height, size]} />
         <meshStandardMaterial color={towerColor} roughness={0.4} />
       </mesh>
       <t.In>

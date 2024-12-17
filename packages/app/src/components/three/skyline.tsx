@@ -1,5 +1,5 @@
 import { useMantineTheme } from "@mantine/core";
-import { OrbitControls, Stage } from "@react-three/drei";
+import { Bounds, OrbitControls, Stage } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { ResultOf } from "gql.tada";
 import { ContributionQuery } from "../../api/query";
@@ -16,12 +16,16 @@ export function Skyline(props: SkylineProps) {
   const theme = useMantineTheme();
 
   return (
-    <Canvas style={{ backgroundColor: theme.colors.dark[8] }}>
+    <Canvas
+      style={{ backgroundColor: theme.colors.dark[8] }}
+      shadows
+      camera={{ position: [0, 0, 10], zoom: 2 }}
+    >
       <Stage>
-        {/* <Bounds fit clip observe margin={1.2}> */}
-        <SkylineModel user={user} year={year} weeks={weeks} />
+        <Bounds fit clip observe>
+          <SkylineModel user={user} year={year} weeks={weeks} />
+        </Bounds>
         <directionalLight color="#fff" position={[13, 100, 100]} />
-        {/* </Bounds> */}
       </Stage>
       <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} />
     </Canvas>
