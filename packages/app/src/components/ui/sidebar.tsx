@@ -35,7 +35,7 @@ export function Sidebar(props: SidebarProps) {
     return (
         <>
             <AppShell.Section h="100%">
-                <Stack gap={5}>
+                <Stack gap={10}>
                     <h2>skyline</h2>
                     {/* <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
         <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" /> */}
@@ -75,7 +75,7 @@ export function Sidebar(props: SidebarProps) {
                         value={parameters.towerSize}
                         onChange={(value) => {
                             console.log(value)
-                            setParameters({ ...parameters, towerSize: parseInt(`${value}`) })
+                            setParameters({ ...parameters, towerSize: parseFloat(`${value}`) })
                         }}
                     />
                     <NumberInput
