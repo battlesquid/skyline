@@ -1,6 +1,6 @@
 import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
 import { SkylineModelParameters } from "../App";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSceneStore } from "../scene";
 import { STLExporter } from "three/examples/jsm/Addons.js";
 
@@ -10,19 +10,30 @@ export interface GenerateOptions {
 }
 
 interface SidebarProps {
-    ready: boolean;
+    authenticated: boolean;
+    ok: boolean;
     setParameters: React.Dispatch<React.SetStateAction<SkylineModelParameters>>;
     parameters: SkylineModelParameters;
-    onExport(): void;
 }
 
 export function Sidebar(props: SidebarProps) {
-    const { ready, parameters, setParameters } = props;
+    const { authenticated, ok, parameters, setParameters } = props;
     const [name, setName] = useState(parameters.name);
     const [year, setYear] = useState(parameters.year);
+    const [modified, setModified] = useState(false);
     const { scene, dirty } = useSceneStore();
 
-    if (!ready) {
+    useEffect(() => {
+        setModified(false);
+    }, [ok]);
+
+    useEffect(() => {
+        if (!ok) {
+            setModified(true);
+        }
+    }, [name])
+
+    if (!authenticated) {
         return (
             <AppShell.Section h="100%">
                 <h2>skyline</h2>
@@ -46,6 +57,7 @@ export function Sidebar(props: SidebarProps) {
                         placeholder="Github Username"
                         value={name}
                         onChange={e => setName(e.target.value)}
+                        error={ok || modified ? "" : `Unable to find profile for "${name}".`}
                     />
                     <NumberInput
                         label="Year"

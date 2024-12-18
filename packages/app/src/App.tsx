@@ -35,6 +35,13 @@ export default function App() {
     towerDampening: 4
   });
 
+  const [fallback, setFallback] = useState<Pick<SkylineModelParameters, "name" | "year">>({
+    name: "Battlesquid",
+    year: new Date().getFullYear()
+  });
+
+  const [requestOk, setRequestOk] = useState(true);
+
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
@@ -52,13 +59,30 @@ export default function App() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    setRequestOk(true);
     setReady(
       localStorage.getItem("token") !== null
       && !result.fetching
     )
   }, [result.fetching]);
 
-  const appContent = ready
+  useEffect(() => {
+    if (result.data?.user) {
+      setFallback({
+        name: parameters.name,
+        year: parameters.year
+      });
+    } else {
+      setRequestOk(false);
+      setParameters({
+        ...parameters,
+        name: fallback.name,
+        year: fallback.year
+      })
+    }
+  }, [result.data]);
+
+  const content = ready
     ? (
       <>
         <Skyline
@@ -84,17 +108,15 @@ export default function App() {
     >
       <AppShell.Navbar p="md">
         <Sidebar
-          ready={ready}
+          authenticated={localStorage.getItem("token") !== null}
+          ok={requestOk}
           parameters={parameters}
           setParameters={setParameters}
-          onExport={() => {
-
-          }}
         />
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        {appContent}
+        {content}
         <t.Out />
       </AppShell.Main>
     </AppShell >
