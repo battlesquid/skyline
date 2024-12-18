@@ -21,7 +21,7 @@ export function Skyline(props: SkylineModelProps) {
       <spotLight position={[10, 100, 40]} angle={0.55} penumbra={0.1} decay={0.4} intensity={Math.PI} />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
       <directionalLight color="#fff" position={[13, 100, 100]} />
-      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} />
+      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} autoRotate autoRotateSpeed={0.5} />
     </Canvas>
   );
 }

@@ -5,8 +5,8 @@ import tunnel from "tunnel-rat";
 import { useQuery } from "urql";
 import { ContributionQuery } from "./api/query";
 import "./App.css";
-import { Skyline } from "./components/three/skyline";
-import { Sidebar } from "./components/ui/sidebar";
+import { Skyline } from "./components/skyline";
+import { Sidebar } from "./components/sidebar";
 
 export const t = tunnel();
 

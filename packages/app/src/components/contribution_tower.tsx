@@ -3,8 +3,8 @@ import { useState } from "react";
 import * as THREE from "three";
 import { Card, Text } from "@mantine/core";
 import { ResultOf } from "gql.tada";
-import { ContributionQuery } from "../../api/query";
-import { t } from "../../App";
+import { ContributionQuery } from "../api/query";
+import { t } from "../App";
 
 interface ContributionTowerProps extends MeshProps {
   x: number;

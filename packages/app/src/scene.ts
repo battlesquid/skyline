@@ -3,10 +3,14 @@ import { create } from "zustand";
 
 export interface SceneStore {
     scene: Scene | null;
+    dirty: boolean;
     setScene(scene: Scene): void;
+    setDirty(dirty: boolean): void;
 }
 
 export const useSceneStore = create<SceneStore>(set => ({
     scene: null,
-    setScene: (scene) => set((state) => ({ scene }))
+    dirty: false,
+    setScene: (scene) => set(_ => ({ scene })),
+    setDirty: (dirty) => set(_ => ({ dirty }))
 }));

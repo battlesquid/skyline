@@ -1,11 +1,10 @@
 import { Center, Text3D, useBounds } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { ResultOf } from "gql.tada";
-import { useEffect, useRef, useState } from "react";
-import { Group } from "three";
-import { ContributionQuery } from "../../api/query";
-import { SkylineModelParameters } from "../../App";
-import { useSceneStore } from "../../scene";
+import { useEffect } from "react";
+import { ContributionQuery } from "../api/query";
+import { SkylineModelParameters } from "../App";
+import { useSceneStore } from "../scene";
 import { ContributionTower } from "./contribution_tower";
 
 export interface SkylineModelProps {
@@ -22,45 +21,28 @@ export function SkylineModel(props: SkylineModelProps) {
     const scene = useThree((state) => state.scene);
     const sceneStore = useSceneStore();
 
-    const [usingControls, setUsingControls] = useState(false);
-    const group = useRef<Group>(null!);
-
-
     const bounds = useBounds();
     let boundsTimeout: NodeJS.Timeout | undefined = undefined;
     useEffect(() => {
         if (boundsTimeout !== undefined) {
             clearTimeout(boundsTimeout)
         }
+        sceneStore.setDirty(true);
         boundsTimeout = setTimeout(() => {
+            sceneStore.setScene(scene.clone());
             bounds.refresh().clip().fit();
-        }, 2000);
+            sceneStore.setDirty(false);
+        }, 1500);
 
         return () => {
             if (boundsTimeout !== undefined) {
                 clearTimeout(boundsTimeout)
             }
         }
-    }, [props.parameters.towerSize, props.parameters.towerDampening])
-
-    useFrame((state, delta) => (group.current.rotation.y += 0.001))
-    // useEffect(() => {
-    //     setInterval(() => {
-    //         sceneStore.setScene(scene.clone());
-    //     }, 1000)
-    // }, [])
-    // useEffect(() => {
-
-    //     setInterval(() => {
-    //         const exporter = new STLExporter();
-    //         const clone = scene.clone();
-    //         clone.rotation.set(Math.PI / 2, 0, 0);
-    //         clone.updateMatrixWorld();
-    //     }, 1000 * 5);
-    // }, [])
+    }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding]);
 
     return (
-        <group ref={group}>
+        <group>
             {weeks.map((week, i) =>
                 week.contributionDays.map((day, j) => (
                     <ContributionTower

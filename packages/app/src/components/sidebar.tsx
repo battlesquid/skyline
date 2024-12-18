@@ -1,6 +1,8 @@
 import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
-import { SkylineModelParameters } from "../../App";
+import { SkylineModelParameters } from "../App";
 import { useState } from "react";
+import { useSceneStore } from "../scene";
+import { STLExporter } from "three/examples/jsm/Addons.js";
 
 export interface GenerateOptions {
     name: string;
@@ -9,16 +11,16 @@ export interface GenerateOptions {
 
 interface SidebarProps {
     ready: boolean;
-    // onSubmit(options: GenerateOptions): void;
     setParameters: React.Dispatch<React.SetStateAction<SkylineModelParameters>>;
     parameters: SkylineModelParameters;
     onExport(): void;
 }
 
 export function Sidebar(props: SidebarProps) {
-    const { ready, parameters, setParameters, onExport } = props;
+    const { ready, parameters, setParameters } = props;
     const [name, setName] = useState(parameters.name);
     const [year, setYear] = useState(parameters.year);
+    const { scene, dirty } = useSceneStore();
 
     if (!ready) {
         return (
@@ -57,13 +59,8 @@ export function Sidebar(props: SidebarProps) {
                     />
                     <Button
                         fullWidth
-                        onClick={() => {
-                            setParameters({
-                                ...parameters,
-                                name,
-                                year
-                            })
-                        }}>
+                        onClick={() => setParameters({ ...parameters, name, year })}
+                    >
                         Generate
                     </Button>
                     <Divider />
@@ -83,6 +80,14 @@ export function Sidebar(props: SidebarProps) {
                         value={parameters.towerDampening}
                         onChange={(value) => setParameters({ ...parameters, towerDampening: parseInt(`${value}`) })}
                     />
+                    <NumberInput
+                        label="Base Padding"
+                        placeholder="Base Padding"
+                        min={0}
+                        step={0.5}
+                        value={parameters.padding}
+                        onChange={(value) => setParameters({ ...parameters, padding: parseFloat(`${value}`) })}
+                    />
                     <Divider />
                     <ColorInput
                         label="Render Color"
@@ -99,9 +104,26 @@ export function Sidebar(props: SidebarProps) {
             </AppShell.Section>
             <Divider mb={10} />
             <AppShell.Section>
-                <Tooltip label="Work In Progress">
-                    <Button fullWidth>Export</Button>
-                </Tooltip>
+                <Button
+                    disabled={scene === null || dirty}
+                    fullWidth
+                    onClick={() => {
+                        if (scene === null) {
+                            return;
+                        }
+                        const clone = scene.clone();
+                        clone.rotation.set(Math.PI / 2, 0, 0);
+                        clone.updateMatrixWorld();
+                        const exporter = new STLExporter();
+                        const data = exporter.parse(clone, { binary: false });
+                        const link = document.createElement("a");
+                        link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
+                        link.download = `${parameters.name}_${parameters.year}_contribution.stl`;
+                        link.click();
+                    }}
+                >
+                    Export
+                </Button>
             </AppShell.Section>
         </>
     )
