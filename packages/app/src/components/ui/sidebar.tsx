@@ -73,10 +73,7 @@ export function Sidebar(props: SidebarProps) {
                         min={0.5}
                         step={0.1}
                         value={parameters.towerSize}
-                        onChange={(value) => {
-                            console.log(value)
-                            setParameters({ ...parameters, towerSize: parseFloat(`${value}`) })
-                        }}
+                        onChange={(value) => setParameters({ ...parameters, towerSize: parseFloat(`${value}`) })}
                     />
                     <NumberInput
                         label="Tower Dampening"
