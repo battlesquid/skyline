@@ -120,6 +120,7 @@ export function Sidebar(props: SidebarProps) {
                             }
                             data={Object.keys(fonts)}
                             defaultValue={DEFAULT_FONT_SELECTION}
+                            allowDeselect={false}
                             onChange={value => {
                                 if (value === null) {
                                     return;
