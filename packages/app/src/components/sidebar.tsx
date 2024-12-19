@@ -1,4 +1,4 @@
-import { ActionIcon, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, NumberInput, Select, Stack, TextInput } from "@mantine/core";
+import { ActionIcon, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, NumberInput, ScrollArea, Select, Stack, TextInput } from "@mantine/core";
 import { IconFolder } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { SkylineModelParameters } from "../parameters";
@@ -47,11 +47,12 @@ export function Sidebar(props: SidebarProps) {
     }
     return (
         <>
-            <AppShell.Section h="100%">
+            <h2>skyline</h2>
+            <ScrollArea
+                style={{ height: "calc(100vh)" }}
+                offsetScrollbars={true}
+            >
                 <Stack gap={10}>
-                    <h2>skyline</h2>
-                    {/* <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-        <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" /> */}
                     <TextInput
                         label="Github Username"
                         placeholder="Github Username"
@@ -102,6 +103,7 @@ export function Sidebar(props: SidebarProps) {
                     />
                     <div style={{ display: "flex", columnGap: "0.5rem" }}>
                         <Select
+                            style={{ flex: 1 }}
                             label="Font"
                             data={Object.keys(fonts)}
                             defaultValue={DEFAULT_FONT_SELECTION}
@@ -147,31 +149,29 @@ export function Sidebar(props: SidebarProps) {
                         checked={parameters.showContributionColor}
                         onChange={() => setParameters({ ...parameters, showContributionColor: !parameters.showContributionColor })}
                     />
+                    <Divider />
+                    <Button
+                        disabled={scene === null || dirty}
+                        fullWidth
+                        onClick={() => {
+                            if (scene === null) {
+                                return;
+                            }
+                            const clone = scene.clone();
+                            clone.rotation.set(Math.PI / 2, 0, 0);
+                            clone.updateMatrixWorld();
+                            const exporter = new STLExporter();
+                            const data = exporter.parse(clone, { binary: false });
+                            const link = document.createElement("a");
+                            link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
+                            link.download = `${parameters.name}_${parameters.year}_contribution.stl`;
+                            link.click();
+                        }}
+                    >
+                        Export
+                    </Button>
                 </Stack>
-            </AppShell.Section>
-            <Divider mb={10} />
-            <AppShell.Section>
-                <Button
-                    disabled={scene === null || dirty}
-                    fullWidth
-                    onClick={() => {
-                        if (scene === null) {
-                            return;
-                        }
-                        const clone = scene.clone();
-                        clone.rotation.set(Math.PI / 2, 0, 0);
-                        clone.updateMatrixWorld();
-                        const exporter = new STLExporter();
-                        const data = exporter.parse(clone, { binary: false });
-                        const link = document.createElement("a");
-                        link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-                        link.download = `${parameters.name}_${parameters.year}_contribution.stl`;
-                        link.click();
-                    }}
-                >
-                    Export
-                </Button>
-            </AppShell.Section>
+            </ScrollArea>
         </>
     )
 }

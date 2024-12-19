@@ -38,7 +38,7 @@ export function SkylineModel(props: SkylineModelProps) {
                 clearTimeout(boundsTimeout)
             }
         }
-    }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding]);
+    }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding, props.parameters.font]);
 
     return (
         <group>
