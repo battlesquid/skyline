@@ -1,14 +1,20 @@
 import { Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 import { ContributionWeek, ContributionWeeks } from "../api/types";
+import { Mesh } from "three";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
     weeks: ContributionWeeks;
+}
+
+type Dimensions = {
+    width: number;
+    height: number;
 }
 
 export function SkylineModel(props: SkylineModelProps) {
@@ -40,6 +46,25 @@ export function SkylineModel(props: SkylineModelProps) {
         }
     }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding, props.parameters.font]);
 
+    const yearRef = useRef<Mesh>(null!);
+    const nameRef = useRef<Mesh>(null!);
+
+    const getDimensions = (mesh: Mesh): Dimensions => {
+        mesh.geometry.computeBoundingBox();
+        return {
+            width: mesh.geometry.boundingBox!.max.x - mesh.geometry.boundingBox!.min.x,
+            height: mesh.geometry.boundingBox!.max.y - mesh.geometry.boundingBox!.min.y
+        }
+    }
+
+    const [yearDimensions, setYearDimensions] = useState<Dimensions>({ width: 0, height: 0 })
+    const [nameDimensions, setNameDimensions] = useState<Dimensions>({ width: 0, height: 0 })
+    useEffect(() => {
+        console.log(getDimensions(yearRef.current))
+        setNameDimensions(getDimensions(nameRef.current));
+        setYearDimensions(getDimensions(yearRef.current));
+    }, [parameters.name, parameters.year, parameters.font, parameters.towerSize])
+
     const calculateFirstDayOffset = (week: ContributionWeek, weekNo: number): number => {
         return weekNo === 0
             ? new Date(week.firstDay).getUTCDay()
@@ -67,8 +92,9 @@ export function SkylineModel(props: SkylineModelProps) {
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </mesh>
             <Text3D
+                ref={nameRef}
                 font={parameters.font}
-                position={[-length / 2 + 1, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
+                position={[-length / 2 + 1, -platformHeight / 2 - yearDimensions.height / 2, (width / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
@@ -76,8 +102,9 @@ export function SkylineModel(props: SkylineModelProps) {
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </Text3D>
             <Text3D
+                ref={yearRef}
                 font={parameters.font}
-                position={[length / 2 - 4, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
+                position={[length / 2 - yearDimensions.width - 1, -platformHeight / 2 - yearDimensions.height / 2, (width / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
