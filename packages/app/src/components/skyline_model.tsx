@@ -1,11 +1,11 @@
-import { Center, Text3D, useBounds } from "@react-three/drei";
+import { Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { ResultOf } from "gql.tada";
 import { useEffect } from "react";
 import { ContributionQuery } from "../api/query";
+import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../scene";
 import { ContributionTower } from "./contribution_tower";
-import { defaults, SkylineModelParameters } from "../parameters";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;

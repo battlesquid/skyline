@@ -3,7 +3,6 @@ import { Bounds, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { SkylineModel, SkylineModelProps } from "./skyline_model";
 
-
 export function Skyline(props: SkylineModelProps) {
   const { parameters, weeks } = props;
   const theme = useMantineTheme();

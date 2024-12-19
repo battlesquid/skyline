@@ -1,8 +1,8 @@
-import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
+import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { useSceneStore } from "../scene";
 import { STLExporter } from "three/examples/jsm/Addons.js";
 import { SkylineModelParameters } from "../parameters";
+import { useSceneStore } from "../scene";
 
 interface SidebarProps {
     authenticated: boolean;
