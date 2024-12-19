@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
-import { ContributionWeeks } from "../api/types";
+import { ContributionWeek, ContributionWeeks } from "../api/types";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
@@ -40,6 +40,12 @@ export function SkylineModel(props: SkylineModelProps) {
         }
     }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding, props.parameters.font]);
 
+    const calculateFirstDayOffset = (week: ContributionWeek, weekNo: number): number => {
+        return weekNo === 0
+            ? new Date(week.firstDay).getUTCDay()
+            : 0;
+    }
+
     return (
         <group>
             {weeks.map((week, i) =>
@@ -48,7 +54,7 @@ export function SkylineModel(props: SkylineModelProps) {
                         key={day.date.toString()}
                         day={day}
                         x={i * parameters.towerSize - length / 2 + parameters.towerSize / 2}
-                        y={j * parameters.towerSize - width / 2 + parameters.towerSize / 2}
+                        y={(j + calculateFirstDayOffset(week, i)) * parameters.towerSize - width / 2 + parameters.towerSize / 2}
                         height={day.contributionCount * parameters.towerSize / parameters.towerDampening + parameters.towerSize / parameters.towerDampening}
                         size={parameters.towerSize}
                         defaultColor={parameters.color}

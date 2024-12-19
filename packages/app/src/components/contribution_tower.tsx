@@ -1,9 +1,8 @@
+import { Card, Text } from "@mantine/core";
 import { MeshProps } from "@react-three/fiber";
 import { useState } from "react";
 import * as THREE from "three";
-import { Card, Text } from "@mantine/core";
-import { ResultOf } from "gql.tada";
-import { ContributionQuery } from "../api/query";
+import { ContributionDay } from "../api/types";
 import { t } from "../App";
 
 interface ContributionTowerProps extends MeshProps {
@@ -13,9 +12,7 @@ interface ContributionTowerProps extends MeshProps {
   size: number;
   defaultColor: string;
   showContributionColor: boolean;
-  day: NonNullable<
-    ResultOf<typeof ContributionQuery>["user"]
-  >["contributionsCollection"]["contributionCalendar"]["weeks"][number]["contributionDays"][number];
+  day: ContributionDay;
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
@@ -36,7 +33,6 @@ export function ContributionTower(props: ContributionTowerProps) {
         position={[x, height / 2, y]}
         onClick={(event) => {
           event.stopPropagation();
-          console.log(x, y);
           click(!clicked);
         }}
         onPointerMove={(event) => {

@@ -28,7 +28,6 @@ export function Sidebar(props: SidebarProps) {
 
     useEffect(() => {
         if (!ok) {
-            console.log(ok)
             setModified(true);
         }
     }, [name]);
