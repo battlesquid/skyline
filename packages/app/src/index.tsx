@@ -5,6 +5,9 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "urql";
 import { client } from "./api/client";
 import App from "./App";
+import { preloadDefaultFonts } from "./stores";
+
+preloadDefaultFonts();
 
 const rootEl = document.getElementById("root");
 if (rootEl) {

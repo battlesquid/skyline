@@ -36,7 +36,7 @@ export default function App() {
   useEffect(() => {
     if (result.data?.user) {
       setWeeks(result.data.user.contributionsCollection.contributionCalendar.weeks);
-    } else {
+    } else if (!result.fetching) {
       setRequestOk(false);
     }
   }, [result.data]);

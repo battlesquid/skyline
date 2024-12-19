@@ -1,8 +1,9 @@
-import { AppShell, Button, Checkbox, ColorInput, Divider, FileInput, Group, NumberInput, Select, Stack, TextInput } from "@mantine/core";
+import { ActionIcon, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, NumberInput, Select, Stack, TextInput } from "@mantine/core";
+import { IconFolder } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { STLExporter } from "three/examples/jsm/Addons.js";
 import { SkylineModelParameters } from "../parameters";
-import { useSceneStore } from "../stores";
+import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
+import { STLExporter } from "three-stdlib";
 
 interface SidebarProps {
     authenticated: boolean;
@@ -16,7 +17,10 @@ export function Sidebar(props: SidebarProps) {
     const [name, setName] = useState(parameters.name);
     const [year, setYear] = useState(parameters.year);
     const [modified, setModified] = useState(false);
+    const [fontLoadFailed, setFontLoadFailed] = useState(false);
     const { scene, dirty } = useSceneStore();
+    const fonts = useFontStore(state => state.fonts);
+    const addFont = useFontStore(state => state.addFont);
 
     useEffect(() => {
         setModified(false);
@@ -24,9 +28,10 @@ export function Sidebar(props: SidebarProps) {
 
     useEffect(() => {
         if (!ok) {
+            console.log(ok)
             setModified(true);
         }
-    }, [name])
+    }, [name]);
 
     if (!authenticated) {
         return (
@@ -95,14 +100,41 @@ export function Sidebar(props: SidebarProps) {
                         value={parameters.padding}
                         onChange={(value) => setParameters({ ...parameters, padding: parseFloat(`${value}`) })}
                     />
-                    <Group>
+                    <div style={{ display: "flex", columnGap: "0.5rem" }}>
                         <Select
                             label="Font"
-                            comboboxProps={{ width: "100%" }}
+                            data={Object.keys(fonts)}
+                            defaultValue={DEFAULT_FONT_SELECTION}
+                            onChange={value => {
+                                if (value === null) {
+                                    return;
+                                }
+                                setParameters({ ...parameters, font: fonts[value] });
+                            }}
+                            error={fontLoadFailed ? "Unable to load font" : ""}
                         />
-
-                        <FileInput label="​"></FileInput>
-                    </Group>
+                        <Stack gap={0}>
+                            <wbr />
+                            <FileButton
+                                onChange={async (file) => {
+                                    setFontLoadFailed(false);
+                                    if (file === null) {
+                                        return;
+                                    }
+                                    const name = file.name.split(".")[0];
+                                    const data = await file.text();
+                                    try {
+                                        setFontLoadFailed(!addFont(name, JSON.parse(data)));
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }}
+                                accept="application/json"
+                            >
+                                {(props) => <ActionIcon size="input-sm" {...props}><IconFolder /></ActionIcon>}
+                            </FileButton>
+                        </Stack>
+                    </div>
                     <Divider />
                     <ColorInput
                         label="Render Color"

@@ -56,14 +56,13 @@ export function SkylineModel(props: SkylineModelProps) {
                     />
                 ))
             )}
-            <mesh position={[0, 0 - platformHeight / 2, 0]}>
+            <mesh position={[0, -platformHeight / 2, 0]}>
                 <boxGeometry args={[length + parameters.padding * 2, platformHeight, width + parameters.padding * 2]} />
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </mesh>
             <Text3D
                 font={parameters.font}
-                position={[0 - length / 2 + 1, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
-                letterSpacing={-0.1}
+                position={[-length / 2 + 1, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
@@ -73,7 +72,6 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 font={parameters.font}
                 position={[length / 2 - 4, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
-                letterSpacing={-0.1}
                 height={parameters.textDepth}
                 size={textSize}
             >

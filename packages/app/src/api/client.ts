@@ -1,8 +1,9 @@
 import { authExchange } from "@urql/exchange-auth";
 import { cacheExchange, Client, fetchExchange } from "urql";
+import { getToken, setToken } from "../storage";
 
-const getToken = async (): Promise<string | null> => {
-  const token = localStorage.getItem("token");
+const resolveToken = async (): Promise<string | null> => {
+  const token = getToken();
   if (token !== null) {
     return token;
   }
@@ -32,7 +33,7 @@ const getToken = async (): Promise<string | null> => {
     return null;
   }
 
-  localStorage.setItem("token", result.token)
+  setToken(result.token);
 
   return result.token;
 }
@@ -42,7 +43,7 @@ export const client = new Client({
   exchanges: [
     cacheExchange,
     authExchange(async utils => {
-      const token = await getToken();
+      const token = await resolveToken();
       return {
         addAuthToOperation(operation) {
           if (!token) {
@@ -53,7 +54,7 @@ export const client = new Client({
           })
         },
         didAuthError(error, operation) {
-          return localStorage.getItem("token") === null;
+          return getToken() === null;
         },
         async refreshAuth() {
 

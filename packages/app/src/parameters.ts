@@ -1,9 +1,11 @@
+import { FontData } from "@react-three/drei";
+
 export interface SkylineModelParameters {
     name: string;
     year: number;
     towerSize: number;
     towerDampening: number;
-    font: string;
+    font: string | FontData;
     padding: number;
     textDepth: number;
     color: string;
