@@ -7,44 +7,15 @@ import { ContributionQuery } from "./api/query";
 import "./App.css";
 import { Skyline } from "./components/skyline";
 import { Sidebar } from "./components/sidebar";
+import { defaults, SkylineModelParameters } from "./parameters";
+import { ContributionWeeks } from "./api/types";
 
 export const t = tunnel();
 
-export interface SkylineModelParameters {
-  name: string;
-  year: number;
-  towerSize: number;
-  towerDampening: number;
-  font: string;
-  padding: number;
-  textDepth: number;
-  color: string;
-  showContributionColor: boolean;
-}
-
 export default function App() {
-  const [parameters, setParameters] = useState<SkylineModelParameters>({
-    name: "Battlesquid",
-    year: new Date().getFullYear(),
-    color: "#575757",
-    font: "/Inter_Bold.json",
-    showContributionColor: false,
-    padding: 0.5,
-    textDepth: 0.25,
-    towerSize: 0.6,
-    towerDampening: 4
-  });
-
-  const [fallback, setFallback] = useState<Pick<SkylineModelParameters, "name" | "year">>({
-    name: "Battlesquid",
-    year: new Date().getFullYear()
-  });
-
+  const [parameters, setParameters] = useState<SkylineModelParameters>(defaults);
+  const [weeks, setWeeks] = useState<ContributionWeeks>([]);
   const [requestOk, setRequestOk] = useState(true);
-
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-
   const [result] = useQuery({
     query: ContributionQuery,
     variables: {
@@ -53,48 +24,22 @@ export default function App() {
       end: `${parameters.year}-12-31T00:00:00Z`,
     },
   });
-
+  
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const theme = useMantineTheme();
-
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setRequestOk(true);
-    setReady(
-      localStorage.getItem("token") !== null
-      && !result.fetching
-    )
   }, [result.fetching]);
 
   useEffect(() => {
     if (result.data?.user) {
-      setFallback({
-        name: parameters.name,
-        year: parameters.year
-      });
+      setWeeks(result.data.user.contributionsCollection.contributionCalendar.weeks);
     } else {
       setRequestOk(false);
-      setParameters({
-        ...parameters,
-        name: fallback.name,
-        year: fallback.year
-      })
     }
   }, [result.data]);
-
-  const content = ready
-    ? (
-      <>
-        <Skyline
-          parameters={parameters}
-          weeks={result.data!.user!.contributionsCollection.contributionCalendar.weeks}
-        />
-        <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
-      </>
-    )
-    : (
-      <></>
-    )
 
   return (
     <AppShell
@@ -116,7 +61,11 @@ export default function App() {
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        {content}
+        <Skyline
+          parameters={parameters}
+          weeks={weeks}
+        />
+        <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
         <t.Out />
       </AppShell.Main>
     </AppShell >

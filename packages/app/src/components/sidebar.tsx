@@ -1,13 +1,8 @@
 import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput, Tooltip } from "@mantine/core";
-import { SkylineModelParameters } from "../App";
 import { useEffect, useState } from "react";
 import { useSceneStore } from "../scene";
 import { STLExporter } from "three/examples/jsm/Addons.js";
-
-export interface GenerateOptions {
-    name: string;
-    year: number;
-}
+import { SkylineModelParameters } from "../parameters";
 
 interface SidebarProps {
     authenticated: boolean;

@@ -3,9 +3,9 @@ import { useThree } from "@react-three/fiber";
 import { ResultOf } from "gql.tada";
 import { useEffect } from "react";
 import { ContributionQuery } from "../api/query";
-import { SkylineModelParameters } from "../App";
 import { useSceneStore } from "../scene";
 import { ContributionTower } from "./contribution_tower";
+import { defaults, SkylineModelParameters } from "../parameters";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
@@ -59,7 +59,7 @@ export function SkylineModel(props: SkylineModelProps) {
             )}
             <mesh position={[0, 0 - platformHeight / 2, 0]}>
                 <boxGeometry args={[length + parameters.padding * 2, platformHeight, width + parameters.padding * 2]} />
-                <meshStandardMaterial color={parameters.color} />
+                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </mesh>
             <Text3D
                 font={parameters.font}
@@ -69,20 +69,18 @@ export function SkylineModel(props: SkylineModelProps) {
                 size={textSize}
             >
                 {parameters.name}
-                <meshStandardMaterial color={parameters.color} />
+                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </Text3D>
-            <Center disableZ disableY>
-                <Text3D
-                    font={parameters.font}
-                    position={[length / 2 - 4, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
-                    letterSpacing={-0.1}
-                    height={parameters.textDepth}
-                    size={textSize}
-                >
-                    {parameters.year}
-                    <meshStandardMaterial color={parameters.color} />
-                </Text3D>
-            </Center>
+            <Text3D
+                font={parameters.font}
+                position={[length / 2 - 4, -platformHeight + textSize / 2, (width / 2) + parameters.padding]}
+                letterSpacing={-0.1}
+                height={parameters.textDepth}
+                size={textSize}
+            >
+                {parameters.year}
+                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+            </Text3D>
         </group>
     )
 } 
