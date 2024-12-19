@@ -1,5 +1,5 @@
-import { ActionIcon, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, NumberInput, ScrollArea, Select, Stack, TextInput } from "@mantine/core";
-import { IconFolder } from "@tabler/icons-react";
+import { ActionIcon, Anchor, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
+import { IconFolder, IconHelp, IconQuestionMark } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { SkylineModelParameters } from "../parameters";
 import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
@@ -103,7 +103,21 @@ export function Sidebar(props: SidebarProps) {
                     <div style={{ display: "flex", columnGap: "0.5rem" }}>
                         <Select
                             style={{ flex: 1 }}
-                            label="Font"
+                            label={
+                                <Group gap={5}>
+                                    Font
+                                    <HoverCard>
+                                        <HoverCard.Target>
+                                            <ThemeIcon size={16} radius={"lg"} variant="light">
+                                                <IconHelp size={16} />
+                                            </ThemeIcon>
+                                        </HoverCard.Target>
+                                        <HoverCard.Dropdown>
+                                            <Text size="sm">Must be a valid <Anchor href="https://gero3.github.io/facetype.js/" target="_blank">typeface.js</Anchor> font.</Text>
+                                        </HoverCard.Dropdown>
+                                    </HoverCard>
+                                </Group>
+                            }
                             data={Object.keys(fonts)}
                             defaultValue={DEFAULT_FONT_SELECTION}
                             onChange={value => {
