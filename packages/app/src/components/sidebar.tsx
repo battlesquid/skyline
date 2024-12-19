@@ -2,7 +2,7 @@ import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, Te
 import { useEffect, useState } from "react";
 import { STLExporter } from "three/examples/jsm/Addons.js";
 import { SkylineModelParameters } from "../parameters";
-import { useSceneStore } from "../scene";
+import { useSceneStore } from "../stores";
 
 interface SidebarProps {
     authenticated: boolean;

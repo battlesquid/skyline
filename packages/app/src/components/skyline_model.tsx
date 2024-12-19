@@ -4,7 +4,7 @@ import { ResultOf } from "gql.tada";
 import { useEffect } from "react";
 import { ContributionQuery } from "../api/query";
 import { defaults, SkylineModelParameters } from "../parameters";
-import { useSceneStore } from "../scene";
+import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 
 export interface SkylineModelProps {
