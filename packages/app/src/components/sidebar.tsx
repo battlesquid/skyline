@@ -1,4 +1,4 @@
-import { AppShell, Button, Checkbox, ColorInput, Divider, NumberInput, Stack, TextInput } from "@mantine/core";
+import { AppShell, Button, Checkbox, ColorInput, Divider, FileInput, Group, NumberInput, Select, Stack, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { STLExporter } from "three/examples/jsm/Addons.js";
 import { SkylineModelParameters } from "../parameters";
@@ -95,6 +95,14 @@ export function Sidebar(props: SidebarProps) {
                         value={parameters.padding}
                         onChange={(value) => setParameters({ ...parameters, padding: parseFloat(`${value}`) })}
                     />
+                    <Group>
+                        <Select
+                            label="Font"
+                            comboboxProps={{ width: "100%" }}
+                        />
+
+                        <FileInput label="​"></FileInput>
+                    </Group>
                     <Divider />
                     <ColorInput
                         label="Render Color"

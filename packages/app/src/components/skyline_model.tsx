@@ -1,15 +1,14 @@
 import { Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { ResultOf } from "gql.tada";
 import { useEffect } from "react";
-import { ContributionQuery } from "../api/query";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
+import { ContributionWeeks } from "../api/types";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
-    weeks: NonNullable<ResultOf<typeof ContributionQuery>["user"]>["contributionsCollection"]["contributionCalendar"]["weeks"];
+    weeks: ContributionWeeks;
 }
 
 export function SkylineModel(props: SkylineModelProps) {
