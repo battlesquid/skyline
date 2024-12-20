@@ -46,9 +46,6 @@ export function SkylineModel(props: SkylineModelProps) {
         }
     }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding, props.parameters.font]);
 
-    const yearRef = useRef<Mesh>(null!);
-    const nameRef = useRef<Mesh>(null!);
-
     const getDimensions = (mesh: Mesh): Dimensions => {
         mesh.geometry.computeBoundingBox();
         return {
@@ -57,10 +54,13 @@ export function SkylineModel(props: SkylineModelProps) {
         }
     }
 
-    const [yearDimensions, setYearDimensions] = useState<Dimensions>({ width: 0, height: 0 })
-    const [nameDimensions, setNameDimensions] = useState<Dimensions>({ width: 0, height: 0 })
+    const yearRef = useRef<Mesh>(null!);
+    const nameRef = useRef<Mesh>(null!);
+
+    const [yearDimensions, setYearDimensions] = useState<Dimensions>({ width: 0, height: 0 });
+    const [nameDimensions, setNameDimensions] = useState<Dimensions>({ width: 0, height: 0 });
+
     useEffect(() => {
-        console.log(getDimensions(yearRef.current))
         setNameDimensions(getDimensions(nameRef.current));
         setYearDimensions(getDimensions(yearRef.current));
     }, [parameters.name, parameters.year, parameters.font, parameters.towerSize])
@@ -94,7 +94,7 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 ref={nameRef}
                 font={parameters.font}
-                position={[-length / 2 + 1, -platformHeight / 2 - yearDimensions.height / 2, (width / 2) + parameters.padding]}
+                position={[-length / 2 + 1, -platformHeight / 2 - nameDimensions.height / 2, (width / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
