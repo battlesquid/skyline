@@ -17,10 +17,10 @@ export function Skyline(props: SkylineModelProps) {
         <SkylineModel parameters={parameters} weeks={weeks} />
       </Bounds>
       <ambientLight intensity={Math.PI / 2} />
-      <spotLight position={[10, 100, 40]} angle={0.55} penumbra={0.1} decay={0.4} intensity={Math.PI} />
-      <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-      <directionalLight color="#fff" position={[13, 100, 100]} />
-      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2.5} autoRotate autoRotateSpeed={0.5} />
+      <spotLight position={[0, 20, 50]} angle={0.50} penumbra={0.1} decay={0.4} intensity={Math.PI} />
+      <pointLight position={[0, 20, 0]} decay={0} intensity={Math.PI} />
+      <directionalLight color="#fff" position={[0, 10, -50]} />
+      <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
     </Canvas>
   );
 }

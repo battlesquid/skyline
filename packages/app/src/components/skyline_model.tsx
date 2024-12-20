@@ -48,6 +48,7 @@ export function SkylineModel(props: SkylineModelProps) {
 
     const getDimensions = (mesh: Mesh): Dimensions => {
         mesh.geometry.computeBoundingBox();
+        mesh.geometry.center();
         return {
             width: mesh.geometry.boundingBox!.max.x - mesh.geometry.boundingBox!.min.x,
             height: mesh.geometry.boundingBox!.max.y - mesh.geometry.boundingBox!.min.y
@@ -94,7 +95,7 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 ref={nameRef}
                 font={parameters.font}
-                position={[-length / 2 + 1, -platformHeight / 2 - nameDimensions.height / 2, (width / 2) + parameters.padding]}
+                position={[-length / 2 + nameDimensions.width / 2 + 1, -platformHeight / 2, (width / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
@@ -104,7 +105,7 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 ref={yearRef}
                 font={parameters.font}
-                position={[length / 2 - yearDimensions.width - 1, -platformHeight / 2 - yearDimensions.height / 2, (width / 2) + parameters.padding]}
+                position={[length / 2 - yearDimensions.width / 2 - 1, -platformHeight / 2, (width / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
