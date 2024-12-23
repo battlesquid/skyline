@@ -1,11 +1,12 @@
-import { Text3D, useBounds } from "@react-three/drei";
+import { AccumulativeShadows, Environment, Grid, MeshReflectorMaterial, RandomizedLight, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { defaults, SkylineModelParameters } from "../parameters";
-import { useSceneStore } from "../stores";
+import { useModelStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 import { ContributionWeek, ContributionWeeks } from "../api/types";
-import { Mesh } from "three";
+import { Group, Mesh } from "three";
+import { useMantineTheme } from "@mantine/core";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
@@ -23,8 +24,10 @@ export function SkylineModel(props: SkylineModelProps) {
     const width = 7 * parameters.towerSize;
     const platformHeight = parameters.towerSize * 3;
     const textSize = platformHeight / 2;
-    const scene = useThree((state) => state.scene);
-    const sceneStore = useSceneStore();
+    const model = useRef<Group>(null!);
+    const modelStore = useModelStore();
+
+    const theme = useMantineTheme();
 
     const bounds = useBounds();
     let boundsTimeout: NodeJS.Timeout | undefined = undefined;
@@ -32,11 +35,11 @@ export function SkylineModel(props: SkylineModelProps) {
         if (boundsTimeout !== undefined) {
             clearTimeout(boundsTimeout)
         }
-        sceneStore.setDirty(true);
+        modelStore.setDirty(true);
         boundsTimeout = setTimeout(() => {
-            sceneStore.setScene(scene.clone());
-            bounds.refresh().clip().fit();
-            sceneStore.setDirty(false);
+            modelStore.setModel(model.current);
+            bounds.refresh(model.current).clip().fit();
+            modelStore.setDirty(false);
         }, 1500);
 
         return () => {
@@ -73,45 +76,78 @@ export function SkylineModel(props: SkylineModelProps) {
     }
 
     return (
-        <group>
-            {weeks.map((week, i) =>
-                week.contributionDays.map((day, j) => (
-                    <ContributionTower
-                        key={day.date.toString()}
-                        day={day}
-                        x={i * parameters.towerSize - length / 2 + parameters.towerSize / 2}
-                        y={(j + calculateFirstDayOffset(week, i)) * parameters.towerSize - width / 2 + parameters.towerSize / 2}
-                        height={day.contributionCount * parameters.towerSize / parameters.towerDampening + parameters.towerSize / parameters.towerDampening}
-                        size={parameters.towerSize}
-                        defaultColor={parameters.color}
-                        showContributionColor={parameters.showContributionColor}
-                    />
-                ))
-            )}
-            <mesh position={[0, -platformHeight / 2, 0]}>
-                <boxGeometry args={[length + parameters.padding * 2, platformHeight, width + parameters.padding * 2]} />
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+        <>
+            <mesh
+                position={[0, -platformHeight - 0.1, 0]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                castShadow
+            >
+                <planeGeometry args={[10000, 10000]} />
+                <MeshReflectorMaterial
+                    mirror={0.4}
+                    color={theme.colors.dark[8]}
+                    blur={[400, 400]}
+                    resolution={1024}
+                    mixBlur={0.2}
+                    mixStrength={3}
+                    depthScale={1}
+                    minDepthThreshold={0.85}
+                    metalness={0}
+                    roughness={1}
+                />
             </mesh>
-            <Text3D
-                ref={nameRef}
-                font={parameters.font}
-                position={[-length / 2 + nameDimensions.width / 2 + 1, -platformHeight / 2, (width / 2) + parameters.padding]}
-                height={parameters.textDepth}
-                size={textSize}
-            >
-                {parameters.name}
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
-            </Text3D>
-            <Text3D
-                ref={yearRef}
-                font={parameters.font}
-                position={[length / 2 - yearDimensions.width / 2 - 1, -platformHeight / 2, (width / 2) + parameters.padding]}
-                height={parameters.textDepth}
-                size={textSize}
-            >
-                {parameters.year}
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
-            </Text3D>
-        </group>
+            {/* <Grid
+                args={[10.5, 10.5]}
+                cellSize={10.5}
+                position={[0, -platformHeight, 0]}
+                infiniteGrid={true}
+                fadeDistance={20}
+                cellColor={"#AAAAAA"}
+                fadeFrom={0}
+            /> */}
+            <group ref={model}>
+                {weeks.map((week, i) =>
+                    week.contributionDays.map((day, j) => (
+                        <ContributionTower
+                            key={day.date.toString()}
+                            day={day}
+                            x={i * parameters.towerSize - length / 2 + parameters.towerSize / 2}
+                            y={(j + calculateFirstDayOffset(week, i)) * parameters.towerSize - width / 2 + parameters.towerSize / 2}
+                            height={day.contributionCount * parameters.towerSize / parameters.towerDampening + parameters.towerSize / parameters.towerDampening}
+                            size={parameters.towerSize}
+                            defaultColor={parameters.color}
+                            showContributionColor={parameters.showContributionColor}
+                        />
+                    ))
+                )}
+                <mesh castShadow receiveShadow position={[0, -platformHeight / 2, 0]}>
+                    <boxGeometry args={[length + parameters.padding * 2, platformHeight, width + parameters.padding * 2]} />
+                    <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+
+                </mesh>
+
+                <Text3D
+                    ref={nameRef}
+                    font={parameters.font}
+                    position={[-length / 2 + nameDimensions.width / 2 + 1, -platformHeight / 2, (width / 2) + parameters.padding]}
+                    height={parameters.textDepth}
+                    size={textSize}
+                >
+                    {parameters.name}
+                    <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                </Text3D>
+                <Text3D
+                    ref={yearRef}
+                    font={parameters.font}
+                    position={[length / 2 - yearDimensions.width / 2 - 1, -platformHeight / 2, (width / 2) + parameters.padding]}
+                    height={parameters.textDepth}
+                    size={textSize}
+                >
+                    {parameters.year}
+                    <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                </Text3D>
+            </group>
+        </>
+
     )
 } 

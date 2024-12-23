@@ -1,20 +1,20 @@
 import { FontData, useFont } from "@react-three/drei";
-import { Scene } from "three";
+import { Group } from "three";
 import { Font } from "three-stdlib";
 import { create } from "zustand";
 import { addFont, getFonts } from "./storage";
 
-interface SceneStore {
-    scene: Scene | null;
+interface ModelStore {
+    model: Group | null;
     dirty: boolean;
-    setScene(scene: Scene): void;
+    setModel(model: Group): void;
     setDirty(dirty: boolean): void;
 }
 
-export const useSceneStore = create<SceneStore>(set => ({
-    scene: null,
+export const useModelStore = create<ModelStore>(set => ({
+    model: null,
     dirty: false,
-    setScene: (scene) => set(_ => ({ scene })),
+    setModel: (model) => set(_ => ({ model })),
     setDirty: (dirty) => set(_ => ({ dirty }))
 }));
 

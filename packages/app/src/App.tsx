@@ -24,7 +24,7 @@ export default function App() {
       end: `${parameters.year}-12-31T00:00:00Z`,
     },
   });
-  
+
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const theme = useMantineTheme();
@@ -61,10 +61,12 @@ export default function App() {
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={result.fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        <Skyline
-          parameters={parameters}
-          weeks={weeks}
-        />
+        {!result.fetching && (
+          <Skyline
+            parameters={parameters}
+            weeks={weeks}
+          />
+        )}
         <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
         <t.Out />
       </AppShell.Main>

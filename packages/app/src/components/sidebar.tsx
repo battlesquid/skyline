@@ -2,7 +2,7 @@ import { ActionIcon, Anchor, AppShell, Button, Checkbox, ColorInput, Divider, Fi
 import { IconFolder, IconHelp, IconQuestionMark } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { SkylineModelParameters } from "../parameters";
-import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
+import { DEFAULT_FONT_SELECTION, useFontStore, useModelStore } from "../stores";
 import { STLExporter } from "three-stdlib";
 
 interface SidebarProps {
@@ -18,7 +18,7 @@ export function Sidebar(props: SidebarProps) {
     const [year, setYear] = useState(parameters.year);
     const [modified, setModified] = useState(false);
     const [fontLoadFailed, setFontLoadFailed] = useState(false);
-    const { scene, dirty } = useSceneStore();
+    const { model, dirty } = useModelStore();
     const fonts = useFontStore(state => state.fonts);
     const addFont = useFontStore(state => state.addFont);
 
@@ -165,13 +165,13 @@ export function Sidebar(props: SidebarProps) {
                     />
                     <Divider />
                     <Button
-                        disabled={scene === null || dirty}
+                        disabled={model === null || dirty}
                         fullWidth
                         onClick={() => {
-                            if (scene === null) {
+                            if (model === null) {
                                 return;
                             }
-                            const clone = scene.clone();
+                            const clone = model.clone();
                             clone.rotation.set(Math.PI / 2, 0, 0);
                             clone.updateMatrixWorld();
                             const exporter = new STLExporter();
