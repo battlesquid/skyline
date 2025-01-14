@@ -5,7 +5,7 @@ import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 import { ContributionWeek, ContributionWeeks } from "../api/types";
-import { Mesh } from "three";
+import { Box3, Group, Mesh, Vector3 } from "three";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
@@ -15,6 +15,21 @@ export interface SkylineModelProps {
 type Dimensions = {
     width: number;
     height: number;
+}
+
+const getDimensions = (mesh: Mesh): Dimensions => {
+    mesh.geometry.computeBoundingBox();
+    mesh.geometry.center();
+    return {
+        width: mesh.geometry.boundingBox!.max.x - mesh.geometry.boundingBox!.min.x,
+        height: mesh.geometry.boundingBox!.max.y - mesh.geometry.boundingBox!.min.y
+    }
+}
+
+const calculateFirstDayOffset = (week: ContributionWeek, weekNo: number): number => {
+    return weekNo === 0
+        ? new Date(week.firstDay).getUTCDay()
+        : 0;
 }
 
 export function SkylineModel(props: SkylineModelProps) {
@@ -44,16 +59,7 @@ export function SkylineModel(props: SkylineModelProps) {
                 clearTimeout(boundsTimeout)
             }
         }
-    }, [props.parameters.towerSize, props.parameters.towerDampening, props.parameters.name, props.parameters.year, props.parameters.padding, props.parameters.font]);
-
-    const getDimensions = (mesh: Mesh): Dimensions => {
-        mesh.geometry.computeBoundingBox();
-        mesh.geometry.center();
-        return {
-            width: mesh.geometry.boundingBox!.max.x - mesh.geometry.boundingBox!.min.x,
-            height: mesh.geometry.boundingBox!.max.y - mesh.geometry.boundingBox!.min.y
-        }
-    }
+    }, [parameters.towerSize, parameters.towerDampening, parameters.name, parameters.year, parameters.padding, parameters.font]);
 
     const yearRef = useRef<Mesh>(null!);
     const nameRef = useRef<Mesh>(null!);
@@ -66,14 +72,14 @@ export function SkylineModel(props: SkylineModelProps) {
         setYearDimensions(getDimensions(yearRef.current));
     }, [parameters.name, parameters.year, parameters.font, parameters.towerSize])
 
-    const calculateFirstDayOffset = (week: ContributionWeek, weekNo: number): number => {
-        return weekNo === 0
-            ? new Date(week.firstDay).getUTCDay()
-            : 0;
-    }
+    const group = useRef<Group>(null!);
+    useEffect(() => {
+        const bb = new Box3().setFromObject(group.current, true);
+        sceneStore.setSize(bb.getSize(new Vector3()));
+    }, [parameters, yearDimensions, nameDimensions, weeks]);
 
     return (
-        <group>
+        <group ref={group}>
             {weeks.map((week, i) =>
                 week.contributionDays.map((day, j) => (
                     <ContributionTower

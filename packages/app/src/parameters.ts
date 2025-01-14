@@ -20,7 +20,7 @@ export const defaults: SkylineModelParameters = {
     font: defaultFonts[DEFAULT_FONT_SELECTION],
     showContributionColor: false,
     padding: 0.5,
-    textDepth: 0.25,
-    towerSize: 0.6,
+    textDepth: 1.75,
+    towerSize: 2.5,
     towerDampening: 4
 }

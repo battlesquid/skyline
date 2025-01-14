@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SkylineModelParameters } from "../parameters";
 import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
 import { STLExporter } from "three-stdlib";
+import { Vector3 } from "three";
 
 interface SidebarProps {
     authenticated: boolean;
@@ -12,13 +13,32 @@ interface SidebarProps {
     parameters: SkylineModelParameters;
 }
 
+const getDimensionsText = (scale: number, size: Vector3) => {
+    return `${Math.round(size.x * scale)}mm × ${Math.round(size.y * scale)}mm × ${Math.round(size.z * scale)}mm`
+}
+
+const safeFloat = (value: string | number, min: number) => {
+    if (value === "") {
+        return min;
+    }
+    return parseFloat(`${value}`);
+}
+
+const safeInt = (value: string | number, min: number) => {
+    if (value === "") {
+        return min;
+    }
+    return parseInt(`${value}`);
+}
+
 export function Sidebar(props: SidebarProps) {
     const { authenticated, ok, parameters, setParameters } = props;
     const [name, setName] = useState(parameters.name);
     const [year, setYear] = useState(parameters.year);
+    const [scale, setScale] = useState(1);
     const [modified, setModified] = useState(false);
     const [fontLoadFailed, setFontLoadFailed] = useState(false);
-    const { scene, dirty } = useSceneStore();
+    const { scene, dirty, size } = useSceneStore();
     const fonts = useFontStore(state => state.fonts);
     const addFont = useFontStore(state => state.addFont);
 
@@ -67,30 +87,23 @@ export function Sidebar(props: SidebarProps) {
                         stepHoldDelay={500}
                         stepHoldInterval={100}
                         value={year}
-                        onChange={value => setYear(parseInt(`${value}`))}
+                        onChange={value => setYear(safeInt(value, 2015))}
                     />
                     <Button
                         fullWidth
                         onClick={() => setParameters({ ...parameters, name, year })}
+                        variant="light"
                     >
                         Generate
                     </Button>
                     <Divider />
-                    <NumberInput
-                        label="Tower Size"
-                        placeholder="Tower Size"
-                        min={0.5}
-                        step={0.1}
-                        value={parameters.towerSize}
-                        onChange={(value) => setParameters({ ...parameters, towerSize: parseFloat(`${value}`) })}
-                    />
                     <NumberInput
                         label="Tower Dampening"
                         placeholder="Tower Dampening"
                         min={1}
                         allowDecimal={false}
                         value={parameters.towerDampening}
-                        onChange={(value) => setParameters({ ...parameters, towerDampening: parseInt(`${value}`) })}
+                        onChange={(value) => setParameters({ ...parameters, towerDampening: safeInt(value, 1) })}
                     />
                     <NumberInput
                         label="Base Padding"
@@ -98,7 +111,7 @@ export function Sidebar(props: SidebarProps) {
                         min={0}
                         step={0.5}
                         value={parameters.padding}
-                        onChange={(value) => setParameters({ ...parameters, padding: parseFloat(`${value}`) })}
+                        onChange={(value) => setParameters({ ...parameters, padding: safeFloat(value, 0) })}
                     />
                     <div style={{ display: "flex", columnGap: "0.5rem" }}>
                         <Select
@@ -147,10 +160,13 @@ export function Sidebar(props: SidebarProps) {
                                 }}
                                 accept="application/json"
                             >
-                                {(props) => <ActionIcon size="input-sm" {...props}><IconFolder /></ActionIcon>}
+                                {(props) => <ActionIcon variant="light" size="input-sm" {...props}><IconFolder /></ActionIcon>}
                             </FileButton>
                         </Stack>
                     </div>
+                    <Group>
+
+                    </Group>
                     <Divider />
                     <ColorInput
                         label="Render Color"
@@ -164,9 +180,20 @@ export function Sidebar(props: SidebarProps) {
                         onChange={() => setParameters({ ...parameters, showContributionColor: !parameters.showContributionColor })}
                     />
                     <Divider />
+                    <NumberInput
+                        label="Scale"
+                        placeholder="Scale"
+                        min={1}
+                        step={0.1}
+                        value={scale}
+                        onChange={(value) => setScale(safeFloat(value, 1))}
+                    />
                     <Button
+                        loading={scene === null || dirty}
                         disabled={scene === null || dirty}
                         fullWidth
+                        variant="light"
+                        size="md"
                         onClick={() => {
                             if (scene === null) {
                                 return;
@@ -182,8 +209,17 @@ export function Sidebar(props: SidebarProps) {
                             link.click();
                         }}
                     >
-                        Export
+                        <div>
+                            <Text fw={900} size="sm">
+                                Export
+                            </Text>
+                            <Text size="xs">
+                                {getDimensionsText(scale, size)}
+                            </Text>
+                        </div>
+
                     </Button>
+
                 </Stack>
             </ScrollArea>
         </>

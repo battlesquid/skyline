@@ -17,7 +17,7 @@ export function Skyline(props: SkylineModelProps) {
         <SkylineModel parameters={parameters} weeks={weeks} />
       </Bounds>
       <ambientLight intensity={Math.PI / 2} />
-      <spotLight position={[0, 20, 50]} angle={0.50} penumbra={0.1} decay={0.4} intensity={Math.PI} />
+      <spotLight position={[0, 20, 200]} angle={0.50} penumbra={0.1} decay={0.4} intensity={Math.PI} />
       <pointLight position={[0, 20, 0]} decay={0} intensity={Math.PI} />
       <directionalLight color="#fff" position={[0, 10, -50]} />
       <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
