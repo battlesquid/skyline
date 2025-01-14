@@ -34,7 +34,8 @@ const safeInt = (value: string | number, min: number) => {
 export function Sidebar(props: SidebarProps) {
     const { authenticated, ok, parameters, setParameters } = props;
     const [name, setName] = useState(parameters.name);
-    const [year, setYear] = useState(parameters.year);
+    const [startYear, setStartYear] = useState(parameters.startYear);
+    const [endYear, setEndYear] = useState(parameters.endYear);
     const [scale, setScale] = useState(1);
     const [modified, setModified] = useState(false);
     const [fontLoadFailed, setFontLoadFailed] = useState(false);
@@ -79,19 +80,41 @@ export function Sidebar(props: SidebarProps) {
                         onChange={e => setName(e.target.value)}
                         error={ok || modified ? "" : `Unable to find profile for "${name}".`}
                     />
-                    <NumberInput
-                        label="Year"
-                        placeholder="Year"
-                        min={2015}
-                        max={new Date().getFullYear()}
-                        stepHoldDelay={500}
-                        stepHoldInterval={100}
-                        value={year}
-                        onChange={value => setYear(safeInt(value, 2015))}
-                    />
+                    <Group grow>
+                        <NumberInput
+                            label="Start Year"
+                            placeholder="Start Year"
+                            min={2015}
+                            max={new Date().getFullYear()}
+                            stepHoldDelay={500}
+                            stepHoldInterval={100}
+                            value={startYear}
+                            onBlur={() => {
+                                if (startYear > endYear) {
+                                    setEndYear(startYear);
+                                }
+                            }}
+                            onChange={value => setStartYear(safeInt(value, 2015))}
+                        />
+                        <NumberInput
+                            label="End Year"
+                            placeholder="End Year"
+                            min={2015}
+                            max={new Date().getFullYear()}
+                            stepHoldDelay={500}
+                            stepHoldInterval={100}
+                            value={endYear}
+                            onBlur={() => {
+                                if (endYear > startYear) {
+                                    setStartYear(endYear);
+                                }
+                            }}
+                            onChange={value => setEndYear(safeInt(value, 2015))}
+                        />
+                    </Group>
                     <Button
                         fullWidth
-                        onClick={() => setParameters({ ...parameters, name, year })}
+                        onClick={() => setParameters({ ...parameters, name, startYear, endYear })}
                         variant="light"
                     >
                         Generate
@@ -205,7 +228,7 @@ export function Sidebar(props: SidebarProps) {
                             const data = exporter.parse(clone, { binary: false });
                             const link = document.createElement("a");
                             link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-                            link.download = `${parameters.name}_${parameters.year}_contribution.stl`;
+                            link.download = `${parameters.name}_${parameters.startYear}_contribution.stl`;
                             link.click();
                         }}
                     >

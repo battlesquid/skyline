@@ -1,15 +1,15 @@
-import { Text3D, useBounds } from "@react-three/drei";
+import { Box, Center, Instances, Merged, Sphere, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 import { ContributionWeek, ContributionWeeks } from "../api/types";
-import { Box3, Group, Mesh, Vector3 } from "three";
+import { Box3, BoxGeometry, Group, Mesh, Vector3 } from "three";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
-    weeks: ContributionWeeks;
+    years: ContributionWeeks[]
 }
 
 type Dimensions = {
@@ -32,9 +32,16 @@ const calculateFirstDayOffset = (week: ContributionWeek, weekNo: number): number
         : 0;
 }
 
+const formatYearText = (start: number, end: number) => {
+    if (start === end) {
+        return `${start}`
+    }
+    return `${start}-${end}`
+}
+
 export function SkylineModel(props: SkylineModelProps) {
-    const { parameters, weeks } = props;
-    const length = weeks.length * parameters.towerSize;
+    const { parameters, years } = props;
+    const length = years[0].length * parameters.towerSize;
     const width = 7 * parameters.towerSize;
     const platformHeight = parameters.towerSize * 3;
     const textSize = platformHeight / 2;
@@ -59,7 +66,7 @@ export function SkylineModel(props: SkylineModelProps) {
                 clearTimeout(boundsTimeout)
             }
         }
-    }, [parameters.towerSize, parameters.towerDampening, parameters.name, parameters.year, parameters.padding, parameters.font]);
+    }, [parameters.towerSize, parameters.towerDampening, parameters.name, parameters.startYear, parameters.padding, parameters.font]);
 
     const yearRef = useRef<Mesh>(null!);
     const nameRef = useRef<Mesh>(null!);
@@ -70,38 +77,50 @@ export function SkylineModel(props: SkylineModelProps) {
     useEffect(() => {
         setNameDimensions(getDimensions(nameRef.current));
         setYearDimensions(getDimensions(yearRef.current));
-    }, [parameters.name, parameters.year, parameters.font, parameters.towerSize])
+    }, [parameters.name, parameters.startYear, parameters.font, parameters.towerSize])
 
     const group = useRef<Group>(null!);
     useEffect(() => {
-        const bb = new Box3().setFromObject(group.current, true);
-        sceneStore.setSize(bb.getSize(new Vector3()));
-    }, [parameters, yearDimensions, nameDimensions, weeks]);
+        if (group.current === null) {
+            return;
+        }
+        // const bb = new Box3().setFromObject(group.current, true);
+        // sceneStore.setSize(bb.getSize(new Vector3()));
+    }, [parameters, yearDimensions, nameDimensions, years]);
 
     return (
         <group ref={group}>
-            {weeks.map((week, i) =>
-                week.contributionDays.map((day, j) => (
-                    <ContributionTower
-                        key={day.date.toString()}
-                        day={day}
-                        x={i * parameters.towerSize - length / 2 + parameters.towerSize / 2}
-                        y={(j + calculateFirstDayOffset(week, i)) * parameters.towerSize - width / 2 + parameters.towerSize / 2}
-                        height={day.contributionCount * parameters.towerSize / parameters.towerDampening + parameters.towerSize / parameters.towerDampening}
-                        size={parameters.towerSize}
-                        defaultColor={parameters.color}
-                        showContributionColor={parameters.showContributionColor}
-                    />
-                ))
-            )}
+            <Center cacheKey={`${parameters.towerDampening}`} disableX disableY>
+                <group>
+                    <Instances>
+                        {years.map((weeks, h) => (
+                            weeks.map((week, i) => (
+                                week.contributionDays.map((day, j) => (
+                                    <ContributionTower
+                                        key={day.date.toString()}
+                                        day={day}
+                                        x={i * parameters.towerSize - length / 2 + parameters.towerSize / 2}
+                                        y={(width * h) + ((j + calculateFirstDayOffset(week, i)) * parameters.towerSize - (width / 2) + parameters.towerSize / 2)}
+                                        height={day.contributionCount * parameters.towerSize / parameters.towerDampening + parameters.towerSize / parameters.towerDampening}
+                                        size={parameters.towerSize}
+                                        defaultColor={parameters.color}
+                                        showContributionColor={parameters.showContributionColor}
+                                    />
+                                ))
+                            ))
+                        ))}
+                    </Instances>
+                </group>
+            </Center>
+
             <mesh position={[0, -platformHeight / 2, 0]}>
-                <boxGeometry args={[length + parameters.padding * 2, platformHeight, width + parameters.padding * 2]} />
+                <boxGeometry args={[length + parameters.padding * 2, platformHeight, width * years.length + parameters.padding * 2]} />
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </mesh>
             <Text3D
                 ref={nameRef}
                 font={parameters.font}
-                position={[-length / 2 + nameDimensions.width / 2 + 1, -platformHeight / 2, (width / 2) + parameters.padding]}
+                position={[-length / 2 + nameDimensions.width / 2 + 1, -platformHeight / 2, (width * years.length / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
@@ -111,11 +130,11 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 ref={yearRef}
                 font={parameters.font}
-                position={[length / 2 - yearDimensions.width / 2 - 1, -platformHeight / 2, (width / 2) + parameters.padding]}
+                position={[length / 2 - yearDimensions.width / 2 - 1, -platformHeight / 2, (width * years.length / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={textSize}
             >
-                {parameters.year}
+                {formatYearText(parameters.startYear, parameters.endYear)}
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </Text3D>
         </group>
