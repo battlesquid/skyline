@@ -1,10 +1,8 @@
-import { Card, Text } from "@mantine/core";
+import { Instance } from "@react-three/drei";
 import { MeshProps } from "@react-three/fiber";
 import { useState } from "react";
 import * as THREE from "three";
 import { ContributionDay } from "../api/types";
-import { t } from "../App";
-import { Box, Instance } from "@react-three/drei";
 
 interface ContributionTowerProps extends MeshProps {
   x: number;
