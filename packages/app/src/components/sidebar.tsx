@@ -1,10 +1,10 @@
 import { ActionIcon, Anchor, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
-import { IconFolder, IconHelp, IconQuestionMark } from "@tabler/icons-react";
+import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { InstancedMesh, Vector3 } from "three";
+import { SceneUtils, STLExporter } from "three-stdlib";
 import { SkylineModelParameters } from "../parameters";
 import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
-import { STLExporter } from "three-stdlib";
-import { Vector3 } from "three";
 
 interface SidebarProps {
     authenticated: boolean;
@@ -34,7 +34,8 @@ const safeInt = (value: string | number, min: number) => {
 export function Sidebar(props: SidebarProps) {
     const { authenticated, ok, parameters, setParameters } = props;
     const [name, setName] = useState(parameters.name);
-    const [year, setYear] = useState(parameters.year);
+    const [startYear, setStartYear] = useState(parameters.startYear);
+    const [endYear, setEndYear] = useState(parameters.endYear);
     const [scale, setScale] = useState(1);
     const [modified, setModified] = useState(false);
     const [fontLoadFailed, setFontLoadFailed] = useState(false);
@@ -79,19 +80,43 @@ export function Sidebar(props: SidebarProps) {
                         onChange={e => setName(e.target.value)}
                         error={ok || modified ? "" : `Unable to find profile for "${name}".`}
                     />
-                    <NumberInput
-                        label="Year"
-                        placeholder="Year"
-                        min={2015}
-                        max={new Date().getFullYear()}
-                        stepHoldDelay={500}
-                        stepHoldInterval={100}
-                        value={year}
-                        onChange={value => setYear(safeInt(value, 2015))}
-                    />
+                    <Group grow>
+                        <NumberInput
+                            label="Start Year"
+                            placeholder="Start Year"
+                            min={2015}
+                            max={new Date().getFullYear()}
+                            stepHoldDelay={500}
+                            stepHoldInterval={100}
+                            value={startYear}
+                            onBlur={() => {
+                                if (startYear > endYear) {
+                                    setEndYear(startYear);
+                                }
+                            }}
+                            onChange={value => {
+                                setStartYear(safeInt(value, 2015))
+                            }}
+                        />
+                        <NumberInput
+                            label="End Year"
+                            placeholder="End Year"
+                            min={2015}
+                            max={new Date().getFullYear()}
+                            stepHoldDelay={500}
+                            stepHoldInterval={100}
+                            value={endYear}
+                            onBlur={() => {
+                                if (endYear < startYear) {
+                                    setStartYear(endYear);
+                                }
+                            }}
+                            onChange={value => setEndYear(safeInt(value, 2015))}
+                        />
+                    </Group>
                     <Button
                         fullWidth
-                        onClick={() => setParameters({ ...parameters, name, year })}
+                        onClick={() => setParameters({ ...parameters, name, startYear, endYear })}
                         variant="light"
                     >
                         Generate
@@ -199,13 +224,21 @@ export function Sidebar(props: SidebarProps) {
                                 return;
                             }
                             const clone = scene.clone();
+                            const instanceParent = clone.getObjectByName("instances_container");
+                            const instances = clone.getObjectByName("instances") as InstancedMesh;
+                            const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
+
+                            meshes.position.set(0, meshes.position.y, 0);
+                            meshes.updateMatrix()
+                            instanceParent?.add(meshes);
+
                             clone.rotation.set(Math.PI / 2, 0, 0);
                             clone.updateMatrixWorld();
                             const exporter = new STLExporter();
                             const data = exporter.parse(clone, { binary: false });
                             const link = document.createElement("a");
                             link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-                            link.download = `${parameters.name}_${parameters.year}_contribution.stl`;
+                            link.download = `${parameters.name}_${parameters.startYear}_contribution.stl`;
                             link.click();
                         }}
                     >

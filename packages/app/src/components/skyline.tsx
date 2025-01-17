@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { SkylineModel, SkylineModelProps } from "./skyline_model";
 
 export function Skyline(props: SkylineModelProps) {
-  const { parameters, weeks } = props;
+  const { parameters, years } = props;
   const theme = useMantineTheme();
 
   return (
@@ -14,7 +14,7 @@ export function Skyline(props: SkylineModelProps) {
       camera={{ position: [0, 0, 10], zoom: 2 }}
     >
       <Bounds fit clip observe>
-        <SkylineModel parameters={parameters} weeks={weeks} />
+        <SkylineModel parameters={parameters} years={years} />
       </Bounds>
       <ambientLight intensity={Math.PI / 2} />
       <spotLight position={[0, 20, 200]} angle={0.50} penumbra={0.1} decay={0.4} intensity={Math.PI} />

@@ -3,7 +3,8 @@ import { DEFAULT_FONT_SELECTION, defaultFonts } from "./stores";
 
 export interface SkylineModelParameters {
     name: string;
-    year: number;
+    startYear: number;
+    endYear: number;
     towerSize: number;
     towerDampening: number;
     font: string | FontData;
@@ -15,7 +16,8 @@ export interface SkylineModelParameters {
 
 export const defaults: SkylineModelParameters = {
     name: "Battlesquid",
-    year: new Date().getFullYear(),
+    startYear: new Date().getFullYear(),
+    endYear: new Date().getFullYear(),
     color: "#575757",
     font: defaultFonts[DEFAULT_FONT_SELECTION],
     showContributionColor: false,

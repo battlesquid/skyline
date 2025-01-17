@@ -1,61 +1,35 @@
-import { Card, Text } from "@mantine/core";
-import { MeshProps } from "@react-three/fiber";
+import { Instance } from "@react-three/drei";
 import { useState } from "react";
-import * as THREE from "three";
 import { ContributionDay } from "../api/types";
-import { t } from "../App";
 
-interface ContributionTowerProps extends MeshProps {
+interface ContributionTowerProps {
   x: number;
   y: number;
-  height: number;
-  size: number;
-  defaultColor: string;
-  showContributionColor: boolean;
   day: ContributionDay;
+  dampening: number;
+  size: number;
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
-  const { x, y, height, day, size, showContributionColor, defaultColor, ...rest } = props;
+  const { x, y, day, dampening, size } = props;
   const [hovered, hover] = useState(false);
-  const [clicked, click] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const color = showContributionColor ?
-    new THREE.Color(day.color)
-    : new THREE.Color(defaultColor);
-  const towerColor = hovered ? color.multiplyScalar(1.3) : color;
+  const height = day.contributionCount * size / dampening + size / dampening;
 
   return (
     <>
-      <mesh
-        {...rest}
+      <Instance
+        scale={[size, height, size]}
         position={[x, height / 2, y]}
-        onClick={(event) => {
-          event.stopPropagation();
-          click(!clicked);
-        }}
         onPointerMove={(event) => {
           if (!hovered) {
             return;
           }
-
           event.stopPropagation();
           setPosition({ x: event.clientX, y: event.clientY });
         }}
-        onPointerOver={(event) => {
-          event.stopPropagation();
-          hover(true);
-        }}
-        onPointerOut={(event) => {
-          event.stopPropagation();
-          hover(false);
-        }}
-      >
-        <boxGeometry args={[size, height, size]} />
-        <meshStandardMaterial color={towerColor} roughness={0.4} />
-      </mesh>
-      <t.In>
+      />
+      {/* <t.In>
         {hovered && (
           <div
             key={`${x}:${y}`}
@@ -74,7 +48,7 @@ export function ContributionTower(props: ContributionTowerProps) {
             </Card>
           </div>
         )}
-      </t.In>
+      </t.In> */}
     </>
   );
 }
