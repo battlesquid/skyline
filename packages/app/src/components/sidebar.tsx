@@ -90,11 +90,14 @@ export function Sidebar(props: SidebarProps) {
                             stepHoldInterval={100}
                             value={startYear}
                             onBlur={() => {
+                                console.log("blurred")
                                 if (startYear > endYear) {
                                     setEndYear(startYear);
                                 }
                             }}
-                            onChange={value => setStartYear(safeInt(value, 2015))}
+                            onChange={value => {
+                                setStartYear(safeInt(value, 2015))
+                            }}
                         />
                         <NumberInput
                             label="End Year"
@@ -105,7 +108,7 @@ export function Sidebar(props: SidebarProps) {
                             stepHoldInterval={100}
                             value={endYear}
                             onBlur={() => {
-                                if (endYear > startYear) {
+                                if (endYear < startYear) {
                                     setStartYear(endYear);
                                 }
                             }}
