@@ -15,14 +15,7 @@ export const t = tunnel();
 export default function App() {
   const [parameters, setParameters] = useState<SkylineModelParameters>(defaults);
   const [requestOk, setRequestOk] = useState(true);
-  // const [result] = useQuery({
-  //   query: ContributionQuery,
-  //   variables: {
-  //     name: parameters.name,
-  //     start: `${parameters.startYear}-01-01T00:00:00Z`,
-  //     end: `${parameters.endYear}-12-31T00:00:00Z`,
-  //   },
-  // });
+  const authenticated = localStorage.getItem("token") !== null;
 
   const { years, fetching } = useExtendedQuery({
     name: parameters.name,
@@ -56,7 +49,7 @@ export default function App() {
     >
       <AppShell.Navbar p="md">
         <Sidebar
-          authenticated={localStorage.getItem("token") !== null}
+          authenticated={authenticated}
           ok={requestOk}
           parameters={parameters}
           setParameters={setParameters}
@@ -64,10 +57,12 @@ export default function App() {
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        <Skyline
-          parameters={parameters}
-          years={years}
-        />
+        {authenticated && (
+          <Skyline
+            parameters={parameters}
+            years={years}
+          />
+        )}
         <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
         <t.Out />
       </AppShell.Main>
