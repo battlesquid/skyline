@@ -32,22 +32,12 @@ export function ContributionTower(props: ContributionTowerProps) {
       <Instance
         scale={[size, height, size]}
         position={[x, height / 2, y]}
-
         onPointerMove={(event) => {
           if (!hovered) {
             return;
           }
-
           event.stopPropagation();
           setPosition({ x: event.clientX, y: event.clientY });
-        }}
-        onPointerOver={(event) => {
-          event.stopPropagation();
-          hover(true);
-        }}
-        onPointerOut={(event) => {
-          event.stopPropagation();
-          hover(false);
         }}
       >
         {/* <meshStandardMaterial color={towerColor} roughness={0.4} /> */}
@@ -81,7 +71,7 @@ export function ContributionTower(props: ContributionTowerProps) {
         <boxGeometry args={[size, height, size]} />
         <meshStandardMaterial color={towerColor} roughness={0.4} />
       </mesh> */}
-      <t.In>
+      {/* <t.In>
         {hovered && (
           <div
             key={`${x}:${y}`}
@@ -100,7 +90,7 @@ export function ContributionTower(props: ContributionTowerProps) {
             </Card>
           </div>
         )}
-      </t.In>
+      </t.In> */}
     </>
   );
 }

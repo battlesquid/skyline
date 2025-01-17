@@ -81,18 +81,17 @@ export function SkylineModel(props: SkylineModelProps) {
 
     const group = useRef<Group>(null!);
     useEffect(() => {
-        if (group.current === null) {
-            return;
-        }
-        // const bb = new Box3().setFromObject(group.current, true);
-        // sceneStore.setSize(bb.getSize(new Vector3()));
+        const bb = new Box3().setFromObject(group.current, true);
+        sceneStore.setSize(bb.getSize(new Vector3()));
     }, [parameters, yearDimensions, nameDimensions, years]);
 
     return (
         <group ref={group}>
-            <Center cacheKey={`${parameters.towerDampening}`} disableX disableY>
+            <Center cacheKey={`${sceneStore.dirty}`} disableX disableY>
                 <group>
-                    <Instances>
+                    <Instances range={100000}>
+                        <boxGeometry />
+                        <meshStandardMaterial color={parameters.color} />
                         {years.map((weeks, h) => (
                             weeks.map((week, i) => (
                                 week.contributionDays.map((day, j) => (

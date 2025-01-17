@@ -13,9 +13,9 @@ export function Skyline(props: SkylineModelProps) {
       shadows
       camera={{ position: [0, 0, 10], zoom: 2 }}
     >
-      {/* <Bounds fit clip observe> */}
+      <Bounds fit clip observe>
         <SkylineModel parameters={parameters} years={years} />
-      {/* </Bounds> */}
+      </Bounds>
       <ambientLight intensity={Math.PI / 2} />
       <spotLight position={[0, 20, 200]} angle={0.50} penumbra={0.1} decay={0.4} intensity={Math.PI} />
       <pointLight position={[0, 20, 0]} decay={0} intensity={Math.PI} />
