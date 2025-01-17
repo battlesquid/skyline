@@ -90,7 +90,6 @@ export function Sidebar(props: SidebarProps) {
                             stepHoldInterval={100}
                             value={startYear}
                             onBlur={() => {
-                                console.log("blurred")
                                 if (startYear > endYear) {
                                     setEndYear(startYear);
                                 }

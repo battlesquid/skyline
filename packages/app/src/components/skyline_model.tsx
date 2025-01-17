@@ -127,8 +127,8 @@ export function SkylineModel(props: SkylineModelProps) {
                 day={day}
                 x={weekIdx * parameters.towerSize - X_MIDPOINT_OFFSET + TOWER_SIZE_OFFSET}
                 y={centerOffset + YEAR_OFFSET + ((dayIdx + weekOffset) * parameters.towerSize - Y_MIDPOINT_OFFSET + TOWER_SIZE_OFFSET)}
-                height={day.contributionCount * parameters.towerSize / parameters.towerDampening + parameters.towerSize / parameters.towerDampening}
                 size={parameters.towerSize}
+                dampening={parameters.towerDampening}
             />
         )
     }

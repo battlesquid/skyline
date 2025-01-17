@@ -1,21 +1,20 @@
 import { Instance } from "@react-three/drei";
-import { MeshProps } from "@react-three/fiber";
 import { useState } from "react";
 import { ContributionDay } from "../api/types";
 
-interface ContributionTowerProps extends MeshProps {
+interface ContributionTowerProps {
   x: number;
   y: number;
-  height: number;
-  size: number;
   day: ContributionDay;
+  dampening: number;
+  size: number;
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
-  const { x, y, height, day, size, ...rest } = props;
+  const { x, y, day, dampening, size } = props;
   const [hovered, hover] = useState(false);
-  const [clicked, click] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const height = day.contributionCount * size / dampening + size / dampening;
 
   return (
     <>
@@ -29,38 +28,7 @@ export function ContributionTower(props: ContributionTowerProps) {
           event.stopPropagation();
           setPosition({ x: event.clientX, y: event.clientY });
         }}
-      >
-        {/* <meshStandardMaterial color={towerColor} roughness={0.4} /> */}
-
-      </Instance>
-      {/* <mesh
-        {...rest}
-        position={[x, height / 2, y]}
-        onClick={(event) => {
-          console.log(x, y)
-          event.stopPropagation();
-          click(!clicked);
-        }}
-        onPointerMove={(event) => {
-          if (!hovered) {
-            return;
-          }
-
-          event.stopPropagation();
-          setPosition({ x: event.clientX, y: event.clientY });
-        }}
-        onPointerOver={(event) => {
-          event.stopPropagation();
-          hover(true);
-        }}
-        onPointerOut={(event) => {
-          event.stopPropagation();
-          hover(false);
-        }}
-      >
-        <boxGeometry args={[size, height, size]} />
-        <meshStandardMaterial color={towerColor} roughness={0.4} />
-      </mesh> */}
+      />
       {/* <t.In>
         {hovered && (
           <div
