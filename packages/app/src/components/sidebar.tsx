@@ -1,10 +1,10 @@
 import { ActionIcon, Anchor, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
-import { IconFolder, IconHelp, IconQuestionMark } from "@tabler/icons-react";
+import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { InstancedMesh, Vector3 } from "three";
+import { SceneUtils, STLExporter } from "three-stdlib";
 import { SkylineModelParameters } from "../parameters";
 import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
-import { STLExporter } from "three-stdlib";
-import { Vector3 } from "three";
 
 interface SidebarProps {
     authenticated: boolean;
@@ -222,6 +222,14 @@ export function Sidebar(props: SidebarProps) {
                                 return;
                             }
                             const clone = scene.clone();
+                            const instanceParent = clone.getObjectByName("instances_container");
+                            const instances = clone.getObjectByName("instances") as InstancedMesh;
+                            const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
+
+                            meshes.position.set(0, meshes.position.y, 0);
+                            meshes.updateMatrix()
+                            instanceParent?.add(meshes);
+
                             clone.rotation.set(Math.PI / 2, 0, 0);
                             clone.updateMatrixWorld();
                             const exporter = new STLExporter();

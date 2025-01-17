@@ -1,7 +1,6 @@
 import { Instance } from "@react-three/drei";
 import { MeshProps } from "@react-three/fiber";
 import { useState } from "react";
-import * as THREE from "three";
 import { ContributionDay } from "../api/types";
 
 interface ContributionTowerProps extends MeshProps {
@@ -9,21 +8,14 @@ interface ContributionTowerProps extends MeshProps {
   y: number;
   height: number;
   size: number;
-  defaultColor: string;
-  showContributionColor: boolean;
   day: ContributionDay;
 }
 
 export function ContributionTower(props: ContributionTowerProps) {
-  const { x, y, height, day, size, showContributionColor, defaultColor, ...rest } = props;
+  const { x, y, height, day, size, ...rest } = props;
   const [hovered, hover] = useState(false);
   const [clicked, click] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const color = showContributionColor ?
-    new THREE.Color(day.color)
-    : new THREE.Color(defaultColor);
-  const towerColor = hovered ? color.multiplyScalar(1.3) : color;
 
   return (
     <>
