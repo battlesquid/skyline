@@ -3,6 +3,7 @@ import { Scene, Vector3 } from "three";
 import { Font } from "three-stdlib";
 import { create } from "zustand";
 import { addFont, getFonts } from "./storage";
+import { ContributionDay } from "./api/types";
 
 interface SceneStore {
     scene: Scene | null;
@@ -61,3 +62,29 @@ export const useFontStore = create<FontStore>(set => ({
         }
     },
 }));
+
+export interface TargetTower {
+    day: ContributionDay;
+    x: number;
+    y: number;
+}
+
+export interface TowerStore {
+    targetDay: ContributionDay | null;
+    x: number;
+    y: number;
+    setTargetDay(target: ContributionDay | null): void;
+    setTargetDayPos(x: number, y: number): void;
+}
+
+export const useTowerStore = create<TowerStore>(set => ({
+    targetDay: null,
+    x: 0,
+    y: 0,
+    setTargetDay(targetDay) {
+        set(_ => ({ targetDay }))
+    },
+    setTargetDayPos(x, y) {
+        set(_ => ({ x, y }))
+    }
+}))

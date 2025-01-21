@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Group, Mesh, Vector3 } from "three";
 import { ContributionDay, ContributionWeek, ContributionWeeks } from "../api/types";
 import { defaults, SkylineModelParameters } from "../parameters";
-import { useSceneStore } from "../stores";
+import { useSceneStore, useTowerStore } from "../stores";
 import { groupby } from "../utils";
 import { ContributionTower } from "./contribution_tower";
+import { Card, Text } from "@mantine/core";
+import { t } from "../App";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
@@ -143,58 +145,82 @@ export function SkylineModel(props: SkylineModelProps) {
 
     const boxGeometry = useMemo(() => <boxGeometry />, []);
 
-    return (
-        <group ref={group}>
-            <group name="instances_container">
-                <Instances
-                    name={"instances"}
-                    key={`${years.length}-${parameters.showContributionColor}`}
-                    visible={!parameters.showContributionColor}
-                    range={100000}
-                    limit={365 * (years.length + 1)}
-                >
-                    {boxGeometry}
-                    <meshStandardMaterial color={parameters.color} />
-                    {years.map((weeks, yearIdx) => renderContributionYear(weeks, yearIdx))}
-                </Instances>
-                {Object.entries(colorGroups).map(([color, days]) => (
-                    <Instances
+    const { targetDay, x, y } = useTowerStore();
 
-                        key={`${years.length}-${parameters.showContributionColor}-${color}`}
-                        visible={parameters.showContributionColor}
+    return (
+        <>
+            {/* <t.In>
+                {targetDay !== null && (
+                    <div
+                        className="animate-in"
+                        style={{
+                            position: "absolute",
+                            left: x,
+                            top: y,
+                        }}
+                    >
+                        <Card>
+                            <Text fw={500}>{new Date(targetDay.date).toLocaleDateString(undefined, { dateStyle: "short" })}</Text>
+                            <Text size="sm" c="dimmed">
+                                Contributions: {targetDay.contributionCount}
+                            </Text>
+                        </Card>
+                    </div>
+                )}
+            </t.In> */}
+            <group ref={group}>
+                <group name="instances_container">
+                    <Instances
+                        name={"instances"}
+                        key={`${years.length}-${parameters.showContributionColor}`}
+                        visible={!parameters.showContributionColor}
                         range={100000}
                         limit={365 * (years.length + 1)}
                     >
                         {boxGeometry}
-                        <meshStandardMaterial color={color} />
-                        {days.map(day => renderContributionDay(day, day.yearIdx, day.weekIdx, day.weekOffset, day.dayIdx))}
+                        <meshStandardMaterial color={parameters.color} />
+                        {years.map((weeks, yearIdx) => renderContributionYear(weeks, yearIdx))}
                     </Instances>
-                ))}
+                    {Object.entries(colorGroups).map(([color, days]) => (
+                        <Instances
+
+                            key={`${years.length}-${parameters.showContributionColor}-${color}`}
+                            visible={parameters.showContributionColor}
+                            range={100000}
+                            limit={365 * (years.length + 1)}
+                        >
+                            {boxGeometry}
+                            <meshStandardMaterial color={color} />
+                            {days.map(day => renderContributionDay(day, day.yearIdx, day.weekIdx, day.weekOffset, day.dayIdx))}
+                        </Instances>
+                    ))}
+                </group>
+                <mesh position={[0, -PLATFORM_MIDPOINT, 0]}>
+                    <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
+                    <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                </mesh>
+                <Text3D
+                    ref={nameRef}
+                    font={parameters.font}
+                    position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 1, -PLATFORM_MIDPOINT, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
+                    height={parameters.textDepth}
+                    size={TEXT_SIZE}
+                >
+                    {parameters.name}
+                    <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                </Text3D>
+                <Text3D
+                    ref={yearRef}
+                    font={parameters.font}
+                    position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 1, -PLATFORM_MIDPOINT, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
+                    height={parameters.textDepth}
+                    size={TEXT_SIZE}
+                >
+                    {formatYearText(parameters.startYear, parameters.endYear)}
+                    <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                </Text3D>
             </group>
-            <mesh position={[0, -PLATFORM_MIDPOINT, 0]}>
-                <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
-            </mesh>
-            <Text3D
-                ref={nameRef}
-                font={parameters.font}
-                position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 1, -PLATFORM_MIDPOINT, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
-                height={parameters.textDepth}
-                size={TEXT_SIZE}
-            >
-                {parameters.name}
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
-            </Text3D>
-            <Text3D
-                ref={yearRef}
-                font={parameters.font}
-                position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 1, -PLATFORM_MIDPOINT, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
-                height={parameters.textDepth}
-                size={TEXT_SIZE}
-            >
-                {formatYearText(parameters.startYear, parameters.endYear)}
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
-            </Text3D>
-        </group>
+        </>
+
     )
 } 

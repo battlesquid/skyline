@@ -1,6 +1,7 @@
 import { Instance } from "@react-three/drei";
 import { useState } from "react";
 import { ContributionDay } from "../api/types";
+import { useTowerStore } from "../stores";
 
 interface ContributionTowerProps {
   x: number;
@@ -15,18 +16,26 @@ export function ContributionTower(props: ContributionTowerProps) {
   const [hovered, hover] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const height = day.contributionCount * size / dampening + size / dampening;
+  const { setTargetDay, setTargetDayPos } = useTowerStore();
 
   return (
     <>
       <Instance
         scale={[size, height, size]}
         position={[x, height / 2, y]}
-        onPointerMove={(event) => {
-          if (!hovered) {
-            return;
-          }
+        onPointerOver={(event) => {
           event.stopPropagation();
-          setPosition({ x: event.clientX, y: event.clientY });
+          setTargetDay(day)
+        }}
+        onPointerOut={(event) => {
+          event.stopPropagation();
+          setTargetDay(null);
+        }}
+        onPointerMove={(event) => {
+          event.stopPropagation();
+          setTargetDayPos(event.clientX, event.clientY);
+          // console.log({ x: event.clientX, y: event.clientY })
+          // setPosition({ x: event.clientX, y: event.clientY });
         }}
       />
       {/* <t.In>

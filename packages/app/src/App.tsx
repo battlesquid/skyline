@@ -1,4 +1,4 @@
-import { AppShell, LoadingOverlay, useMantineTheme } from "@mantine/core";
+import { AppShell, Card, LoadingOverlay, useMantineTheme, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import tunnel from "tunnel-rat";
@@ -9,6 +9,7 @@ import { Sidebar } from "./components/sidebar";
 import { Skyline } from "./components/skyline";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { defaults, SkylineModelParameters } from "./parameters";
+import { useTowerStore } from "./stores";
 
 export const t = tunnel();
 
@@ -26,6 +27,7 @@ export default function App() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const theme = useMantineTheme();
+  const { targetDay: target } = useTowerStore();
 
   useEffect(() => {
     setRequestOk(true);
