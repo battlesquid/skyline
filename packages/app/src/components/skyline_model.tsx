@@ -1,4 +1,4 @@
-import { Center, Instances, Text3D, useBounds } from "@react-three/drei";
+import { Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Group, Mesh, Vector3 } from "three";
@@ -9,6 +9,7 @@ import { groupby } from "../utils";
 import { ContributionTower } from "./contribution_tower";
 import { Card, Text } from "@mantine/core";
 import { t } from "../App";
+import { useDebounce } from "../hooks/useDebounce";
 
 export interface SkylineModelProps {
     parameters: SkylineModelParameters;
@@ -66,24 +67,18 @@ export function SkylineModel(props: SkylineModelProps) {
     const sceneStore = useSceneStore();
 
     const bounds = useBounds();
-    let boundsTimeout: NodeJS.Timeout | undefined = undefined;
-    useEffect(() => {
-        if (boundsTimeout !== undefined) {
-            clearTimeout(boundsTimeout)
-        }
-        sceneStore.setDirty(true);
-        boundsTimeout = setTimeout(() => {
-            sceneStore.setScene(scene.clone());
-            bounds.refresh().clip().fit();
-            sceneStore.setDirty(false);
-        }, 1500);
-
-        return () => {
-            if (boundsTimeout !== undefined) {
-                clearTimeout(boundsTimeout)
+    useDebounce(
+        {
+            beforeDebounceInit: () => sceneStore.setDirty(true),
+            onDebounce: () => {
+                sceneStore.setScene(scene.clone());
+                bounds.refresh().clip().fit();
+                sceneStore.setDirty(false);
             }
-        }
-    }, [parameters.towerDampening, parameters.name, parameters.startYear, parameters.endYear, parameters.padding, parameters.font]);
+        },
+        1500,
+        [parameters.towerDampening, parameters.name, parameters.startYear, parameters.endYear, parameters.padding, parameters.font]
+    );
 
     const yearRef = useRef<Mesh>(null!);
     const nameRef = useRef<Mesh>(null!);
@@ -149,7 +144,7 @@ export function SkylineModel(props: SkylineModelProps) {
 
     return (
         <>
-            {/* <t.In>
+            <t.In>
                 {targetDay !== null && (
                     <div
                         className="animate-in"
@@ -167,7 +162,7 @@ export function SkylineModel(props: SkylineModelProps) {
                         </Card>
                     </div>
                 )}
-            </t.In> */}
+            </t.In>
             <group ref={group}>
                 <group name="instances_container">
                     <Instances
