@@ -1,11 +1,10 @@
-import { Center, Instances, Text3D, useBounds } from "@react-three/drei";
+import { Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box3, Group, Mesh, Vector3 } from "three";
+import { Box3, Color, Group, Mesh, Vector3 } from "three";
 import { ContributionDay, ContributionWeek, ContributionWeeks } from "../api/types";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
-import { groupby } from "../utils";
 import { ContributionTower } from "./contribution_tower";
 
 export interface SkylineModelProps {
@@ -99,23 +98,9 @@ export function SkylineModel(props: SkylineModelProps) {
         const bb = new Box3().setFromObject(group.current, true);
         sceneStore.setSize(bb.getSize(new Vector3()));
     }, [parameters, yearDimensions, nameDimensions, years]);
-
-    const [colorGroups, setColorGroups] = useState<Record<string, ContributionInstanceDay[]>>({})
-    useEffect(() => {
-        if (!parameters.showContributionColor) {
-            return;
-        }
-        const days: ContributionInstanceDay[] = [];
-        years.forEach((weeks, yearIdx) => {
-            weeks.forEach((week, weekIdx) => {
-                week.contributionDays.forEach((day, dayIdx) => {
-                    days.push({ ...day, yearIdx, weekIdx, dayIdx, weekOffset: calculateFirstDayOffset(week, weekIdx) })
-                })
-            })
-        });
-        setColorGroups(groupby(days, d => d.color));
-    }, [parameters.showContributionColor, years]);
-
+    
+    const tempColor = new Color();
+    
     const renderContributionDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number) => {
         const YEAR_OFFSET = MODEL_WIDTH * yearIdx;
         const centerOffset = years.length === 1
@@ -141,7 +126,31 @@ export function SkylineModel(props: SkylineModelProps) {
         return weeks.map((week, weeksIdx) => renderContributionWeek(week, yearIdx, weeksIdx))
     }
 
-    const boxGeometry = useMemo(() => <boxGeometry />, []);
+    const geometry = useMemo(() => {
+        const colors = Float32Array.from(
+            years.flatMap((weeks) => {
+                return weeks.flatMap((week) => {
+                    return week.contributionDays.flatMap((day) => tempColor.set(day.color).toArray())
+                })
+            })
+        );
+        if (parameters.showContributionColor) {
+            return (
+                <>
+                    <meshStandardMaterial toneMapped={false} vertexColors />
+                    <boxGeometry>
+                        <instancedBufferAttribute attach="attributes-color" args={[colors, 3]} />
+                    </boxGeometry>
+                </>
+            )
+        }
+        return (
+            <>
+                <meshStandardMaterial color={parameters.color} />
+                <boxGeometry />
+            </>
+        )
+    }, [years, parameters.showContributionColor, parameters.color])
 
     return (
         <group ref={group}>
@@ -149,27 +158,12 @@ export function SkylineModel(props: SkylineModelProps) {
                 <Instances
                     name={"instances"}
                     key={`${years.length}-${parameters.showContributionColor}`}
-                    visible={!parameters.showContributionColor}
                     range={100000}
                     limit={365 * (years.length + 1)}
                 >
-                    {boxGeometry}
-                    <meshStandardMaterial color={parameters.color} />
+                    {geometry}
                     {years.map((weeks, yearIdx) => renderContributionYear(weeks, yearIdx))}
                 </Instances>
-                {Object.entries(colorGroups).map(([color, days]) => (
-                    <Instances
-
-                        key={`${years.length}-${parameters.showContributionColor}-${color}`}
-                        visible={parameters.showContributionColor}
-                        range={100000}
-                        limit={365 * (years.length + 1)}
-                    >
-                        {boxGeometry}
-                        <meshStandardMaterial color={color} />
-                        {days.map(day => renderContributionDay(day, day.yearIdx, day.weekIdx, day.weekOffset, day.dayIdx))}
-                    </Instances>
-                ))}
             </group>
             <mesh position={[0, -PLATFORM_MIDPOINT, 0]}>
                 <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
