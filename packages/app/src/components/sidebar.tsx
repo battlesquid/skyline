@@ -127,8 +127,8 @@ export function Sidebar(props: SidebarProps) {
                         placeholder="Tower Dampening"
                         min={1}
                         allowDecimal={false}
-                        value={parameters.towerDampening}
-                        onChange={(value) => setParameters({ ...parameters, towerDampening: safeInt(value, 1) })}
+                        value={parameters.dampening}
+                        onChange={(value) => setParameters({ ...parameters, dampening: safeInt(value, 1) })}
                     />
                     <NumberInput
                         label="Base Padding"

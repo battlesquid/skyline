@@ -6,7 +6,7 @@ export interface SkylineModelParameters {
     startYear: number;
     endYear: number;
     towerSize: number;
-    towerDampening: number;
+    dampening: number;
     font: string | FontData;
     padding: number;
     textDepth: number;
@@ -24,5 +24,5 @@ export const defaults: SkylineModelParameters = {
     padding: 0.5,
     textDepth: 1.75,
     towerSize: 2.5,
-    towerDampening: 4
+    dampening: 4
 }
