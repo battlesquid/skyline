@@ -111,7 +111,7 @@ export function SkylineModel(props: SkylineModelProps) {
         });
         const rawDefault = Array(rawColored.length).fill(0).flatMap(_ => tempColor.set(parameters.color))
         const instancedColored = Float32Array.from(rawColored.flatMap(c => tempColor.set(c).toArray()));
-        const instancedDefault = Float32Array.from(Array(rawColored.length).fill(0).flatMap(_ => tempColor.set(parameters.color).toArray()));
+        const instancedDefault = Float32Array.from(rawColored.flatMap(_ => tempColor.set(parameters.color).toArray()));
         return { instancedColored, instancedDefault, rawColored, rawDefault };
     }, [years, parameters.color]);
 
