@@ -1,8 +1,10 @@
 import { Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Box3, Color, Group, Mesh, Vector3 } from "three";
+import { Box3, Color, ExtrudeGeometry, Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { SVGLoader } from "three-stdlib";
 import { ContributionDay, ContributionWeek, ContributionWeeks } from "../api/types";
+import { LOGOS } from "../logos";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
@@ -49,11 +51,15 @@ const formatYearText = (start: number, end: number) => {
 export function SkylineModel(props: SkylineModelProps) {
     const { parameters, years } = props;
 
+    if (years[0].length === 0) {
+        return null;
+    }
+
     const MODEL_LENGTH = years[0].length * parameters.towerSize;
     const MODEL_WIDTH = 7 * parameters.towerSize;
     const PLATFORM_HEIGHT = parameters.towerSize * 3;
     const PLATFORM_MIDPOINT = PLATFORM_HEIGHT / 2;
-    const TEXT_SIZE = PLATFORM_HEIGHT / 2;
+    const TEXT_SIZE = PLATFORM_HEIGHT / 2.2;
     const TOWER_SIZE_OFFSET = parameters.towerSize / 2;
     const X_MIDPOINT_OFFSET = MODEL_LENGTH / 2;
     const Y_MIDPOINT_OFFSET = MODEL_WIDTH / 2;
@@ -159,6 +165,25 @@ export function SkylineModel(props: SkylineModelProps) {
         return years.map((weeks, yearIdx) => renderContributionYear(weeks, yearIdx, id))
     }
 
+    const logo = useRef<Group>(null!);
+    useEffect(() => {
+        const loader = new SVGLoader();
+        const data = loader.parse(LOGOS.Circle);
+        const material = new MeshStandardMaterial({ color: parameters.color, side: 2 });
+        data.paths.forEach((path) => {
+            const shapes = path.toShapes(true);
+            shapes.forEach((shape) => {
+                const geometry = new ExtrudeGeometry(shape, {
+                    depth: 200,
+                    bevelEnabled: false
+                });
+                const mesh = new Mesh(geometry, material);
+                logo.current.add(mesh);
+            });
+        });
+        logo.current.scale.set(0.005, -0.005, 0.005);
+    }, [parameters.showContributionColor, parameters.color, parameters.padding]);
+
     return (
         <group ref={group}>
             <group name="instances_container">
@@ -166,9 +191,8 @@ export function SkylineModel(props: SkylineModelProps) {
                     name={"instances"}
                     key={`${years.length}-${parameters.showContributionColor}`}
                     range={100000}
-                    limit={colors.rawDefault.length}
+                    limit={colors.rawDefault.length - 1}
                 >
-                    <meshStandardMaterial toneMapped={false} vertexColors={true} />
                     <boxGeometry>
                         <instancedBufferAttribute
                             attach="attributes-color"
@@ -180,6 +204,7 @@ export function SkylineModel(props: SkylineModelProps) {
                             ]}
                         />
                     </boxGeometry>
+                    <meshStandardMaterial toneMapped={false} vertexColors={true} />
                     {render()}
                 </Instances>
             </group>
@@ -187,10 +212,12 @@ export function SkylineModel(props: SkylineModelProps) {
                 <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </mesh>
+            <group ref={logo} position={[-X_MIDPOINT_OFFSET + 5, -PLATFORM_MIDPOINT / 2 + 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}>
+            </group>
             <Text3D
                 ref={nameRef}
                 font={parameters.font}
-                position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 1, -PLATFORM_MIDPOINT, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
+                position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 12, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={TEXT_SIZE}
             >
@@ -200,7 +227,7 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 ref={yearRef}
                 font={parameters.font}
-                position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 1, -PLATFORM_MIDPOINT, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
+                position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 5, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={TEXT_SIZE}
             >

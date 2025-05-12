@@ -15,7 +15,7 @@ interface ContributionTowerProps {
 
 export function ContributionTower(props: ContributionTowerProps) {
   const { x, y, day, dampening, size } = props;
-  const height = day.contributionCount * size / dampening + size / dampening;
+  const height = day.contributionCount * size / dampening;
   const mesh = useRef<InstancedMesh>(null!);
 
   return (
