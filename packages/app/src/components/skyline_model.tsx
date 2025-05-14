@@ -1,15 +1,17 @@
 import { Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Box3, Color, ExtrudeGeometry, Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { Color, ExtrudeGeometry, Group, Mesh, MeshStandardMaterial } from "three";
 import { SVGLoader } from "three-stdlib";
 import { ContributionDay, ContributionWeek, ContributionWeeks } from "../api/types";
+import { useBoundingBox } from "../hooks/useBoundingBox";
 import { LOGOS } from "../logos";
 import { defaults, SkylineModelParameters } from "../parameters";
 import { useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 
 export interface SkylineModelProps {
+    group: MutableRefObject<Group>;
     parameters: SkylineModelParameters;
     years: ContributionWeeks[]
 }
@@ -49,7 +51,7 @@ const formatYearText = (start: number, end: number) => {
 }
 
 export function SkylineModel(props: SkylineModelProps) {
-    const { parameters, years } = props;
+    const { group, parameters, years } = props;
 
     if (years[0].length === 0) {
         return null;
@@ -98,10 +100,9 @@ export function SkylineModel(props: SkylineModelProps) {
         setYearDimensions(getDimensions(yearRef.current));
     }, [parameters.name, parameters.startYear, parameters.endYear, parameters.font])
 
-    const group = useRef<Group>(null!);
-    useEffect(() => {
-        const bb = new Box3().setFromObject(group.current, true);
-        sceneStore.setSize(bb.getSize(new Vector3()));
+    useBoundingBox({
+        obj: group,
+        setter: (bb) => sceneStore.setSize(bb)
     }, [parameters, yearDimensions, nameDimensions, years]);
 
 
@@ -116,12 +117,13 @@ export function SkylineModel(props: SkylineModelProps) {
             })
         });
         const rawDefault = Array(rawColored.length).fill(0).flatMap(_ => tempColor.set(parameters.color))
+        console.log(rawDefault.length)
         const instancedColored = Float32Array.from(rawColored.flatMap(c => tempColor.set(c).toArray()));
         const instancedDefault = Float32Array.from(rawColored.flatMap(_ => tempColor.set(parameters.color).toArray()));
         return { instancedColored, instancedDefault, rawColored, rawDefault };
     }, [years, parameters.color]);
 
-    const renderContributionDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: MutableRefObject<number>) => {
+    const renderDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: MutableRefObject<number>) => {
         const idx = id.current;
         id.current++;
         const YEAR_OFFSET = MODEL_WIDTH * yearIdx;
@@ -130,7 +132,7 @@ export function SkylineModel(props: SkylineModelProps) {
             : -(MODEL_WIDTH * (years.length - 1)) / 2;
         const towerColors = parameters.showContributionColor ? colors.instancedColored : colors.instancedDefault;
         const highlightBase = parameters.showContributionColor ? colors.rawColored[idx] : colors.rawDefault[idx];
-        const highlight = multColor.set(highlightBase).multiplyScalar(1.3);
+        const highlight = multColor.set(highlightBase).multiplyScalar(1.1);
 
         return (
             <ContributionTower
@@ -146,23 +148,23 @@ export function SkylineModel(props: SkylineModelProps) {
         )
     }
 
-    const renderContributionWeek = (week: ContributionWeek, yearIdx: number, weekIdx: number, weekOffset: number, id: MutableRefObject<number>) => {
-        return week.contributionDays.map((day, dayIdx) => renderContributionDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id))
+    const renderWeek = (week: ContributionWeek, yearIdx: number, weekIdx: number, weekOffset: number, id: MutableRefObject<number>) => {
+        return week.contributionDays.map((day, dayIdx) => renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id))
     }
 
-    const renderContributionYear = (weeks: ContributionWeeks, yearIdx: number, id: MutableRefObject<number>) => {
+    const renderYear = (weeks: ContributionWeeks, yearIdx: number, id: MutableRefObject<number>) => {
         return weeks.map((week, weekIdx) => {
             let weekOffset = 0;
             if (weekIdx === 0) {
                 weekOffset = calculateFirstDayOffset(week, weekIdx);
             }
-            return renderContributionWeek(week, yearIdx, weekIdx, weekOffset, id)
+            return renderWeek(week, yearIdx, weekIdx, weekOffset, id)
         });
     }
 
     const render = () => {
         id.current = 0;
-        return years.map((weeks, yearIdx) => renderContributionYear(weeks, yearIdx, id))
+        return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx, id))
     }
 
     const logo = useRef<Group>(null!);
@@ -178,6 +180,7 @@ export function SkylineModel(props: SkylineModelProps) {
                     bevelEnabled: false
                 });
                 const mesh = new Mesh(geometry, material);
+                mesh.castShadow = true;
                 logo.current.add(mesh);
             });
         });
@@ -188,7 +191,9 @@ export function SkylineModel(props: SkylineModelProps) {
         <group ref={group}>
             <group name="instances_container">
                 <Instances
-                    name={"instances"}
+                    castShadow
+                    receiveShadow
+                    name="instances"
                     key={`${years.length}-${parameters.showContributionColor}`}
                     range={100000}
                     limit={colors.rawDefault.length - 1}
@@ -208,15 +213,16 @@ export function SkylineModel(props: SkylineModelProps) {
                     {render()}
                 </Instances>
             </group>
-            <mesh position={[0, -PLATFORM_MIDPOINT, 0]}>
+            <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
                 <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
                 <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
             </mesh>
-            <group ref={logo} position={[-X_MIDPOINT_OFFSET + 5, -PLATFORM_MIDPOINT / 2 + 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}>
-            </group>
+            <group ref={logo} position={[-X_MIDPOINT_OFFSET + 5, -PLATFORM_MIDPOINT / 2 + 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]} />
             <Text3D
                 ref={nameRef}
                 font={parameters.font}
+                receiveShadow
+                castShadow
                 position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 12, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={TEXT_SIZE}
@@ -227,6 +233,8 @@ export function SkylineModel(props: SkylineModelProps) {
             <Text3D
                 ref={yearRef}
                 font={parameters.font}
+                receiveShadow
+                castShadow
                 position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 5, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
                 height={parameters.textDepth}
                 size={TEXT_SIZE}

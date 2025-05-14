@@ -2,8 +2,6 @@ import { AppShell, LoadingOverlay, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import tunnel from "tunnel-rat";
-import { useQuery } from "urql";
-import { ContributionQuery } from "./api/query";
 import "./App.css";
 import { Sidebar } from "./components/sidebar";
 import { Skyline } from "./components/skyline";

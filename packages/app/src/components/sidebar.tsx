@@ -1,8 +1,8 @@
 import { ActionIcon, Anchor, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
 import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { InstancedMesh, Vector3 } from "three";
-import { SceneUtils, STLExporter } from "three-stdlib";
+import { Vector3 } from "three";
+import { exportScene } from "../export_scene";
 import { SkylineModelParameters } from "../parameters";
 import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
 
@@ -189,9 +189,6 @@ export function Sidebar(props: SidebarProps) {
                             </FileButton>
                         </Stack>
                     </div>
-                    <Group>
-
-                    </Group>
                     <Divider />
                     <ColorInput
                         label="Render Color"
@@ -214,33 +211,12 @@ export function Sidebar(props: SidebarProps) {
                         onChange={(value) => setScale(safeFloat(value, 1))}
                     />
                     <Button
-                        loading={scene === null || dirty}
-                        disabled={scene === null || dirty}
-                        fullWidth
                         variant="light"
                         size="md"
-                        onClick={() => {
-                            if (scene === null) {
-                                return;
-                            }
-                            const clone = scene.clone();
-                            const instanceParent = clone.getObjectByName("instances_container");
-                            const instances = clone.getObjectByName("instances") as InstancedMesh;
-                            const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
-
-                            meshes.position.set(0, meshes.position.y, 0);
-                            meshes.updateMatrix()
-                            instanceParent?.add(meshes);
-
-                            clone.rotation.set(Math.PI / 2, 0, 0);
-                            clone.updateMatrixWorld();
-                            const exporter = new STLExporter();
-                            const data = exporter.parse(clone, { binary: false });
-                            const link = document.createElement("a");
-                            link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-                            link.download = `${parameters.name}_${parameters.startYear}_contribution.stl`;
-                            link.click();
-                        }}
+                        fullWidth
+                        loading={scene === null || dirty}
+                        disabled={scene === null || dirty}
+                        onClick={() => exportScene(scene, `${parameters.name}_${parameters.startYear}_contribution`)}
                     >
                         <div>
                             <Text fw={900} size="sm">
