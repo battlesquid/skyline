@@ -1,18 +1,17 @@
 import { Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Color, ExtrudeGeometry, Group, Mesh, MeshStandardMaterial } from "three";
-import { SVGLoader } from "three-stdlib";
+import { Color, Group, Mesh, MeshStandardMaterial } from "three";
 import { ContributionDay, ContributionWeek, ContributionWeeks } from "../api/types";
+import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
+import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
-import { defaults, SkylineModelParameters } from "../parameters";
-import { useSceneStore } from "../stores";
+import { useParametersStore, useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 
 export interface SkylineModelProps {
     group: MutableRefObject<Group>;
-    parameters: SkylineModelParameters;
     years: ContributionWeeks[]
 }
 
@@ -51,12 +50,8 @@ const formatYearText = (start: number, end: number) => {
 }
 
 export function SkylineModel(props: SkylineModelProps) {
-    const { group, parameters, years } = props;
-
-    if (years[0].length === 0) {
-        return null;
-    }
-
+    const { group, years } = props;
+    const { parameters } = useParametersStore();
     const MODEL_LENGTH = years[0].length * parameters.towerSize;
     const MODEL_WIDTH = 7 * parameters.towerSize;
     const PLATFORM_HEIGHT = parameters.towerSize * 3;
@@ -90,15 +85,18 @@ export function SkylineModel(props: SkylineModelProps) {
         }
     }, [parameters.dampening, parameters.name, parameters.startYear, parameters.endYear, parameters.padding, parameters.font]);
 
-    const yearRef = useRef<Mesh>(null!);
-    const nameRef = useRef<Mesh>(null!);
+    const yearRef = useRef<Mesh | null>(null);
+    const nameRef = useRef<Mesh | null>(null);
 
     const [yearDimensions, setYearDimensions] = useState<Dimensions>({ width: 0, height: 0 });
     const [nameDimensions, setNameDimensions] = useState<Dimensions>({ width: 0, height: 0 });
     useEffect(() => {
+        if (nameRef.current === null || yearRef.current === null) {
+            return;
+        }
         setNameDimensions(getDimensions(nameRef.current));
         setYearDimensions(getDimensions(yearRef.current));
-    }, [parameters.name, parameters.startYear, parameters.endYear, parameters.font])
+    }, [parameters.name, parameters.startYear, parameters.endYear, parameters.font, years])
 
     useBoundingBox({
         obj: group,
@@ -110,18 +108,21 @@ export function SkylineModel(props: SkylineModelProps) {
     const tempColor = new Color();
     const multColor = new Color();
 
-    const colors = useMemo(() => {
-        const rawColored = years.flatMap((weeks) => {
+    const contributionColors = useMemo(() => {
+        const raw = years.flatMap((weeks) => {
             return weeks.flatMap((week) => {
                 return week.contributionDays.flatMap((day) => day.color)
-            })
+            });
         });
-        const rawDefault = Array(rawColored.length).fill(0).flatMap(_ => tempColor.set(parameters.color))
-        console.log(rawDefault.length)
-        const instancedColored = Float32Array.from(rawColored.flatMap(c => tempColor.set(c).toArray()));
-        const instancedDefault = Float32Array.from(rawColored.flatMap(_ => tempColor.set(parameters.color).toArray()));
-        return { instancedColored, instancedDefault, rawColored, rawDefault };
-    }, [years, parameters.color]);
+        const instanced = Float32Array.from(raw.flatMap(c => tempColor.set(c).toArray()));
+        return { raw, instanced };
+    }, [years]);
+
+    const defaultColors = useMemo(() => {
+        const raw = Array(contributionColors.raw.length).fill(0).flatMap(_ => tempColor.set(parameters.color))
+        const instanced = Float32Array.from(raw.flatMap(_ => tempColor.set(parameters.color).toArray()));
+        return { raw, instanced };
+    }, [contributionColors.raw.length, parameters.color]);
 
     const renderDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: MutableRefObject<number>) => {
         const idx = id.current;
@@ -130,8 +131,8 @@ export function SkylineModel(props: SkylineModelProps) {
         const centerOffset = years.length === 1
             ? 0
             : -(MODEL_WIDTH * (years.length - 1)) / 2;
-        const towerColors = parameters.showContributionColor ? colors.instancedColored : colors.instancedDefault;
-        const highlightBase = parameters.showContributionColor ? colors.rawColored[idx] : colors.rawDefault[idx];
+        const towerColors = parameters.showContributionColor ? contributionColors.instanced : defaultColors.instanced;
+        const highlightBase = parameters.showContributionColor ? contributionColors.raw[idx] : defaultColors.raw[idx];
         const highlight = multColor.set(highlightBase).multiplyScalar(1.1);
 
         return (
@@ -140,7 +141,7 @@ export function SkylineModel(props: SkylineModelProps) {
                 day={day}
                 x={weekIdx * parameters.towerSize - X_MIDPOINT_OFFSET + TOWER_SIZE_OFFSET}
                 y={centerOffset + YEAR_OFFSET + ((dayIdx + weekOffset) * parameters.towerSize - Y_MIDPOINT_OFFSET + TOWER_SIZE_OFFSET)}
-                size={defaults.towerSize}
+                size={getDefaultParameters().towerSize}
                 dampening={parameters.dampening}
                 onPointerEnter={() => tempColor.set(highlight).toArray(towerColors, idx * 3)}
                 onPointerLeave={() => tempColor.set(highlightBase).toArray(towerColors, idx * 3)}
@@ -167,25 +168,28 @@ export function SkylineModel(props: SkylineModelProps) {
         return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx, id))
     }
 
-    const logo = useRef<Group>(null!);
+    const logo = useRef<Group | null>(null);
+    const material = useMemo(() =>
+        new MeshStandardMaterial({
+            color: parameters.showContributionColor
+                ? getDefaultParameters().color
+                : parameters.color
+        }),
+        [parameters.color, parameters.showContributionColor]
+    );
+    const { meshes } = useSvgMesh(LOGOS.Circle, material);
     useEffect(() => {
-        const loader = new SVGLoader();
-        const data = loader.parse(LOGOS.Circle);
-        const material = new MeshStandardMaterial({ color: parameters.color, side: 2 });
-        data.paths.forEach((path) => {
-            const shapes = path.toShapes(true);
-            shapes.forEach((shape) => {
-                const geometry = new ExtrudeGeometry(shape, {
-                    depth: 200,
-                    bevelEnabled: false
-                });
-                const mesh = new Mesh(geometry, material);
-                mesh.castShadow = true;
-                logo.current.add(mesh);
-            });
-        });
+        if (logo.current === null) {
+            return;
+        }
+        logo.current.clear();
+        meshes.forEach((mesh) => logo.current?.add(mesh));
         logo.current.scale.set(0.005, -0.005, 0.005);
-    }, [parameters.showContributionColor, parameters.color, parameters.padding]);
+    }, [logo.current, meshes]);
+
+    if (years[0].length === 0) {
+        return null;
+    }
 
     return (
         <group ref={group}>
@@ -196,15 +200,15 @@ export function SkylineModel(props: SkylineModelProps) {
                     name="instances"
                     key={`${years.length}-${parameters.showContributionColor}`}
                     range={100000}
-                    limit={colors.rawDefault.length - 1}
+                    limit={contributionColors.raw.length + 1}
                 >
                     <boxGeometry>
                         <instancedBufferAttribute
                             attach="attributes-color"
                             args={[
                                 parameters.showContributionColor
-                                    ? colors.instancedColored
-                                    : colors.instancedDefault,
+                                    ? contributionColors.instanced
+                                    : defaultColors.instanced,
                                 3
                             ]}
                         />
@@ -215,32 +219,32 @@ export function SkylineModel(props: SkylineModelProps) {
             </group>
             <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
                 <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                <meshStandardMaterial color={parameters.showContributionColor ? getDefaultParameters().color : parameters.color} />
             </mesh>
-            <group ref={logo} position={[-X_MIDPOINT_OFFSET + 5, -PLATFORM_MIDPOINT / 2 + 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]} />
+            <group ref={logo} position={[-X_MIDPOINT_OFFSET + 5, -PLATFORM_MIDPOINT / 2 + 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding - 0.1]} />
             <Text3D
                 ref={nameRef}
                 font={parameters.font}
                 receiveShadow
                 castShadow
-                position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 12, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
+                position={[-X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 12, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding - 0.1]}
                 height={parameters.textDepth}
                 size={TEXT_SIZE}
             >
                 {parameters.name}
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                <meshStandardMaterial color={parameters.showContributionColor ? getDefaultParameters().color : parameters.color} />
             </Text3D>
             <Text3D
                 ref={yearRef}
                 font={parameters.font}
                 receiveShadow
                 castShadow
-                position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 5, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding]}
+                position={[X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 5, -PLATFORM_MIDPOINT - 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding - 0.1]}
                 height={parameters.textDepth}
                 size={TEXT_SIZE}
             >
                 {formatYearText(parameters.startYear, parameters.endYear)}
-                <meshStandardMaterial color={parameters.showContributionColor ? defaults.color : parameters.color} />
+                <meshStandardMaterial color={parameters.showContributionColor ? getDefaultParameters().color : parameters.color} />
             </Text3D>
         </group>
     )

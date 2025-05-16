@@ -1,16 +1,14 @@
-import { ActionIcon, Anchor, AppShell, Button, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
+import { ActionIcon, Anchor, AppShell, Button, Center, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
 import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Vector3 } from "three";
+import { DEFAULT_FONT_SELECTION } from "../defaults";
 import { exportScene } from "../export_scene";
-import { SkylineModelParameters } from "../parameters";
-import { DEFAULT_FONT_SELECTION, useFontStore, useSceneStore } from "../stores";
+import { useFontStore, useParametersStore, useSceneStore } from "../stores";
 
 interface SidebarProps {
     authenticated: boolean;
     ok: boolean;
-    setParameters: React.Dispatch<React.SetStateAction<SkylineModelParameters>>;
-    parameters: SkylineModelParameters;
 }
 
 const getDimensionsText = (scale: number, size: Vector3) => {
@@ -32,7 +30,8 @@ const safeInt = (value: string | number, min: number) => {
 }
 
 export function Sidebar(props: SidebarProps) {
-    const { authenticated, ok, parameters, setParameters } = props;
+    const { authenticated, ok } = props;
+    const { parameters, setParameters } = useParametersStore();
     const [name, setName] = useState(parameters.name);
     const [startYear, setStartYear] = useState(parameters.startYear);
     const [endYear, setEndYear] = useState(parameters.endYear);
@@ -56,7 +55,10 @@ export function Sidebar(props: SidebarProps) {
     if (!authenticated) {
         return (
             <AppShell.Section h="100%">
-                <h2>skyline</h2>
+                <Center>
+                    <h2>skyline</h2>
+                </Center>
+                <Divider pb={2} />
                 <Button
                     component="a"
                     href={import.meta.env.PUBLIC_WORKER_URL}
@@ -67,7 +69,10 @@ export function Sidebar(props: SidebarProps) {
     }
     return (
         <>
-            <h2>skyline</h2>
+            <Center>
+                <h2>github skyline</h2>
+            </Center>
+            <Divider pb={2} />
             <ScrollArea
                 style={{ height: "calc(100vh)" }}
                 offsetScrollbars={true}

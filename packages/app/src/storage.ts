@@ -1,9 +1,9 @@
 import { FontData } from "@react-three/drei";
 import { FontMap } from "./stores";
 
-const StorageKeys = {
-    TOKEN: "token",
-    FONTS: "fonts"
+export enum StorageKeys {
+    TOKEN = "token",
+    FONTS = "fonts"
 }
 
 export const getToken = () => localStorage.getItem(StorageKeys.TOKEN);

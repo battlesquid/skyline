@@ -1,3 +1,4 @@
+
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import React from "react";
@@ -19,6 +20,6 @@ if (rootEl) {
           <App />
         </Provider>
       </MantineProvider>
-    </React.StrictMode>,
+    </React.StrictMode>
   );
 }

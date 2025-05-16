@@ -6,12 +6,13 @@ import "./App.css";
 import { Sidebar } from "./components/sidebar";
 import { Skyline } from "./components/skyline";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
-import { defaults, SkylineModelParameters } from "./parameters";
+import { useParametersStore } from "./stores";
 
 export const t = tunnel();
 
 export default function App() {
-  const [parameters, setParameters] = useState<SkylineModelParameters>(defaults);
+  const { parameters } = useParametersStore();
+
   const [requestOk, setRequestOk] = useState(true);
   const authenticated = localStorage.getItem("token") !== null;
 
@@ -49,17 +50,12 @@ export default function App() {
         <Sidebar
           authenticated={authenticated}
           ok={requestOk}
-          parameters={parameters}
-          setParameters={setParameters}
         />
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         {authenticated && (
-          <Skyline
-            parameters={parameters}
-            years={years}
-          />
+          <Skyline years={years} />
         )}
         <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
         <t.Out />

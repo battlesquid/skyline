@@ -1,25 +1,27 @@
-import { useMantineTheme } from "@mantine/core";
 import { Bounds, Environment, Grid, OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { useRef } from "react";
+import { Canvas, RenderProps } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
 import { Group } from "three";
 import { SkylineModel, SkylineModelProps } from "./skyline_model";
+import { useParametersStore } from "../stores";
 
 export type SkylineProps = Omit<SkylineModelProps, "group">
 
 export function Skyline(props: SkylineProps) {
-  const { parameters, years } = props;
-  const theme = useMantineTheme();
+  const { years } = props;
+  const { parameters } = useParametersStore();
   const group = useRef<Group>(null!);
+  const style = useMemo(() => ({}), []);
+  const camera = useMemo<RenderProps<HTMLCanvasElement>["camera"]>(() => ({ position: [0, 0, 10], fov: 10 }), []);
 
   return (
     <Canvas
-      style={{ backgroundColor: theme.colors.dark[8] }}
+      style={style}
+      camera={camera}
       shadows
-      camera={{ position: [0, 0, 10], zoom: 1.5, fov: 10 }}
     >
-      <Bounds fit clip observe>
-        <SkylineModel group={group} parameters={parameters} years={years} />
+      <Bounds fit clip observe margin={1}>
+        <SkylineModel group={group} years={years} />
       </Bounds>
       <ambientLight intensity={Math.PI / 2} />
       <spotLight castShadow position={[0, 20, 200]} angle={0.50} penumbra={0.1} decay={0.4} intensity={Math.PI} />
