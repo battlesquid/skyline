@@ -11,14 +11,17 @@ jobs:
     name: Deploy
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+            version: 10.7.0
       - uses: actions/setup-node@v3
         with:
-            node-version: 22.12.0
+            node-version: 22.14.0
             registry-url: https://registry.npmjs.org/
-      - run: yarn workspace @skyline/oauth-worker install
+      - run: pnpm --filter=@skyline/worker install
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          packageManager: yarn
+          packageManager: pnpm
           workingDirectory: ./packages/worker

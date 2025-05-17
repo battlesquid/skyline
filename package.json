@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "workspaces": ["packages/*"],
   "scripts": {
-    "app:dev": "yarn workspace @skyline/app run dev",
+    "dev": "pnpm --filter=@skyline/app run dev",
     "clean:dist": "rm -rf ./packages/**/dist packages/**/tsconfig.tsbuildinfo",
     "clean:packages": "rm -rf packages/**/node_modules node_modules"
   },
@@ -13,7 +13,7 @@
     "typescript": "^5.6.3"
   },
   "volta": {
-    "node": "22.12.0",
-    "yarn": "1.22.22"
+    "node": "22.14.0",
+    "pnpm": "10.7.0"
   }
 }
