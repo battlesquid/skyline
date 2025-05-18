@@ -11,7 +11,6 @@
     "@types/node": "20.8.3"
   },
   "volta": {
-    "node": "22.12.0",
-    "yarn": "1.22.22"
+    "extends": "../../package.json"
   }
 }

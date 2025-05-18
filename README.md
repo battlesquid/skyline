@@ -5,7 +5,7 @@
 Install the dependencies:
 
 ```bash
-yarn
+pnpm i
 ```
 
 ## Get Started
@@ -13,21 +13,8 @@ yarn
 Start the dev server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
-
-Build the app for production:
-
-```bash
-yarn build
-```
-
-Preview the production build locally:
-
-```bash
-yarn preview
-```
-
 
 ## Licensing
 
