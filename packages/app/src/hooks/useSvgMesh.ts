@@ -25,7 +25,6 @@ export const useSvgMesh = (svg: string, material: MeshStandardMaterial) => {
     }, [svg]);
 
     useEffect(() => {
-        console.log("updating material");
         meshes.forEach((mesh) => {
             mesh.material = material;
         });

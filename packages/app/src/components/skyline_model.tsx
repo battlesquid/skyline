@@ -112,9 +112,12 @@ export function SkylineModel(props: SkylineModelProps) {
     const contributionColors = useMemo(() => {
         const raw = years.flatMap((weeks) => {
             return weeks.flatMap((week) => {
-                return week.contributionDays.flatMap((day) => day.color)
+                return week.contributionDays
+                .filter((day) => day.contributionCount > 0)
+                .flatMap((day) => day.color)
             });
         });
+        console.log(raw.length);
         const instanced = Float32Array.from(raw.flatMap(c => tempColor.set(c).toArray()));
         return { raw, instanced };
     }, [years]);
@@ -128,6 +131,9 @@ export function SkylineModel(props: SkylineModelProps) {
     const renderDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: MutableRefObject<number>) => {
         const idx = id.current;
         id.current++;
+        if (day.contributionCount === 0) {
+            return null;
+        }
         const YEAR_OFFSET = MODEL_WIDTH * yearIdx;
         const centerOffset = years.length === 1
             ? 0
