@@ -9,6 +9,7 @@ import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
 import { useParametersStore, useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
+import { temp } from "three/webgpu";
 
 export interface SkylineModelProps {
     group: MutableRefObject<Group>;
@@ -66,7 +67,7 @@ export function SkylineModel(props: SkylineModelProps) {
     const sceneStore = useSceneStore();
 
     const bounds = useBounds();
-    let boundsTimeout: NodeJS.Timeout | undefined = undefined;
+    let boundsTimeout: number | undefined = undefined;
     useEffect(() => {
         if (boundsTimeout !== undefined) {
             clearTimeout(boundsTimeout)
@@ -133,7 +134,7 @@ export function SkylineModel(props: SkylineModelProps) {
             : -(MODEL_WIDTH * (years.length - 1)) / 2;
         const towerColors = parameters.showContributionColor ? contributionColors.instanced : defaultColors.instanced;
         const highlightBase = parameters.showContributionColor ? contributionColors.raw[idx] : defaultColors.raw[idx];
-        const highlight = multColor.set(highlightBase).multiplyScalar(1.1);
+        const highlight = multColor.set(highlightBase).multiplyScalar(1.6).getHex();
 
         return (
             <ContributionTower
