@@ -113,11 +113,10 @@ export function SkylineModel(props: SkylineModelProps) {
         const raw = years.flatMap((weeks) => {
             return weeks.flatMap((week) => {
                 return week.contributionDays
-                .filter((day) => day.contributionCount > 0)
-                .flatMap((day) => day.color)
+                    .filter((day) => day.contributionCount > 0)
+                    .flatMap((day) => day.color)
             });
         });
-        console.log(raw.length);
         const instanced = Float32Array.from(raw.flatMap(c => tempColor.set(c).toArray()));
         return { raw, instanced };
     }, [years]);
@@ -129,11 +128,11 @@ export function SkylineModel(props: SkylineModelProps) {
     }, [contributionColors.raw.length, parameters.color]);
 
     const renderDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: MutableRefObject<number>) => {
-        const idx = id.current;
-        id.current++;
         if (day.contributionCount === 0) {
             return null;
         }
+        const idx = id.current;
+        id.current++;
         const YEAR_OFFSET = MODEL_WIDTH * yearIdx;
         const centerOffset = years.length === 1
             ? 0
@@ -141,7 +140,6 @@ export function SkylineModel(props: SkylineModelProps) {
         const towerColors = parameters.showContributionColor ? contributionColors.instanced : defaultColors.instanced;
         const highlightBase = parameters.showContributionColor ? contributionColors.raw[idx] : defaultColors.raw[idx];
         const highlight = multColor.set(highlightBase).multiplyScalar(1.6).getHex();
-
         return (
             <ContributionTower
                 key={day.date.toString()}
