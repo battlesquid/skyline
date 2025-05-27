@@ -48,6 +48,7 @@ export const useExtendedQuery = (props: ExtendedQueryProps): ExtendedQueryResult
     const [fetching, setFetching] = useState(false);
     useEffect(() => {
         setFetching(true);
+        setYears([[]]);
         doRangeQuery(props)
             .then(setYears)
             .catch(console.error)

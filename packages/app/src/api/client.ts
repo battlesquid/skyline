@@ -1,6 +1,6 @@
 import { authExchange } from "@urql/exchange-auth";
 import { cacheExchange, Client, fetchExchange } from "urql";
-import { getToken, setToken } from "../storage";
+import { deleteToken, getToken, setToken, StorageKeys } from "../storage";
 
 const resolveToken = async (): Promise<string | null> => {
   const token = getToken();
@@ -54,10 +54,10 @@ export const client = new Client({
           })
         },
         didAuthError(error, operation) {
-          return getToken() === null;
+          return getToken() === null || error.response?.status === 401;
         },
         async refreshAuth() {
-
+          deleteToken();
         },
       }
     }),

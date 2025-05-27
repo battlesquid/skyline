@@ -1,4 +1,4 @@
-import { Instances, Text3D, useBounds } from "@react-three/drei";
+import { InstancedAttribute, Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import { Color, Group, Mesh, MeshStandardMaterial } from "three";
@@ -9,7 +9,7 @@ import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
 import { useParametersStore, useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
-import { temp } from "three/webgpu";
+import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../constants";
 
 export interface SkylineModelProps {
     group: MutableRefObject<Group>;
@@ -53,8 +53,8 @@ const formatYearText = (start: number, end: number) => {
 export function SkylineModel(props: SkylineModelProps) {
     const { group, years } = props;
     const { parameters } = useParametersStore();
-    const MODEL_LENGTH = years[0].length * parameters.towerSize;
-    const MODEL_WIDTH = 7 * parameters.towerSize;
+    const MODEL_LENGTH = WEEKS_IN_YEAR * parameters.towerSize;
+    const MODEL_WIDTH = DAYS_IN_WEEK * parameters.towerSize;
     const PLATFORM_HEIGHT = parameters.towerSize * 3;
     const PLATFORM_MIDPOINT = PLATFORM_HEIGHT / 2;
     const TEXT_SIZE = PLATFORM_HEIGHT / 2.2;
@@ -155,7 +155,7 @@ export function SkylineModel(props: SkylineModelProps) {
     }
 
     const renderWeek = (week: ContributionWeek, yearIdx: number, weekIdx: number, weekOffset: number, id: MutableRefObject<number>) => {
-        return week.contributionDays.map((day, dayIdx) => renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id))
+        return week.contributionDays.map((day, dayIdx) => renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id));
     }
 
     const renderYear = (weeks: ContributionWeeks, yearIdx: number, id: MutableRefObject<number>) => {
@@ -204,8 +204,7 @@ export function SkylineModel(props: SkylineModelProps) {
                     receiveShadow
                     name="instances"
                     key={`${years.length}-${parameters.showContributionColor}`}
-                    range={100000}
-                    limit={contributionColors.raw.length + 1}
+                    limit={contributionColors.instanced.length}
                 >
                     <boxGeometry>
                         <instancedBufferAttribute

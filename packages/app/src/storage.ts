@@ -10,6 +10,8 @@ export const getToken = () => localStorage.getItem(StorageKeys.TOKEN);
 
 export const setToken = (token: string) => localStorage.setItem(StorageKeys.TOKEN, token);
 
+export const deleteToken = () => localStorage.removeItem(StorageKeys.TOKEN);
+
 export const getFonts = (): FontMap => {
     try {
         return JSON.parse(localStorage.getItem(StorageKeys.FONTS) ?? "{}");

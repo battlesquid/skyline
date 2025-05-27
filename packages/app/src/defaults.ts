@@ -18,7 +18,7 @@ export const getDefaultParameters = () => ({
     color: "#575757",
     font: DEFAULT_FONT,
     showContributionColor: false,
-    padding: 0.5,
+    padding: 1.5,
     textDepth: 1.75,
     towerSize: 2.5,
     dampening: 4

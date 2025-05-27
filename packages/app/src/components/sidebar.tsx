@@ -69,13 +69,14 @@ export function Sidebar(props: SidebarProps) {
     }
     return (
         <>
-            <Center>
+            <AppShell.Section>
                 <h2>github skyline</h2>
-            </Center>
-            <Divider pb={2} />
-            <ScrollArea
-                style={{ height: "calc(100vh)" }}
+            </AppShell.Section>
+            <AppShell.Section
+                grow
+                component={ScrollArea}
                 offsetScrollbars={true}
+                type="always"
             >
                 <Stack gap={10}>
                     <TextInput
@@ -215,27 +216,29 @@ export function Sidebar(props: SidebarProps) {
                         value={scale}
                         onChange={(value) => setScale(safeFloat(value, 1))}
                     />
-                    <Button
-                        variant="light"
-                        size="md"
-                        fullWidth
-                        loading={scene === null || dirty}
-                        disabled={scene === null || dirty}
-                        onClick={() => exportScene(scene, `${parameters.name}_${parameters.startYear}_contribution`)}
-                    >
-                        <div>
-                            <Text fw={900} size="sm">
-                                Export
-                            </Text>
-                            <Text size="xs">
-                                {getDimensionsText(scale, size)}
-                            </Text>
-                        </div>
-
-                    </Button>
-
                 </Stack>
-            </ScrollArea>
+            </AppShell.Section>
+            <Divider p={5} />
+            <AppShell.Section>
+                <Button
+                    variant="light"
+                    size="md"
+                    fullWidth
+                    loading={scene === null || dirty}
+                    disabled={scene === null || dirty}
+                    onClick={() => exportScene(scene, `${parameters.name}_${parameters.startYear}_contribution`)}
+                >
+                    <div>
+                        <Text fw={900} size="sm">
+                            Export
+                        </Text>
+                        <Text size="xs">
+                            {getDimensionsText(scale, size)}
+                        </Text>
+                    </div>
+
+                </Button>
+            </AppShell.Section>
         </>
     )
 }
