@@ -54,23 +54,33 @@ export function Sidebar(props: SidebarProps) {
 
     if (!authenticated) {
         return (
-            <AppShell.Section h="100%">
-                <Center>
-                    <h2>skyline</h2>
-                </Center>
-                <Divider pb={2} />
-                <Button
-                    component="a"
-                    href={import.meta.env.PUBLIC_WORKER_URL}
-                    fullWidth={true}
-                >Login to Github</Button>
+            <AppShell.Section grow>
+                <Stack h="100%" justify="center">
+                    <Center>
+                    </Center>
+                    <Divider />
+                    <Button
+                        component="a"
+                        href={import.meta.env.PUBLIC_WORKER_URL}
+                        fullWidth={true}
+                    >
+                        Login to Github
+                    </Button>
+                    <Button
+                        component="a"
+                        href={import.meta.env.PUBLIC_WORKER_URL}
+                        fullWidth={true}
+                    >
+                        Login to Github (Enterprise)
+                    </Button>
+                </Stack>
             </AppShell.Section>
         )
     }
     return (
         <>
             <AppShell.Section>
-                <h2>github skyline</h2>
+                <h2>{import.meta.env.APP_NAME}</h2>
             </AppShell.Section>
             <AppShell.Section
                 grow
