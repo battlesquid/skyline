@@ -28,8 +28,9 @@ export function Skyline(props: SkylineProps) {
       <pointLight castShadow position={[0, 40, 50]} decay={0} intensity={Math.PI} />
       <directionalLight color="#fff" position={[0, 10, -50]} />
       <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
-      {/* <Environment preset="forest" />
+      <Environment preset="forest" />
       <Grid
+        name="grid"
         position={[0, -(parameters.towerSize * 3), 0]}
         cellSize={0}
         sectionColor={"#555"}
@@ -38,7 +39,7 @@ export function Skyline(props: SkylineProps) {
         fadeStrength={10}
         fadeFrom={1}
         infiniteGrid={true}
-      /> */}
+      />
     </Canvas>
   );
 }

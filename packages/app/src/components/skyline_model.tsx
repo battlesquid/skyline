@@ -109,6 +109,8 @@ export function SkylineModel(props: SkylineModelProps) {
     const tempColor = new Color();
     const multColor = new Color();
 
+    const modelColor = parameters.showContributionColor ? getDefaultParameters().color : parameters.color
+
     const contributionColors = useMemo(() => {
         const raw = years.flatMap((weeks) => {
             return weeks.flatMap((week) => {
@@ -198,7 +200,8 @@ export function SkylineModel(props: SkylineModelProps) {
 
     return (
         <group ref={group}>
-            <group name="instances_container">
+            <group name="export_group"></group>
+            <group name="instances_group">
                 <Instances
                     castShadow
                     receiveShadow
@@ -223,7 +226,7 @@ export function SkylineModel(props: SkylineModelProps) {
             </group>
             <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
                 <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
-                <meshStandardMaterial color={parameters.showContributionColor ? getDefaultParameters().color : parameters.color} />
+                <meshStandardMaterial color={modelColor} />
             </mesh>
             <group ref={logo} position={[-X_MIDPOINT_OFFSET + 5, -PLATFORM_MIDPOINT / 2 + 0.5, (MODEL_WIDTH * years.length / 2) + parameters.padding - 0.1]} />
             <Text3D
@@ -236,7 +239,7 @@ export function SkylineModel(props: SkylineModelProps) {
                 size={TEXT_SIZE}
             >
                 {parameters.name}
-                <meshStandardMaterial color={parameters.showContributionColor ? getDefaultParameters().color : parameters.color} />
+                <meshStandardMaterial color={modelColor} />
             </Text3D>
             <Text3D
                 ref={yearRef}
@@ -248,7 +251,7 @@ export function SkylineModel(props: SkylineModelProps) {
                 size={TEXT_SIZE}
             >
                 {formatYearText(parameters.startYear, parameters.endYear)}
-                <meshStandardMaterial color={parameters.showContributionColor ? getDefaultParameters().color : parameters.color} />
+                <meshStandardMaterial color={modelColor} />
             </Text3D>
         </group>
     )

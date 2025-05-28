@@ -6,15 +6,28 @@ export const exportScene = (scene: Scene | null, name: string) => {
         return;
     }
     const clone = scene.clone();
-    const instanceParent = clone.getObjectByName("instances_container");
+    const exportGroup = clone.getObjectByName("export_group");
     const instances = clone.getObjectByName("instances") as InstancedMesh;
+
     const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
+    meshes.position.set(0, meshes.position.y, 0);
+    meshes.updateMatrix();
 
-    // meshes.position.set(0, meshes.position.y, 0);
-    // meshes.updateMatrix()
-    // instanceParent?.add(meshes);
+    // TODO: make this more bulletproof
+    exportGroup?.add(meshes);
 
-    clone.rotation.set(Math.PI * 2/3, 0, 0);
+    const instancesGroup = clone.getObjectByName("instances_group");
+    if (instancesGroup !== undefined) {
+        instancesGroup.removeFromParent();
+        instances.removeFromParent();
+    }
+
+    const grid = clone.getObjectByName("grid");
+    if (grid !== undefined) {
+        grid.removeFromParent();
+    }
+
+    clone.rotation.set(Math.PI / 2, 0, 0);
     clone.updateMatrixWorld();
     const exporter = new STLExporter();
     const data = exporter.parse(clone);
