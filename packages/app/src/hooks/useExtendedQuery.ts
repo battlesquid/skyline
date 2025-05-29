@@ -6,7 +6,7 @@ import { OperationResult } from "urql";
 import { ResultOf } from "gql.tada";
 
 interface ExtendedQueryProps {
-    name: string;
+    name?: string;
     start: number;
     end: number;
 }
@@ -17,6 +17,9 @@ export interface ExtendedQueryResult {
 }
 
 const doRangeQuery = async (props: ExtendedQueryProps) => {
+    if (props.name === undefined) {
+        return [];
+    }
     const { name, start, end } = props;
     const queries: Promise<OperationResult<ResultOf<typeof ContributionQuery>>>[] = [];
     for (let i = start; i <= end; i++) {
@@ -47,6 +50,9 @@ export const useExtendedQuery = (props: ExtendedQueryProps): ExtendedQueryResult
     const [years, setYears] = useState<ContributionWeeks[]>([[]]);
     const [fetching, setFetching] = useState(false);
     useEffect(() => {
+        if (props.name === undefined) {
+            return;
+        }
         setFetching(true);
         setYears([[]]);
         doRangeQuery(props)

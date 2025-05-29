@@ -1,6 +1,6 @@
 import { authExchange } from "@urql/exchange-auth";
 import { cacheExchange, Client, fetchExchange } from "urql";
-import { deleteToken, getToken, setToken, StorageKeys } from "../storage";
+import { deleteToken, getToken, setToken } from "../storage";
 
 const resolveToken = async (): Promise<string | null> => {
   const token = getToken();

@@ -1,15 +1,24 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "target": "ES2020",
-    "lib": [
-      "DOM",
-      "ES2020"
-    ],
-    "module": "ESNext",
-    "jsx": "react-jsx",
-    "noEmit": true,
-    "moduleResolution": "bundler"
-  },
-  "include": ["./src"]
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "target": "ES2020",
+        "lib": [
+            "DOM",
+            "ES2020"
+        ],
+        "module": "ESNext",
+        "jsx": "react-jsx",
+        "noEmit": true,
+        "moduleResolution": "bundler",
+        "plugins": [
+            {
+                "name": "gql.tada/ts-plugin",
+                "schema": "../../node_modules/@octokit/graphql-schema/schema.graphql",
+                "tadaOutputLocation": "./src/graphql-env.d.ts"
+            }
+        ]
+    },
+    "include": [
+        "./src"
+    ]
 }

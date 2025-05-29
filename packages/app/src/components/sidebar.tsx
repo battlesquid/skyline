@@ -1,10 +1,11 @@
 import { Accordion, ActionIcon, Anchor, AppShell, Button, Center, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
-import { IconAdjustments, IconDeviceDesktop, IconFolder, IconHelp } from "@tabler/icons-react";
+import { IconCube, IconDeviceDesktop, IconDownload, IconFolder, IconHelp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Vector3 } from "three";
 import { DEFAULT_FONT_SELECTION } from "../defaults";
 import { exportScene } from "../export_scene";
 import { useFontStore, useParametersStore, useSceneStore } from "../stores";
+import accordionClasses from '../styles/accordion.module.css';
 
 interface SidebarProps {
     authenticated: boolean;
@@ -81,12 +82,11 @@ export function Sidebar(props: SidebarProps) {
     return (
         <>
             <AppShell.Section>
-                <Title order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
+                <Title my={5} order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
             </AppShell.Section>
             <AppShell.Section
                 grow
                 component={ScrollArea}
-                offsetScrollbars={true}
                 type="always"
             >
                 <Stack gap={10}>
@@ -140,12 +140,12 @@ export function Sidebar(props: SidebarProps) {
                     </Button>
                     <Divider />
                     <Title order={4}>Settings</Title>
-                    <Accordion variant="separated">
+                    <Accordion classNames={accordionClasses}>
                         <Accordion.Item value="model_options">
-                            <Accordion.Control icon={<IconAdjustments size={20} />}>
+                            <Accordion.Control icon={<IconCube size={20} />}>
                                 Model
                             </Accordion.Control>
-                            <Accordion.Panel p={0}>
+                            <Accordion.Panel>
                                 <NumberInput
                                     label="Tower Dampening"
                                     placeholder="Tower Dampening"
@@ -217,11 +217,10 @@ export function Sidebar(props: SidebarProps) {
                         </Accordion.Item>
                         <Accordion.Item value="display_options">
                             <Accordion.Control icon={<IconDeviceDesktop size={20} />}>
-                                Display
+                                Render
                             </Accordion.Control>
                             <Accordion.Panel>
                                 <Stack gap={10}>
-
                                     <ColorInput
                                         label="Render Color"
                                         value={parameters.color}
@@ -236,14 +235,21 @@ export function Sidebar(props: SidebarProps) {
                                 </Stack>
                             </Accordion.Panel>
                         </Accordion.Item>
-                        <NumberInput
-                            label="Scale"
-                            placeholder="Scale"
-                            min={1}
-                            step={0.1}
-                            value={scale}
-                            onChange={(value) => setScale(safeFloat(value, 1))}
-                        />
+                        <Accordion.Item value="export_options">
+                            <Accordion.Control icon={<IconDownload size={20} />}>
+                                Export
+                            </Accordion.Control>
+                            <Accordion.Panel>
+                                <NumberInput
+                                    label="Scale"
+                                    placeholder="Scale"
+                                    min={1}
+                                    step={0.1}
+                                    value={scale}
+                                    onChange={(value) => setScale(safeFloat(value, 1))}
+                                />
+                            </Accordion.Panel>
+                        </Accordion.Item>
                     </Accordion>
                 </Stack>
             </AppShell.Section>
