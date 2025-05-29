@@ -57,6 +57,7 @@ export function Sidebar(props: SidebarProps) {
             <AppShell.Section grow>
                 <Stack h="100%" justify="center">
                     <Center>
+                        <h2>{import.meta.env.PUBLIC_APP_NAME}</h2>
                     </Center>
                     <Divider />
                     <Button
@@ -68,7 +69,7 @@ export function Sidebar(props: SidebarProps) {
                     </Button>
                     <Button
                         component="a"
-                        href={import.meta.env.PUBLIC_WORKER_URL}
+                        href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
                         fullWidth={true}
                     >
                         Login to Github (Enterprise)
