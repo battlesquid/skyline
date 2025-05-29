@@ -81,7 +81,7 @@ export function Sidebar(props: SidebarProps) {
     return (
         <>
             <AppShell.Section>
-                <h2>{import.meta.env.APP_NAME}</h2>
+                <h2>{import.meta.env.PUBLIC_APP_NAME}</h2>
             </AppShell.Section>
             <AppShell.Section
                 grow
