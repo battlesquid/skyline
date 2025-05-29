@@ -13,8 +13,8 @@
         "plugins": [
             {
                 "name": "gql.tada/ts-plugin",
-                "schema": "../../node_modules/@octokit/graphql-schema/schema.graphql",
-                "tadaOutputLocation": "./src/graphql-env.d.ts"
+                "schema": "./node_modules/@octokit/graphql-schema/schema.graphql",
+                "tadaOutputLocation": "./src/api/graphql-env.d.ts"
             }
         ]
     },

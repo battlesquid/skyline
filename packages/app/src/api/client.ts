@@ -38,6 +38,11 @@ const resolveToken = async (): Promise<string | null> => {
   return result.token;
 }
 
+export const logout = () => {
+  localStorage.clear();
+  location.reload();
+}
+
 export const client = new Client({
   url: "https://api.github.com/graphql",
   exchanges: [

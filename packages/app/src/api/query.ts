@@ -23,7 +23,11 @@ export const ContributionQuery = graphql(`
 `);
 
 export const UserQuery = graphql(`
-query UserQuery {
-    viewer
-}
+  query UserQuery {
+      viewer {
+        name
+        login
+        avatarUrl
+      }
+  }
 `);

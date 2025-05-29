@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { Vector3 } from "three";
 import { DEFAULT_FONT_SELECTION } from "../defaults";
 import { exportScene } from "../export_scene";
+import { UserProfile } from "../api/loadProfile";
 import { useFontStore, useParametersStore, useSceneStore } from "../stores";
 import accordionClasses from '../styles/accordion.module.css';
+import { Profile } from "./profile";
 
 interface SidebarProps {
+    profile?: UserProfile;
     authenticated: boolean;
     ok: boolean;
 }
@@ -31,9 +34,9 @@ const safeInt = (value: string | number, min: number) => {
 }
 
 export function Sidebar(props: SidebarProps) {
-    const { authenticated, ok } = props;
+    const { profile, authenticated, ok } = props;
     const { parameters, setParameters } = useParametersStore();
-    const [name, setName] = useState(parameters.name);
+    const [name, setName] = useState(profile?.name ?? parameters.name);
     const [startYear, setStartYear] = useState(parameters.startYear);
     const [endYear, setEndYear] = useState(parameters.endYear);
     const [scale, setScale] = useState(1);
@@ -253,8 +256,7 @@ export function Sidebar(props: SidebarProps) {
                     </Accordion>
                 </Stack>
             </AppShell.Section>
-            <Divider p={5} />
-            <AppShell.Section>
+            <AppShell.Section pb={10}>
                 <Button
                     variant="light"
                     size="md"
@@ -271,8 +273,11 @@ export function Sidebar(props: SidebarProps) {
                             {getDimensionsText(scale, size)}
                         </Text>
                     </div>
-
                 </Button>
+            </AppShell.Section>
+            <Divider py={5} />
+            <AppShell.Section>
+                <Profile profile={profile} />
             </AppShell.Section>
         </>
     )
