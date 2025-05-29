@@ -25,8 +25,13 @@ export default {
 
         // redirect GET requests to the OAuth login page on github.com
         if (request.method === "GET") {
+            const scopes = ["read:user"];
+            const url = new URL(request.url);
+            if (url.searchParams.get("enterprise") === "true") {
+                scopes.push("read:enterprise");
+            }
             return Response.redirect(
-                `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}&scope=read:user`,
+                `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}&scope=${scopes.join(",")}`,
                 302
             );
         }
