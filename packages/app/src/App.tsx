@@ -54,7 +54,7 @@ export default function App() {
       </AppShell.Navbar>
       <AppShell.Main style={{ height: "calc(100vh)", backgroundColor: theme.colors.dark[7] }}>
         <LoadingOverlay visible={fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-        {authenticated && (
+        {(authenticated && requestOk) && (
           <Skyline years={years} />
         )}
         <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, pointerEvents: "none" }}></div>
