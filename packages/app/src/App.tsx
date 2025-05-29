@@ -39,7 +39,7 @@ export default function App() {
   return (
     <AppShell
       header={{ height: 0 }}
-      padding={"md"}
+      padding={"sm"}
       navbar={{
         width: 300,
         breakpoint: "sm",

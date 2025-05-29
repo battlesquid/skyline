@@ -1,5 +1,5 @@
-import { ActionIcon, Anchor, AppShell, Button, Center, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon } from "@mantine/core";
-import { IconFolder, IconHelp } from "@tabler/icons-react";
+import { Accordion, ActionIcon, Anchor, AppShell, Button, Center, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
+import { IconAdjustments, IconDeviceDesktop, IconFolder, IconHelp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Vector3 } from "three";
 import { DEFAULT_FONT_SELECTION } from "../defaults";
@@ -81,7 +81,7 @@ export function Sidebar(props: SidebarProps) {
     return (
         <>
             <AppShell.Section>
-                <h2>{import.meta.env.PUBLIC_APP_NAME}</h2>
+                <Title order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
             </AppShell.Section>
             <AppShell.Section
                 grow
@@ -139,94 +139,112 @@ export function Sidebar(props: SidebarProps) {
                         Generate
                     </Button>
                     <Divider />
-                    <NumberInput
-                        label="Tower Dampening"
-                        placeholder="Tower Dampening"
-                        min={1}
-                        allowDecimal={false}
-                        value={parameters.dampening}
-                        onChange={(value) => setParameters({ ...parameters, dampening: safeInt(value, 1) })}
-                    />
-                    <NumberInput
-                        label="Base Padding"
-                        placeholder="Base Padding"
-                        min={0}
-                        step={0.5}
-                        value={parameters.padding}
-                        onChange={(value) => setParameters({ ...parameters, padding: safeFloat(value, 0) })}
-                    />
-                    <div style={{ display: "flex", columnGap: "0.5rem" }}>
-                        <Select
-                            style={{ flex: 1 }}
-                            label={
-                                <Group gap={5}>
-                                    Font
-                                    <HoverCard>
-                                        <HoverCard.Target>
-                                            <ThemeIcon size={16} radius={"lg"} variant="light">
-                                                <IconHelp size={16} />
-                                            </ThemeIcon>
-                                        </HoverCard.Target>
-                                        <HoverCard.Dropdown>
-                                            <Text size="sm">Must be a valid <Anchor href="https://gero3.github.io/facetype.js/" target="_blank">typeface.js</Anchor> font.</Text>
-                                        </HoverCard.Dropdown>
-                                    </HoverCard>
-                                </Group>
-                            }
-                            data={Object.keys(fonts)}
-                            defaultValue={DEFAULT_FONT_SELECTION}
-                            allowDeselect={false}
-                            onChange={value => {
-                                if (value === null) {
-                                    return;
-                                }
-                                setParameters({ ...parameters, font: fonts[value] });
-                            }}
-                            error={fontLoadFailed ? "Unable to load font" : ""}
+                    <Title order={4}>Settings</Title>
+                    <Accordion variant="separated">
+                        <Accordion.Item value="model_options">
+                            <Accordion.Control icon={<IconAdjustments size={20} />}>
+                                Model
+                            </Accordion.Control>
+                            <Accordion.Panel p={0}>
+                                <NumberInput
+                                    label="Tower Dampening"
+                                    placeholder="Tower Dampening"
+                                    min={1}
+                                    allowDecimal={false}
+                                    value={parameters.dampening}
+                                    onChange={(value) => setParameters({ ...parameters, dampening: safeInt(value, 1) })}
+                                />
+                                <NumberInput
+                                    label="Base Padding"
+                                    placeholder="Base Padding"
+                                    min={0}
+                                    step={0.5}
+                                    value={parameters.padding}
+                                    onChange={(value) => setParameters({ ...parameters, padding: safeFloat(value, 0) })}
+                                />
+                                <div style={{ display: "flex", columnGap: "0.5rem" }}>
+                                    <Select
+                                        style={{ flex: 1 }}
+                                        label={
+                                            <Group gap={5}>
+                                                Font
+                                                <HoverCard>
+                                                    <HoverCard.Target>
+                                                        <ThemeIcon size={16} radius={"lg"} variant="light">
+                                                            <IconHelp size={16} />
+                                                        </ThemeIcon>
+                                                    </HoverCard.Target>
+                                                    <HoverCard.Dropdown>
+                                                        <Text size="sm">Must be a valid <Anchor href="https://gero3.github.io/facetype.js/" target="_blank">typeface.js</Anchor> font.</Text>
+                                                    </HoverCard.Dropdown>
+                                                </HoverCard>
+                                            </Group>
+                                        }
+                                        data={Object.keys(fonts)}
+                                        defaultValue={DEFAULT_FONT_SELECTION}
+                                        allowDeselect={false}
+                                        onChange={value => {
+                                            if (value === null) {
+                                                return;
+                                            }
+                                            setParameters({ ...parameters, font: fonts[value] });
+                                        }}
+                                        error={fontLoadFailed ? "Unable to load font" : ""}
+                                    />
+                                    <Stack gap={0}>
+                                        <wbr />
+                                        <FileButton
+                                            onChange={async (file) => {
+                                                setFontLoadFailed(false);
+                                                if (file === null) {
+                                                    return;
+                                                }
+                                                const name = file.name.split(".")[0];
+                                                const data = await file.text();
+                                                try {
+                                                    setFontLoadFailed(!addFont(name, JSON.parse(data)));
+                                                } catch (e) {
+                                                    console.error(e);
+                                                }
+                                            }}
+                                            accept="application/json"
+                                        >
+                                            {(props) => <ActionIcon variant="light" size="input-sm" {...props}><IconFolder /></ActionIcon>}
+                                        </FileButton>
+                                    </Stack>
+                                </div>
+                            </Accordion.Panel>
+                        </Accordion.Item>
+                        <Accordion.Item value="display_options">
+                            <Accordion.Control icon={<IconDeviceDesktop size={20} />}>
+                                Display
+                            </Accordion.Control>
+                            <Accordion.Panel>
+                                <Stack gap={10}>
+
+                                    <ColorInput
+                                        label="Render Color"
+                                        value={parameters.color}
+                                        disabled={parameters.showContributionColor}
+                                        onChange={(color) => setParameters({ ...parameters, color })}
+                                    />
+                                    <Checkbox
+                                        label="Show Contribution Colors"
+                                        checked={parameters.showContributionColor}
+                                        onChange={() => setParameters({ ...parameters, showContributionColor: !parameters.showContributionColor })}
+                                    />
+                                </Stack>
+                            </Accordion.Panel>
+                        </Accordion.Item>
+                        <NumberInput
+                            label="Scale"
+                            placeholder="Scale"
+                            min={1}
+                            step={0.1}
+                            value={scale}
+                            onChange={(value) => setScale(safeFloat(value, 1))}
                         />
-                        <Stack gap={0}>
-                            <wbr />
-                            <FileButton
-                                onChange={async (file) => {
-                                    setFontLoadFailed(false);
-                                    if (file === null) {
-                                        return;
-                                    }
-                                    const name = file.name.split(".")[0];
-                                    const data = await file.text();
-                                    try {
-                                        setFontLoadFailed(!addFont(name, JSON.parse(data)));
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }}
-                                accept="application/json"
-                            >
-                                {(props) => <ActionIcon variant="light" size="input-sm" {...props}><IconFolder /></ActionIcon>}
-                            </FileButton>
-                        </Stack>
-                    </div>
-                    <Divider />
-                    <ColorInput
-                        label="Render Color"
-                        value={parameters.color}
-                        disabled={parameters.showContributionColor}
-                        onChange={(color) => setParameters({ ...parameters, color })}
-                    />
-                    <Checkbox
-                        label="Show Contribution Colors"
-                        checked={parameters.showContributionColor}
-                        onChange={() => setParameters({ ...parameters, showContributionColor: !parameters.showContributionColor })}
-                    />
-                    <Divider />
-                    <NumberInput
-                        label="Scale"
-                        placeholder="Scale"
-                        min={1}
-                        step={0.1}
-                        value={scale}
-                        onChange={(value) => setScale(safeFloat(value, 1))}
-                    />
+                    </Accordion>
                 </Stack>
             </AppShell.Section>
             <Divider p={5} />
