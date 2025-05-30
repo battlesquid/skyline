@@ -4,11 +4,13 @@ import { client } from "../api/client";
 import { ContributionQuery } from "../api/query";
 import { OperationResult } from "urql";
 import { ResultOf } from "gql.tada";
+import { UserProfile } from "../api/auth";
 
 interface ExtendedQueryProps {
     name?: string;
     start: number;
     end: number;
+    profile: Promise<UserProfile | null>
 }
 
 export interface ExtendedQueryResult {
@@ -51,14 +53,32 @@ export const useExtendedQuery = (props: ExtendedQueryProps): ExtendedQueryResult
     const [years, setYears] = useState<ContributionWeeks[]>([[]]);
     const [fetching, setFetching] = useState(false);
     const [ok, setOk] = useState(true);
+    const [initialized, setInitialized] = useState(false);
+
+    const init = async () => {
+        if (initialized) {
+            return null;
+        }
+        const profile = await props.profile;
+        setInitialized(true);
+        return profile;
+    }
+
     useEffect(() => {
         if (props.name === undefined) {
             return;
         }
+
         setFetching(true);
         setOk(true);
         setYears([[]]);
-        doRangeQuery(props)
+        init()
+            .then(profile => {
+                return profile === null
+                    ? props
+                    : { ...props, name: profile.login }
+            })
+            .then(props => doRangeQuery(props))
             .then(result => {
                 setYears(result);
                 if (result.length === 0) {

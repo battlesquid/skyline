@@ -6,17 +6,20 @@ import { Sidebar } from "./components/sidebar";
 import { Skyline } from "./components/skyline";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { useParametersStore } from "./stores";
+import { fetchProfile, isAuthenticated } from "./api/auth";
+import { useMemo } from "react";
 
 export const t = tunnel();
 
 export default function App() {
     const { parameters } = useParametersStore();
-    const authenticated = localStorage.getItem("token") !== null;
-
+    const authenticated = isAuthenticated();
+    const profile = useMemo(() => fetchProfile(), []);
     const { years, fetching, ok } = useExtendedQuery({
-        name: parameters.name,
+        name:  parameters.name,
         start: parameters.startYear,
-        end: parameters.endYear
+        end: parameters.endYear,
+        profile
     });
 
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -36,6 +39,7 @@ export default function App() {
             <AppShell.Navbar p="md">
                 <Sidebar
                     authenticated={authenticated}
+                    profile={null}
                     ok={ok}
                 />
             </AppShell.Navbar>

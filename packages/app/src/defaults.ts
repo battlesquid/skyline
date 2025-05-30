@@ -1,4 +1,4 @@
-import { getUsername } from "./storage";
+import { getUsername } from "./api/auth";
 
 export const getDefaultFonts = () => ({
     "Inter": "/Inter_Regular.json",

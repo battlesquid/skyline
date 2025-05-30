@@ -2,7 +2,8 @@ import { FontData, useFont } from "@react-three/drei";
 import { Font } from "three-stdlib";
 import { create } from "zustand";
 import { getDefaultFonts } from "../defaults";
-import { getFonts, addFont } from "../storage";
+
+const FONT_KEY = "fonts";
 
 export type FontMap = Record<string, string | FontData>;
 
@@ -15,17 +16,31 @@ export const preloadDefaultFonts = () => {
     Object.values(getDefaultFonts()).forEach(useFont.preload);
 }
 
+export const getFontsLocal = (): FontMap => {
+    try {
+        return JSON.parse(localStorage.getItem(FONT_KEY) ?? "{}");
+    } catch (e) {
+        console.error(e);
+        return {};
+    }
+}
+
+export const addFontLocal = (name: string, font: FontData) => {
+    const fonts = getFontsLocal();
+    localStorage.setItem(FONT_KEY, JSON.stringify({ ...fonts, [name]: font }));
+}
+
 export const useFontStore = create<FontStore>(set => ({
     fonts: {
         ...getDefaultFonts(),
-        ...getFonts(),
+        ...getFontsLocal(),
     },
     addFont: (name, font) => {
         try {
             new Font(font).generateShapes("");
             useFont.preload(font);
             set(state => ({ fonts: { ...state.fonts, [name]: font } }));
-            addFont(name, font);
+            addFontLocal(name, font);
             return true;
         } catch (e) {
             console.error(e);

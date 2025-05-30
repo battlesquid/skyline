@@ -7,10 +7,9 @@ import { Provider } from "urql";
 import { client } from "./api/client";
 import App from "./App";
 import { preloadDefaultFonts } from "./stores";
-import { loadAndSetUsername } from "./storage";
+import { loadLogin } from "./api/auth";
 
 preloadDefaultFonts();
-loadAndSetUsername();
 
 const rootEl = document.getElementById("root");
 if (rootEl) {

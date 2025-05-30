@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { Vector3 } from "three";
 import { DEFAULT_FONT_SELECTION } from "../defaults";
 import { exportScene } from "../export_scene";
-import { UserProfile } from "../api/loadProfile";
+import { UserProfile } from "../api/auth";
 import { useFontStore, useParametersStore, useSceneStore } from "../stores";
 import accordionClasses from '../styles/accordion.module.css';
 import { Profile } from "./profile";
 
 interface SidebarProps {
-    profile?: UserProfile;
+    profile: UserProfile | null;
     authenticated: boolean;
     ok: boolean;
 }

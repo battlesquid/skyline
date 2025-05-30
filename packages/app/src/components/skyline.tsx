@@ -19,6 +19,7 @@ export function Skyline(props: SkylineProps) {
       style={style}
       camera={camera}
       shadows
+      
     >
       <Bounds fit clip observe margin={1}>
         <SkylineModel group={group} years={years} />
