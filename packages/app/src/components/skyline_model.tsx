@@ -75,7 +75,7 @@ export function SkylineModel(props: SkylineModelProps) {
         sceneStore.setDirty(true);
         boundsTimeout = setTimeout(() => {
             sceneStore.setScene(scene.clone());
-            bounds.refresh().clip().fit();
+            bounds.refresh(group.current).clip().fit().reset();
             sceneStore.setDirty(false);
         }, 1500);
 
@@ -112,6 +112,9 @@ export function SkylineModel(props: SkylineModelProps) {
     const modelColor = parameters.showContributionColor ? getDefaultParameters().color : parameters.color
 
     const contributionColors = useMemo(() => {
+        if (years.length === 0) {
+            return { raw: [], instanced: Float32Array.from([]) }
+        }
         const raw = years.flatMap((weeks) => {
             return weeks.flatMap((week) => {
                 return week.contributionDays
@@ -124,6 +127,9 @@ export function SkylineModel(props: SkylineModelProps) {
     }, [years]);
 
     const defaultColors = useMemo(() => {
+        if (contributionColors.raw.length === 0) {
+            return { raw: [], instanced: Float32Array.from([]) };
+        }
         const raw = Array(contributionColors.raw.length).fill(0).flatMap(_ => tempColor.set(parameters.color))
         const instanced = Float32Array.from(raw.flatMap(_ => tempColor.set(parameters.color).toArray()));
         return { raw, instanced };
@@ -194,14 +200,10 @@ export function SkylineModel(props: SkylineModelProps) {
         logo.current.scale.set(0.005, -0.005, 0.005);
     }, [logo.current, meshes]);
 
-    if (years[0].length === 0) {
-        return null;
-    }
-
     return (
         <group ref={group}>
             <group name="export_group"></group>
-            <group name="instances_group">
+            {(years.length > 0 && years[0].length > 0) && <group name="instances_group">
                 <Instances
                     castShadow
                     receiveShadow
@@ -223,7 +225,7 @@ export function SkylineModel(props: SkylineModelProps) {
                     <meshStandardMaterial toneMapped={false} vertexColors={true} />
                     {render()}
                 </Instances>
-            </group>
+            </group>}
             <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
                 <boxGeometry args={[MODEL_LENGTH + PADDING_WIDTH, PLATFORM_HEIGHT, MODEL_WIDTH * years.length + PADDING_WIDTH]} />
                 <meshStandardMaterial color={modelColor} />

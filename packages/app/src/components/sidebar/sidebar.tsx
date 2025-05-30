@@ -1,13 +1,13 @@
-import { Accordion, ActionIcon, Anchor, AppShell, Button, Center, Checkbox, ColorInput, Divider, FileButton, Group, HoverCard, NumberInput, ScrollArea, Select, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
-import { IconCube, IconDeviceDesktop, IconDownload, IconFolder, IconHelp } from "@tabler/icons-react";
+import { Accordion, AppShell, Button, Center, Checkbox, ColorInput, Divider, Group, NumberInput, ScrollArea, Stack, Text, TextInput, Title } from "@mantine/core";
+import { IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Vector3 } from "three";
-import { DEFAULT_FONT_SELECTION } from "../defaults";
-import { exportScene } from "../export_scene";
-import { UserProfile } from "../api/auth";
-import { useFontStore, useParametersStore, useSceneStore } from "../stores";
-import accordionClasses from '../styles/accordion.module.css';
-import { Profile } from "./profile";
+import { UserProfile } from "../../api/auth";
+import { exportScene } from "../../export_scene";
+import { useParametersStore, useSceneStore } from "../../stores";
+import accordionClasses from '../../styles/accordion.module.css';
+import { Profile } from "../profile";
+import { FontInput } from "./font_input";
 
 interface SidebarProps {
     profile: UserProfile | null;
@@ -36,15 +36,12 @@ const safeInt = (value: string | number, min: number) => {
 export function Sidebar(props: SidebarProps) {
     const { profile, authenticated, ok } = props;
     const { parameters, setParameters } = useParametersStore();
-    const [name, setName] = useState(profile?.name ?? parameters.name);
+    const [name, setName] = useState("");
     const [startYear, setStartYear] = useState(parameters.startYear);
     const [endYear, setEndYear] = useState(parameters.endYear);
     const [scale, setScale] = useState(1);
     const [modified, setModified] = useState(false);
-    const [fontLoadFailed, setFontLoadFailed] = useState(false);
     const { scene, dirty, size } = useSceneStore();
-    const fonts = useFontStore(state => state.fonts);
-    const addFont = useFontStore(state => state.addFont);
 
     useEffect(() => {
         setModified(false);
@@ -166,61 +163,11 @@ export function Sidebar(props: SidebarProps) {
                                     value={parameters.padding}
                                     onChange={(value) => setParameters({ ...parameters, padding: safeFloat(value, 0) })}
                                 />
-                                <div style={{ display: "flex", columnGap: "0.5rem" }}>
-                                    <Select
-                                        style={{ flex: 1 }}
-                                        label={
-                                            <Group gap={5}>
-                                                Font
-                                                <HoverCard>
-                                                    <HoverCard.Target>
-                                                        <ThemeIcon size={16} radius={"lg"} variant="light">
-                                                            <IconHelp size={16} />
-                                                        </ThemeIcon>
-                                                    </HoverCard.Target>
-                                                    <HoverCard.Dropdown>
-                                                        <Text size="sm">Must be a valid <Anchor href="https://gero3.github.io/facetype.js/" target="_blank">typeface.js</Anchor> font.</Text>
-                                                    </HoverCard.Dropdown>
-                                                </HoverCard>
-                                            </Group>
-                                        }
-                                        data={Object.keys(fonts)}
-                                        defaultValue={DEFAULT_FONT_SELECTION}
-                                        allowDeselect={false}
-                                        onChange={value => {
-                                            if (value === null) {
-                                                return;
-                                            }
-                                            setParameters({ ...parameters, font: fonts[value] });
-                                        }}
-                                        error={fontLoadFailed ? "Unable to load font" : ""}
-                                    />
-                                    <Stack gap={0}>
-                                        <wbr />
-                                        <FileButton
-                                            onChange={async (file) => {
-                                                setFontLoadFailed(false);
-                                                if (file === null) {
-                                                    return;
-                                                }
-                                                const name = file.name.split(".")[0];
-                                                const data = await file.text();
-                                                try {
-                                                    setFontLoadFailed(!addFont(name, JSON.parse(data)));
-                                                } catch (e) {
-                                                    console.error(e);
-                                                }
-                                            }}
-                                            accept="application/json"
-                                        >
-                                            {(props) => <ActionIcon variant="light" size="input-sm" {...props}><IconFolder /></ActionIcon>}
-                                        </FileButton>
-                                    </Stack>
-                                </div>
+                                <FontInput />
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="display_options">
-                            <Accordion.Control icon={<IconDeviceDesktop size={20} />}>
+                            <Accordion.Control icon={<IconPaint size={20} />}>
                                 Render
                             </Accordion.Control>
                             <Accordion.Panel>
@@ -276,7 +223,6 @@ export function Sidebar(props: SidebarProps) {
                     </div>
                 </Button>
             </AppShell.Section>
-            <Divider py={5} />
             <AppShell.Section>
                 <Profile profile={profile} />
             </AppShell.Section>

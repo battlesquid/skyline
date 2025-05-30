@@ -12,7 +12,7 @@ body,
 }
 
 body {
-  background: #f0f0f0;
+  background: var(--mantine-color-dark-7);
 }
 
 @keyframes scaleAndFadeIn {
@@ -22,6 +22,7 @@ body {
     translate: 0 100%;
     opacity: 0;
   }
+
   100% {
     display: block;
     transform: scale(1);
@@ -42,6 +43,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
