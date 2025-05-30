@@ -87,6 +87,7 @@ export function Sidebar(props: SidebarProps) {
             <AppShell.Section>
                 <Title my={5} order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
             </AppShell.Section>
+            <Divider p={5} />
             <AppShell.Section
                 grow
                 component={ScrollArea}

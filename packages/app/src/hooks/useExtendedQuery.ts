@@ -14,6 +14,7 @@ interface ExtendedQueryProps {
 export interface ExtendedQueryResult {
     years: ContributionWeeks[];
     fetching: boolean;
+    ok: boolean;
 }
 
 const doRangeQuery = async (props: ExtendedQueryProps) => {
@@ -49,16 +50,23 @@ const doRangeQuery = async (props: ExtendedQueryProps) => {
 export const useExtendedQuery = (props: ExtendedQueryProps): ExtendedQueryResult => {
     const [years, setYears] = useState<ContributionWeeks[]>([[]]);
     const [fetching, setFetching] = useState(false);
+    const [ok, setOk] = useState(true);
     useEffect(() => {
         if (props.name === undefined) {
             return;
         }
         setFetching(true);
+        setOk(true);
         setYears([[]]);
         doRangeQuery(props)
-            .then(setYears)
+            .then(result => {
+                setYears(result);
+                if (result.length === 0) {
+                    setOk(false);
+                }
+            })
             .catch(console.error)
             .finally(() => setFetching(false))
     }, [props.name, props.start, props.end])
-    return { years, fetching }
+    return { years, fetching, ok };
 }

@@ -24,5 +24,5 @@ export function Profile(props: ProfileProps) {
                 <IconLogout style={{ width: "70%", height: "70%" }} stroke={1.5} />
             </ActionIcon>
         </Flex>
-    )
+    );
 }
