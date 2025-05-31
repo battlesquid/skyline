@@ -1,18 +1,18 @@
-import { InstancedAttribute, Instances, Text3D, useBounds } from "@react-three/drei";
+import { Instances, Text3D, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import { Color, Group, Mesh, MeshStandardMaterial } from "three";
 import { ContributionDay, ContributionWeek, ContributionWeeks } from "../api/types";
+import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../constants";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
 import { useParametersStore, useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
-import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../constants";
 
 export interface SkylineModelProps {
-    group: MutableRefObject<Group>;
+    group: RefObject<Group>;
     years: ContributionWeeks[]
 }
 
@@ -135,7 +135,7 @@ export function SkylineModel(props: SkylineModelProps) {
         return { raw, instanced };
     }, [contributionColors.raw.length, parameters.color]);
 
-    const renderDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: MutableRefObject<number>) => {
+    const renderDay = (day: ContributionDay, yearIdx: number, weekIdx: number, weekOffset: number, dayIdx: number, id: RefObject<number>) => {
         if (day.contributionCount === 0) {
             return null;
         }
@@ -162,11 +162,11 @@ export function SkylineModel(props: SkylineModelProps) {
         )
     }
 
-    const renderWeek = (week: ContributionWeek, yearIdx: number, weekIdx: number, weekOffset: number, id: MutableRefObject<number>) => {
+    const renderWeek = (week: ContributionWeek, yearIdx: number, weekIdx: number, weekOffset: number, id: RefObject<number>) => {
         return week.contributionDays.map((day, dayIdx) => renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id));
     }
 
-    const renderYear = (weeks: ContributionWeeks, yearIdx: number, id: MutableRefObject<number>) => {
+    const renderYear = (weeks: ContributionWeeks, yearIdx: number, id: RefObject<number>) => {
         return weeks.map((week, weekIdx) => {
             let weekOffset = 0;
             if (weekIdx === 0) {

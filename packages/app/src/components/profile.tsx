@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Flex, Paper, Text, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Avatar, Flex, Paper, Text, Tooltip, useMantineTheme } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
 import { logout, UserProfile } from "../api/auth";
 
@@ -18,13 +18,15 @@ export function Profile(props: ProfileProps) {
                 <Flex align="center" gap={10}>
                     <Avatar src={avatarUrl} alt={name ?? ""} />
                     <div>
-                        <Text fw="bold">{name}</Text>
-                        <Text size="sm" c="dimmed">{login}</Text>
+                        <Text size="sm" fw="bold">{name}</Text>
+                        <Text size="xs" c="dimmed">{login}</Text>
                     </div>
                 </Flex>
-                <ActionIcon onClick={() => logout()} variant="light" aria-label="Logout">
-                    <IconLogout style={{ width: "70%", height: "70%" }} stroke={1.5} />
-                </ActionIcon>
+                <Tooltip label="Log Out">
+                    <ActionIcon onClick={() => logout()} variant="light" aria-label="Logout">
+                        <IconLogout stroke={1.5} />
+                    </ActionIcon>
+                </Tooltip>
             </Flex>
         </Paper>
     );
