@@ -36,7 +36,7 @@ const safeInt = (value: string | number, min: number) => {
 export function Sidebar(props: SidebarProps) {
     const { profile, authenticated, ok } = props;
     const { parameters, setParameters } = useParametersStore();
-    const [name, setName] = useState("");
+    const [name, setName] = useState(profile?.login ?? "");
     const [startYear, setStartYear] = useState(parameters.startYear);
     const [endYear, setEndYear] = useState(parameters.endYear);
     const [scale, setScale] = useState(1);
@@ -68,13 +68,14 @@ export function Sidebar(props: SidebarProps) {
                     >
                         Login to Github
                     </Button>
-                    <Button
+                    { /* TODO: add back when enterprise oauth flow can be verified */}
+                    {/* <Button
                         component="a"
                         href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
                         fullWidth={true}
                     >
                         Login to Github (Enterprise)
-                    </Button>
+                    </Button> */}
                 </Stack>
             </AppShell.Section>
         )

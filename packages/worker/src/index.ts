@@ -27,6 +27,7 @@ export default {
         if (request.method === "GET") {
             const scopes = ["read:user"];
             const url = new URL(request.url);
+            // TODO: test enterprise oauth flow
             if (url.searchParams.get("enterprise") === "true") {
                 scopes.push("read:enterprise");
             }
