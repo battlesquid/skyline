@@ -2,7 +2,7 @@ import { Accordion, AppShell, Button, Center, Checkbox, ColorInput, Divider, Gro
 import { IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Vector3 } from "three";
-import { UserProfile } from "../../api/auth";
+import type { UserProfile } from "../../api/auth";
 import { exportScene } from "../../export_scene";
 import { useParametersStore, useSceneStore } from "../../stores";
 import accordionClasses from '../../styles/accordion.module.css';
@@ -58,12 +58,12 @@ export function Sidebar(props: SidebarProps) {
             <AppShell.Section grow>
                 <Stack h="100%" justify="center">
                     <Center>
-                        <h2>{import.meta.env.PUBLIC_APP_NAME}</h2>
+                        <h2>{import.meta.env.VITE_APP_NAME}</h2>
                     </Center>
                     <Divider />
                     <Button
                         component="a"
-                        href={import.meta.env.PUBLIC_WORKER_URL}
+                        href={import.meta.env.VITE_WORKER_URL}
                         fullWidth={true}
                     >
                         Login to Github
@@ -71,7 +71,7 @@ export function Sidebar(props: SidebarProps) {
                     { /* TODO: add back when enterprise oauth flow can be verified */}
                     {/* <Button
                         component="a"
-                        href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
+                        href={import.meta.env.VITE_WORKER_ENTERPRISE_URL}
                         fullWidth={true}
                     >
                         Login to Github (Enterprise)
@@ -83,7 +83,7 @@ export function Sidebar(props: SidebarProps) {
     return (
         <>
             <AppShell.Section>
-                <Title my={5} order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
+                <Title my={5} order={4}>{import.meta.env.VITE_APP_NAME}</Title>
             </AppShell.Section>
             <Divider p={5} />
             <AppShell.Section

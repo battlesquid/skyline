@@ -7,7 +7,6 @@ import { Provider } from "urql";
 import { client } from "./api/client";
 import App from "./App";
 import { preloadDefaultFonts } from "./stores";
-import { loadLogin } from "./api/auth";
 
 preloadDefaultFonts();
 

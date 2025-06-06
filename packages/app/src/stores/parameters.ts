@@ -1,4 +1,4 @@
-import { FontData } from "@react-three/drei";
+import type { FontData } from "@react-three/drei";
 import { create } from "zustand";
 import { getDefaultParameters } from "../defaults";
 
