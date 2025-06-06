@@ -1,19 +1,24 @@
 {
-  "name": "skyline",
-  "private": true,
-  "version": "1.0.0",
-  "workspaces": ["packages/*"],
-  "scripts": {
-    "dev": "pnpm --filter=@skyline/app run dev",
-    "clean:dist": "rm -rf ./packages/**/dist packages/**/tsconfig.tsbuildinfo",
-    "clean:packages": "rm -rf packages/**/node_modules node_modules"
-  },
-  "devDependencies": {
-    "prettier": "^3.3.3",
-    "typescript": "^5.6.3"
-  },
-  "volta": {
-    "node": "22.14.0",
-    "pnpm": "10.7.0"
-  }
+	"name": "skyline",
+	"private": true,
+	"version": "1.0.0",
+	"workspaces": ["packages/*"],
+	"scripts": {
+		"dev": "pnpm --filter=@skyline/app run dev",
+		"neat": "biome check .",
+		"neat:fix": "biome check . --write",
+		"clean:dist": "rm -rf ./packages/**/dist packages/**/tsconfig.tsbuildinfo",
+		"clean:packages": "rm -rf packages/**/node_modules node_modules"
+	},
+	"devDependencies": {
+		"prettier": "^3.3.3",
+		"typescript": "^5.6.3"
+	},
+	"volta": {
+		"node": "22.14.0",
+		"pnpm": "10.7.0"
+	},
+	"dependencies": {
+		"@biomejs/biome": "^1.9.4"
+	}
 }

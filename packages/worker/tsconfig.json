@@ -1,22 +1,18 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "lib": [
-      "esnext"
-    ],
-    "strict": true,
-    "types": [
-      "@cloudflare/workers-types"
-    ],
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "moduleDetection": "force",
-    "isolatedModules": true
-  },
-  "include": ["src/**/*.ts"]
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"lib": ["esnext"],
+		"strict": true,
+		"types": ["@cloudflare/workers-types"],
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"target": "es2022",
+		"allowJs": true,
+		"moduleDetection": "force",
+		"isolatedModules": true
+	},
+	"include": ["src/**/*.ts"]
 }
