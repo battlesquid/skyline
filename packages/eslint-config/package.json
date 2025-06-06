@@ -1,15 +1,15 @@
 {
-  "name": "@skyline/eslint-config",
-  "main": "index.mjs",
-  "type": "module",
-  "version": "1.0.0",
-  "devDependencies": {
-    "@eslint/js": "^9.12.0",
-    "globals": "^15.11.0",
-    "prettier": "^3.3.3",
-    "typescript-eslint": "^8.8.1"
-  },
-  "peerDependencies": {
-    "eslint": ">= 9"
-  }
+	"name": "@skyline/eslint-config",
+	"main": "index.mjs",
+	"type": "module",
+	"version": "1.0.0",
+	"devDependencies": {
+		"@eslint/js": "^9.12.0",
+		"globals": "^15.11.0",
+		"prettier": "^3.3.3",
+		"typescript-eslint": "^8.8.1"
+	},
+	"peerDependencies": {
+		"eslint": ">= 9"
+	}
 }

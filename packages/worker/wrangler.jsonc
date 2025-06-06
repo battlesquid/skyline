@@ -1,11 +1,11 @@
 {
-    "$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
-    "name": "gh-skyline",
-    "main": "src/index.ts",
-    "compatibility_date": "2024-12-10",
-    "account_id": "43a4f22039b08a57004057adc36bf4d0",
-    "vars": {
-        "PNPM_VERSION": "10.7.0",
-        "NODE_VERSION": "22.14.0"
-    }
+	"$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
+	"name": "gh-skyline",
+	"main": "src/index.ts",
+	"compatibility_date": "2024-12-10",
+	"account_id": "43a4f22039b08a57004057adc36bf4d0",
+	"vars": {
+		"PNPM_VERSION": "10.7.0",
+		"NODE_VERSION": "22.14.0"
+	}
 }

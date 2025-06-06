@@ -1,25 +1,20 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "target": "ES2022",
-        "lib": [
-            "DOM",
-            "ES2022"
-        ],
-        "module": "ESNext",
-        "jsx": "react-jsx",
-        "noEmit": true,
-        "moduleResolution": "bundler",
-        "moduleDetection": "force",
-        "plugins": [
-            {
-                "name": "gql.tada/ts-plugin",
-                "schema": "./node_modules/@octokit/graphql-schema/schema.graphql",
-                "tadaOutputLocation": "./src/api/graphql-env.d.ts"
-            }
-        ]
-    },
-    "include": [
-        "./src"
-    ]
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["DOM", "ES2022"],
+		"module": "ESNext",
+		"jsx": "react-jsx",
+		"noEmit": true,
+		"moduleResolution": "bundler",
+		"moduleDetection": "force",
+		"plugins": [
+			{
+				"name": "gql.tada/ts-plugin",
+				"schema": "./node_modules/@octokit/graphql-schema/schema.graphql",
+				"tadaOutputLocation": "./src/api/graphql-env.d.ts"
+			}
+		]
+	},
+	"include": ["./src"]
 }
