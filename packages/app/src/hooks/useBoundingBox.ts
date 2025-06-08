@@ -27,6 +27,6 @@ export const useBoundingBox = (
 		} else {
 			setSize(bb.getSize(new Vector3()));
 		}
-	}, [...deps]);
+	}, deps);
 	return { size };
 };

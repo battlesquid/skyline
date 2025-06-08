@@ -1,38 +1,33 @@
 import {
-	Accordion,
-	AppShell,
-	Button,
-	Center,
-	Checkbox,
-	ColorInput,
-	Divider,
-	Group,
-	NumberInput,
-	ScrollArea,
-	Stack,
-	Text,
-	TextInput,
-	Title,
+    Accordion,
+    AppShell,
+    Button,
+    Center,
+    Checkbox,
+    ColorInput,
+    Divider,
+    Group,
+    NumberInput,
+    ScrollArea,
+    Stack,
+    Text,
+    TextInput,
+    Title,
 } from "@mantine/core";
 import { IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import type { Vector3 } from "three";
-import type { UserProfile } from "../../api/auth";
-import { exportScene } from "../../export_scene";
-import { useParametersStore, useSceneStore } from "../../stores";
-import accordionClasses from "../../styles/accordion.module.css";
-import { Profile } from "../profile";
+import type { UserProfile } from "../api/auth";
+import { useParametersStore, useSceneStore } from "../stores";
+import accordionClasses from "../styles/accordion.module.css";
+import { exportScene, getDimensionsText } from "../three/utils";
 import { FontInput } from "./font_input";
+import { Profile } from "./profile";
 
 interface SidebarProps {
 	profile: UserProfile | null;
 	authenticated: boolean;
 	ok: boolean;
 }
-
-const getDimensionsText = (scale: number, size: Vector3) => {
-	return `${Math.round(size.x * scale)}mm × ${Math.round(size.y * scale)}mm × ${Math.round(size.z * scale)}mm`;
-};
 
 const safeFloat = (value: string | number, min: number) => {
 	if (value === "") {

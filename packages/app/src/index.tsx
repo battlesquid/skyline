@@ -19,6 +19,6 @@ if (rootEl) {
 					<App />
 				</Provider>
 			</MantineProvider>
-		</React.StrictMode>,
+		</React.StrictMode>
 	);
 }
