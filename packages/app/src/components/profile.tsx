@@ -24,7 +24,7 @@ export function Profile(props: ProfileProps) {
 		<Paper p={15} style={{ backgroundColor: theme.colors.dark[8] }}>
 			<Flex align="center" justify="space-between">
 				<Flex align="center" gap={10}>
-					<Avatar src={avatarUrl} alt={name ?? ""} />
+					<Avatar src={avatarUrl} alt={login ?? ""} />
 					<div>
 						<Text size="sm" fw="bold">
 							{name}
