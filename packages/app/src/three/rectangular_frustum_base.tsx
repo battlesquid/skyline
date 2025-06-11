@@ -5,7 +5,7 @@ import { useParametersStore } from "../stores";
 import type { ContributionWeeks } from "../api/types";
 import { Text3D } from "@react-three/drei";
 import { formatYearText } from "../api/utils";
-import { ModalBaseHeader } from "@mantine/core";
+import { useModelVariablesStore } from "../stores/model_variables";
 
 export interface RectangularFrustumProps {
     width: number;
@@ -17,7 +17,8 @@ export interface RectangularFrustumProps {
 
 export function RectangularFrustum(props: RectangularFrustumProps) {
     const { parameters } = useParametersStore();
-
+    const {variables} = useModelVariablesStore();
+    
     const topWidth = props.width;
     const topLength = props.length; // base width/height
     const baseWidth = props.width + 5;
@@ -94,30 +95,27 @@ export function RectangularFrustum(props: RectangularFrustumProps) {
         props.years,
     ]);
 
-    const centerX = -(topWidth + baseWidth) / 4; // midpoint of near and far left x positions
-const centerY = 0;
-const centerZ = props.height / 2;
-
 // Compute tilt angle between near and far planes on the x-axis
-const angleX = Math.atan2(baseLength, topLength); // tilt in Z-X plane
+console.log(-props.height, (baseLength / 2))
+const angleX = Math.atan2(-props.height, (baseLength / 2) - 4); // tilt in Z-X plane
 
 
     return (
-        <>
+        <group>
         
            <Text3D
                 ref={nameRef}
                 font={parameters.font}
-                  rotation={[angleX, 0, 0]}
+                rotation={[angleX, 0, 0]}
                 receiveShadow
                 castShadow
                 position={[
-                    -props.width / 2 + nameDimensions.width / 2 + 12,
-                    -props.height / 2 - 0.5,
-                    (props.length * props.years.length) / 2 + parameters.padding - 0.1,
+                    -variables.xMidpointOffset + nameDimensions.width / 2 + 12,
+                    -variables.platformMidpoint - 0.5,
+                    (variables.modelWidth * props.years.length) / 2 + parameters.padding + 3,
                 ]}
                 height={parameters.textDepth}
-                size={props.height / 2.2}
+                size={variables.textSize}
             >
                 {parameters.name}
                 <meshStandardMaterial color={props.color} />
@@ -127,13 +125,14 @@ const angleX = Math.atan2(baseLength, topLength); // tilt in Z-X plane
                 font={parameters.font}
                 receiveShadow
                 castShadow
+                rotation={[angleX, 0, 0]}
                 position={[
-                    props.width / 2 - yearDimensions.width / 2 - 5,
-                    -props.height / 2 - 0.5,
-                    (props.length * props.years.length) / 2 + parameters.padding - 0.1,
+                    variables.xMidpointOffset - yearDimensions.width / 2 - 5,
+                    -variables.platformMidpoint  - 0.5,
+                    (variables.modelWidth * props.years.length) / 2 + parameters.padding + 3,
                 ]}
                 height={parameters.textDepth}
-                size={props.height / 2.2}
+                size={variables.textSize}
             >
                 {formatYearText(parameters.startYear, parameters.endYear)}
                 <meshStandardMaterial color={props.color} />
@@ -141,7 +140,7 @@ const angleX = Math.atan2(baseLength, topLength); // tilt in Z-X plane
         <mesh ref={mesh} castShadow receiveShadow geometry={geometry}>
             <meshStandardMaterial flatShading side={FrontSide} color={props.color} />
         </mesh>
-        </>
+        </group>
     )
 }
 

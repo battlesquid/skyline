@@ -17,6 +17,7 @@ import { ContributionTower } from "./contribution_tower";
 import { calculateFirstDayOffset, formatYearText } from "../api/utils";
 import { type Dimensions, getDimensions } from "./utils";
 import { RectangularFrustum } from "./rectangular_frustum_base";
+import { useModelVariablesStore } from "../stores/model_variables";
 
 export interface SkylineModelProps {
     group: RefObject<Group | null>;
@@ -26,15 +27,33 @@ export interface SkylineModelProps {
 export function SkylineModel(props: SkylineModelProps) {
     const { group, years } = props;
     const { parameters } = useParametersStore();
-    const MODEL_LENGTH = WEEKS_IN_YEAR * parameters.towerSize;
-    const MODEL_WIDTH = DAYS_IN_WEEK * parameters.towerSize;
-    const PLATFORM_HEIGHT = parameters.towerSize * 3;
-    const PLATFORM_MIDPOINT = PLATFORM_HEIGHT / 2;
-    const TEXT_SIZE = PLATFORM_HEIGHT / 2.2;
-    const TOWER_SIZE_OFFSET = parameters.towerSize / 2;
-    const X_MIDPOINT_OFFSET = MODEL_LENGTH / 2;
-    const Y_MIDPOINT_OFFSET = MODEL_WIDTH / 2;
-    const PADDING_WIDTH = parameters.padding * 2;
+    const { variables, setModelVariables } = useModelVariablesStore();
+
+    useEffect(() => {
+        const modelLength = WEEKS_IN_YEAR * parameters.towerSize;
+        const modelWidth = DAYS_IN_WEEK * parameters.towerSize;
+        const platformHeight = parameters.towerSize * 3;
+        const platformMidpoint = platformHeight / 2;
+        const textSize = platformHeight / 2.2;
+        const towerSizeOffset = parameters.towerSize / 2;
+        const xMidpointOffset = modelLength / 2;
+        const yMidpointOffset = modelWidth / 2;
+        const paddingWidth = parameters.padding * 2;
+        setModelVariables({
+            modelLength,
+            modelWidth,
+            platformMidpoint,
+            platformHeight,
+            textSize,
+            towerSizeOffset,
+            xMidpointOffset,
+            yMidpointOffset,
+            paddingWidth
+        })
+    }, [
+        parameters.towerSize,
+        parameters.padding
+    ])
 
     const scene = useThree((state) => state.scene);
     const sceneStore = useSceneStore();
@@ -153,9 +172,9 @@ export function SkylineModel(props: SkylineModelProps) {
         }
         const idx = id.current;
         id.current++;
-        const YEAR_OFFSET = MODEL_WIDTH * yearIdx;
+        const YEAR_OFFSET = variables.modelWidth * yearIdx;
         const centerOffset =
-            years.length === 1 ? 0 : -(MODEL_WIDTH * (years.length - 1)) / 2;
+            years.length === 1 ? 0 : -(variables.modelWidth * (years.length - 1)) / 2;
         const towerColors = parameters.showContributionColor
             ? contributionColors.instanced
             : defaultColors.instanced;
@@ -168,14 +187,14 @@ export function SkylineModel(props: SkylineModelProps) {
                 key={day.date.toString()}
                 day={day}
                 x={
-                    weekIdx * parameters.towerSize - X_MIDPOINT_OFFSET + TOWER_SIZE_OFFSET
+                    weekIdx * parameters.towerSize - variables.xMidpointOffset + variables.towerSizeOffset
                 }
                 y={
                     centerOffset +
                     YEAR_OFFSET +
                     ((dayIdx + weekOffset) * parameters.towerSize -
-                        Y_MIDPOINT_OFFSET +
-                        TOWER_SIZE_OFFSET)
+                        variables.yMidpointOffset +
+                        variables.towerSizeOffset)
                 }
                 size={getDefaultParameters().towerSize}
                 dampening={parameters.dampening}
@@ -270,7 +289,7 @@ export function SkylineModel(props: SkylineModelProps) {
                     </Instances>
                 </group>
             )}
-            <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
+            <mesh castShadow receiveShadow position={[0, -variables.platformMidpoint, 0]}>
                 {/* <boxGeometry
                     args={[
                         MODEL_LENGTH + PADDING_WIDTH,
@@ -280,19 +299,19 @@ export function SkylineModel(props: SkylineModelProps) {
                 /> */}
                 {/* <meshStandardMaterial color={modelColor} /> */}
             </mesh>
-                <RectangularFrustum
-                    width={MODEL_LENGTH + PADDING_WIDTH}
-                    length={MODEL_WIDTH * years.length + PADDING_WIDTH}
-                    height={PLATFORM_HEIGHT}
-                    color={modelColor}
-                    years={years}
-                />
+            <RectangularFrustum
+                width={variables.modelLength + variables.paddingWidth}
+                length={variables.modelWidth * years.length + variables.paddingWidth}
+                height={variables.platformHeight}
+                color={modelColor}
+                years={years}
+            />
             <group
                 ref={logo}
                 position={[
-                    -X_MIDPOINT_OFFSET + 5,
-                    -PLATFORM_MIDPOINT / 2 + 0.5,
-                    (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
+                    -variables.xMidpointOffset + 5,
+                    -variables.platformMidpoint / 2 + 0.5,
+                    (variables.modelWidth * years.length) / 2 + parameters.padding - 0.1,
                 ]}
             />
             {/* <Text3D
