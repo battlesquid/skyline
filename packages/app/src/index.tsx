@@ -3,7 +3,7 @@ import "@mantine/core/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "urql";
-import App from "./App";
+import App from "./app";
 import { client } from "./api/client";
 import { preloadDefaultFonts } from "./stores";
 

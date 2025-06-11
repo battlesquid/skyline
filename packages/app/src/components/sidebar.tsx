@@ -258,7 +258,7 @@ export function Sidebar(props: SidebarProps) {
                         exportScene(
                             scene,
                             filename.trim() === ""
-                                ? `${parameters.name}_${formatYearText(parameters.startYear, parameters.endYear)}_contribution`
+                                ? `${parameters.name}_${formatYearText(parameters.startYear, parameters.endYear)}_skyline`
                                 : filename,
                         )
                     }

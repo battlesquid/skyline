@@ -1,5 +1,3 @@
-import { getUsername } from "./api/auth";
-
 export const getDefaultFonts = () => ({
 	Inter: "/Inter_Regular.json",
 	"Inter Bold": "/Inter_Bold.json",
@@ -14,7 +12,7 @@ export const DEFAULT_FONT_SELECTION = "Inter Bold";
 export const DEFAULT_FONT = getDefaultFonts()[DEFAULT_FONT_SELECTION];
 
 export const getDefaultParameters = () => ({
-	name: getUsername() ?? "Battlesquid",
+	name: "Battlesquid",
 	startYear: new Date().getFullYear(),
 	endYear: new Date().getFullYear(),
 	color: "#575757",

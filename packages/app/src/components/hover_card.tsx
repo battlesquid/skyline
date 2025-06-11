@@ -1,7 +1,6 @@
 import { Card, Text } from "@mantine/core";
+import { useRef } from "react";
 import { useTowerStore } from "../stores/tower";
-import { useEffect, useRef, useState } from "react";
-import type { Dimensions } from "../three/utils";
 
 export function HoverCard() {
     const { position, target } = useTowerStore();
@@ -12,16 +11,6 @@ export function HoverCard() {
         ? target.contributionCount
         : 0;
     const card = useRef<HTMLDivElement | null>(null);
-    const [cardSize, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
-    useEffect(() => {
-        if (card.current === null) {
-            return;
-        }
-        setDimensions({
-            width: card.current.offsetWidth,
-            height: card.current.offsetHeight
-        });
-    }, [target]);
     let x = position.x;
     let y = position.y;
     if (card.current) {

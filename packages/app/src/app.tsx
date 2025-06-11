@@ -1,16 +1,13 @@
 import { AppShell, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import tunnel from "tunnel-rat";
 import { isAuthenticated } from "./api/auth";
-import "./App.css";
+import "./styles/app.css";
 import { HoverCard } from "./components/hover_card";
 import { Sidebar } from "./components/sidebar";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { useProfile } from "./hooks/useProfile";
 import { useParametersStore } from "./stores";
 import { Skyline } from "./three/skyline";
-
-export const t = tunnel();
 
 export default function App() {
     const { parameters } = useParametersStore();
