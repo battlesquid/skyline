@@ -16,6 +16,7 @@ import { useParametersStore, useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
 import { calculateFirstDayOffset, formatYearText } from "../api/utils";
 import { type Dimensions, getDimensions } from "./utils";
+import { RectangularFrustum } from "./rectangular_frustum_base";
 
 export interface SkylineModelProps {
     group: RefObject<Group | null>;
@@ -270,15 +271,22 @@ export function SkylineModel(props: SkylineModelProps) {
                 </group>
             )}
             <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
-                <boxGeometry
+                {/* <boxGeometry
                     args={[
                         MODEL_LENGTH + PADDING_WIDTH,
                         PLATFORM_HEIGHT,
                         MODEL_WIDTH * years.length + PADDING_WIDTH,
                     ]}
-                />
-                <meshStandardMaterial color={modelColor} />
+                /> */}
+                {/* <meshStandardMaterial color={modelColor} /> */}
             </mesh>
+                <RectangularFrustum
+                    width={MODEL_LENGTH + PADDING_WIDTH}
+                    length={MODEL_WIDTH * years.length + PADDING_WIDTH}
+                    height={PLATFORM_HEIGHT}
+                    color={modelColor}
+                    years={years}
+                />
             <group
                 ref={logo}
                 position={[
@@ -287,7 +295,7 @@ export function SkylineModel(props: SkylineModelProps) {
                     (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
                 ]}
             />
-            <Text3D
+            {/* <Text3D
                 ref={nameRef}
                 font={parameters.font}
                 receiveShadow
@@ -318,7 +326,7 @@ export function SkylineModel(props: SkylineModelProps) {
             >
                 {formatYearText(parameters.startYear, parameters.endYear)}
                 <meshStandardMaterial color={modelColor} />
-            </Text3D>
+            </Text3D> */}
         </group>
     );
 }
