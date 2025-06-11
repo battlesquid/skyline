@@ -1,7 +1,7 @@
 import { type Scene, Vector3 } from "three";
 import { create } from "zustand";
 
-interface SceneStore {
+export interface SceneStore {
 	scene: Scene | null;
 	dirty: boolean;
 	size: Vector3;

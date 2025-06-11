@@ -2,7 +2,9 @@
 	"name": "skyline",
 	"private": true,
 	"version": "1.0.0",
-	"workspaces": ["packages/*"],
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"dev": "pnpm --filter=@skyline/app run dev",
 		"neat": "biome check .",
@@ -11,7 +13,6 @@
 		"clean:packages": "rm -rf packages/**/node_modules node_modules"
 	},
 	"devDependencies": {
-		"prettier": "^3.3.3",
 		"typescript": "^5.6.3"
 	},
 	"volta": {

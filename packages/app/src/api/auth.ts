@@ -2,7 +2,6 @@ import { client } from "./client";
 import { UserQuery } from "./query";
 
 const TOKEN_KEY = "token";
-const LOGIN_KEY = "login";
 
 export interface UserProfile {
 	name: string | null;
@@ -17,7 +16,7 @@ export const fetchProfile = async (): Promise<UserProfile | null> => {
 	}
 	return {
 		name: result.data.viewer.name,
-		avatarUrl: result.data.viewer.avatarUrl as string, // TODO: make sure default avatars aren't affected by this
+		avatarUrl: result.data.viewer.avatarUrl as string,
 		login: result.data.viewer.login,
 	};
 };
@@ -71,15 +70,3 @@ export const logout = () => {
 	deleteToken();
 	location.reload();
 };
-
-export const loadLogin = async () => {
-	if (localStorage.getItem(LOGIN_KEY) === null) {
-		const profile = await fetchProfile();
-		if (profile === null) {
-			return;
-		}
-		localStorage.setItem(LOGIN_KEY, profile.login);
-	}
-};
-
-export const getUsername = () => localStorage.getItem(LOGIN_KEY);

@@ -1,5 +1,25 @@
-import type { InstancedMesh, Scene } from "three";
-import { STLExporter, SceneUtils } from "three-stdlib";
+import type { InstancedMesh, Mesh, Scene, Vector3 } from "three";
+import { SceneUtils, STLExporter } from "three-stdlib";
+
+export interface Dimensions {
+    width: number;
+    height: number;
+};
+
+export const getDimensions = (mesh: Mesh | null): Dimensions => {
+    if (mesh === null) {
+        return { width: 0, height: 0 };
+    }
+    mesh.geometry.computeBoundingBox();
+    mesh.geometry.center();
+    if (mesh?.geometry.boundingBox === null) {
+        return { width: 0, height: 0 };
+    }
+    return {
+        width: mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x,
+        height: mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y,
+    };
+};
 
 export const exportScene = (scene: Scene | null, name: string) => {
 	if (scene === null) {
@@ -35,4 +55,8 @@ export const exportScene = (scene: Scene | null, name: string) => {
 	link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
 	link.download = `${name}.stl`;
 	link.click();
+};
+
+export const getDimensionsText = (scale: number, size: Vector3) => {
+	return `${Math.round(size.x * scale)}mm × ${Math.round(size.y * scale)}mm × ${Math.round(size.z * scale)}mm`;
 };

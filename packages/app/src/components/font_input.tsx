@@ -11,8 +11,8 @@ import {
 } from "@mantine/core";
 import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useState } from "react";
-import { DEFAULT_FONT_SELECTION } from "../../defaults";
-import { useFontStore, useParametersStore } from "../../stores";
+import { DEFAULT_FONT_SELECTION } from "../defaults";
+import { useFontStore, useParametersStore } from "../stores";
 
 export function FontInput() {
 	const { parameters, setParameters } = useParametersStore();
