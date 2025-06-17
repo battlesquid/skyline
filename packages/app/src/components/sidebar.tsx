@@ -84,14 +84,13 @@ export function Sidebar(props: SidebarProps) {
 					>
 						Login to Github
 					</Button>
-					{/* TODO: add back when enterprise oauth flow can be verified */}
-					{/* <Button
+					<Button
                         component="a"
                         href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
                         fullWidth={true}
                     >
                         Login to Github (Enterprise)
-                    </Button> */}
+                    </Button>
 				</Stack>
 			</AppShell.Section>
 		);
