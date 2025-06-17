@@ -1,4 +1,3 @@
-import { type Scene, Vector3 } from "three";
 import { create } from "zustand";
 import type { ContributionDay } from "../api/types";
 

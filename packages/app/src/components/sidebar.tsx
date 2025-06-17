@@ -19,7 +19,6 @@ import { IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "../api/auth";
 import { formatYearText } from "../api/utils";
-import { getDefaultParameters } from "../defaults";
 import { useParametersStore } from "../stores/parameters";
 import { useSceneStore } from "../stores/scene";
 import accordionClasses from "../styles/accordion.module.css";
