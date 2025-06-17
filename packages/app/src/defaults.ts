@@ -27,7 +27,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
         textDepth: 1.75,
         towerSize: 2.5,
         dampening: 4,
-        shape: SkylineBaseShape.Frustum
+        shape: SkylineBaseShape.Prism
     };
 
     const modelLength = WEEKS_IN_YEAR * inputs.towerSize;
