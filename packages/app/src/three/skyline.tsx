@@ -22,11 +22,9 @@ export function Skyline(props: SkylineProps) {
     return (
         <Canvas style={style} camera={camera} shadows>
             <color attach="background" args={[theme.colors.dark[6]]} />
-            <Suspense fallback={null}>
-                <Bounds fit clip margin={1}>
-                    <SkylineModel group={group} years={years} />
-                </Bounds>
-            </Suspense>
+            <Bounds fit clip margin={1}>
+                <SkylineModel group={group} years={years} />
+            </Bounds>
             <ambientLight intensity={Math.PI / 2} />
             <spotLight
                 castShadow

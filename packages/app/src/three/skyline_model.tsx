@@ -1,6 +1,6 @@
 import { Instances, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { type RefObject, useEffect, useMemo, useRef } from "react";
+import { MutableRefObject, useEffect, useMemo, useRef } from "react";
 import { Color, type Group } from "three";
 import type {
     ContributionDay,
@@ -16,7 +16,7 @@ import { ContributionTower } from "./contribution_tower";
 import { SkylineBase } from "./skyline_base";
 
 export interface SkylineModelProps {
-    group: RefObject<Group | null>;
+    group: MutableRefObject<Group | null>;
     years: ContributionWeeks[];
 }
 
@@ -109,7 +109,7 @@ export function SkylineModel(props: SkylineModelProps) {
         weekIdx: number,
         weekOffset: number,
         dayIdx: number,
-        id: RefObject<number>,
+        id: MutableRefObject<number>,
     ) => {
         if (day.contributionCount === 0) {
             return null;
@@ -157,7 +157,7 @@ export function SkylineModel(props: SkylineModelProps) {
         yearIdx: number,
         weekIdx: number,
         weekOffset: number,
-        id: RefObject<number>,
+        id: MutableRefObject<number>,
     ) => {
         return week.contributionDays.map((day, dayIdx) =>
             renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id),
@@ -167,7 +167,7 @@ export function SkylineModel(props: SkylineModelProps) {
     const renderYear = (
         weeks: ContributionWeeks,
         yearIdx: number,
-        id: RefObject<number>,
+        id: MutableRefObject<number>,
     ) => {
         return weeks.map((week, weekIdx) => {
             let weekOffset = 0;
