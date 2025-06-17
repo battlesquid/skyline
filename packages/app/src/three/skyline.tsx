@@ -1,13 +1,12 @@
 import { useMantineTheme } from "@mantine/core";
 import {
-	Bounds,
-	Environment,
-	Grid,
-	OrbitControls,
-	Wireframe,
+    Bounds,
+    Environment,
+    Grid,
+    OrbitControls
 } from "@react-three/drei";
 import { Canvas, type RenderProps } from "@react-three/fiber";
-import { Suspense, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import type { Group } from "three";
 import { useParametersStore } from "../stores/parameters";
 import { SkylineModel, type SkylineModelProps } from "./skyline_model";

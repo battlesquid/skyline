@@ -13,7 +13,7 @@
 		"@mantine/core": "^8.0.2",
 		"@mantine/hooks": "^8.0.2",
 		"@octokit/graphql": "^9.0.1",
-		"@react-three/drei": "^10.1.2",
+		"@react-three/drei": "^9.122.0",
 		"@react-three/fiber": "^8.18.0",
 		"@tabler/icons-react": "^3.26.0",
 		"@urql/exchange-auth": "^2.2.0",
