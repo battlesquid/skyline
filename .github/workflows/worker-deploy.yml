@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose an environment to deploy to: <dev|staging|prod>"
+        required: true
+        default: "prod"
 
 jobs:
   deploy:
@@ -25,3 +31,4 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           packageManager: pnpm
           workingDirectory: ./packages/worker
+          command: deploy --env ${{ github.event.inputs.environment }}
