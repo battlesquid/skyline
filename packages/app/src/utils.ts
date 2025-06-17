@@ -16,3 +16,7 @@ export const getSvgBoundingBox = (svg: string) => {
 		height,
 	};
 };
+
+export const marqueeClamp = (value: number, min: number, max: number) => {
+	return value > max ? min : value;
+}
