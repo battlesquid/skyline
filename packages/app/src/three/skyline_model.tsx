@@ -1,23 +1,18 @@
-import { Instances, Text3D, useBounds } from "@react-three/drei";
+import { Instances, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { type RefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Color, type Group, type Mesh, MeshStandardMaterial } from "three";
+import { type RefObject, useEffect, useMemo, useRef } from "react";
+import { Color, type Group } from "three";
 import type {
     ContributionDay,
     ContributionWeek,
     ContributionWeeks,
 } from "../api/types";
-import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
+import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
-import { useSvgMesh } from "../hooks/useSvgMesh";
-import { LOGOS } from "../logos";
 import { useParametersStore, useSceneStore } from "../stores";
 import { ContributionTower } from "./contribution_tower";
-import { calculateFirstDayOffset, formatYearText } from "../api/utils";
-import { type Dimensions, getDimensions } from "./utils";
-import { RectangularFrustum } from "./rectangular_frustum_base";
-import { useModelVariablesStore } from "../stores/model_variables";
+import { SkylineBase } from "./skyline_base";
 
 export interface SkylineModelProps {
     group: RefObject<Group | null>;
@@ -27,33 +22,6 @@ export interface SkylineModelProps {
 export function SkylineModel(props: SkylineModelProps) {
     const { group, years } = props;
     const { parameters } = useParametersStore();
-    const { variables, setModelVariables } = useModelVariablesStore();
-
-    useEffect(() => {
-        const modelLength = WEEKS_IN_YEAR * parameters.towerSize;
-        const modelWidth = DAYS_IN_WEEK * parameters.towerSize;
-        const platformHeight = parameters.towerSize * 3;
-        const platformMidpoint = platformHeight / 2;
-        const textSize = platformHeight / 2.2;
-        const towerSizeOffset = parameters.towerSize / 2;
-        const xMidpointOffset = modelLength / 2;
-        const yMidpointOffset = modelWidth / 2;
-        const paddingWidth = parameters.padding * 2;
-        setModelVariables({
-            modelLength,
-            modelWidth,
-            platformMidpoint,
-            platformHeight,
-            textSize,
-            towerSizeOffset,
-            xMidpointOffset,
-            yMidpointOffset,
-            paddingWidth
-        })
-    }, [
-        parameters.towerSize,
-        parameters.padding
-    ])
 
     const scene = useThree((state) => state.scene);
     const sceneStore = useSceneStore();
@@ -80,37 +48,12 @@ export function SkylineModel(props: SkylineModelProps) {
             }
         };
     }, [
-        parameters.dampening,
-        parameters.name,
-        parameters.startYear,
-        parameters.endYear,
-        parameters.padding,
-        parameters.font,
-    ]);
-
-    const yearRef = useRef<Mesh | null>(null);
-    const nameRef = useRef<Mesh | null>(null);
-
-    const [yearDimensions, setYearDimensions] = useState<Dimensions>({
-        width: 0,
-        height: 0,
-    });
-    const [nameDimensions, setNameDimensions] = useState<Dimensions>({
-        width: 0,
-        height: 0,
-    });
-    useEffect(() => {
-        if (nameRef.current === null || yearRef.current === null) {
-            return;
-        }
-        setNameDimensions(getDimensions(nameRef.current));
-        setYearDimensions(getDimensions(yearRef.current));
-    }, [
-        parameters.name,
-        parameters.startYear,
-        parameters.endYear,
-        parameters.font,
-        years,
+        parameters.inputs.dampening,
+        parameters.inputs.name,
+        parameters.inputs.startYear,
+        parameters.inputs.endYear,
+        parameters.inputs.padding,
+        parameters.inputs.font,
     ]);
 
     useBoundingBox(
@@ -118,16 +61,16 @@ export function SkylineModel(props: SkylineModelProps) {
             obj: group,
             setter: (bb) => sceneStore.setSize(bb),
         },
-        [parameters, yearDimensions, nameDimensions, years],
+        [parameters, years],
     );
 
     const id = useRef<number>(0);
     const tempColor = new Color();
     const multColor = new Color();
 
-    const modelColor = parameters.showContributionColor
-        ? getDefaultParameters().color
-        : parameters.color;
+    const renderColor = parameters.inputs.showContributionColor
+        ? getDefaultParameters().inputs.color
+        : parameters.inputs.color;
 
     const contributionColors = useMemo(() => {
         if (years.length === 0) {
@@ -152,12 +95,12 @@ export function SkylineModel(props: SkylineModelProps) {
         }
         const raw = Array(contributionColors.raw.length)
             .fill(0)
-            .flatMap((_) => tempColor.set(parameters.color));
+            .flatMap((_) => tempColor.set(parameters.inputs.color));
         const instanced = Float32Array.from(
-            raw.flatMap((_) => tempColor.set(parameters.color).toArray()),
+            raw.flatMap((_) => tempColor.set(parameters.inputs.color).toArray()),
         );
         return { raw, instanced };
-    }, [contributionColors.raw.length, parameters.color]);
+    }, [contributionColors.raw.length, parameters.inputs.color]);
 
     const renderDay = (
         day: ContributionDay,
@@ -172,13 +115,13 @@ export function SkylineModel(props: SkylineModelProps) {
         }
         const idx = id.current;
         id.current++;
-        const YEAR_OFFSET = variables.modelWidth * yearIdx;
+        const YEAR_OFFSET = parameters.computed.modelWidth * yearIdx;
         const centerOffset =
-            years.length === 1 ? 0 : -(variables.modelWidth * (years.length - 1)) / 2;
-        const towerColors = parameters.showContributionColor
+            years.length === 1 ? 0 : -(parameters.computed.modelWidth * (years.length - 1)) / 2;
+        const towerColors = parameters.inputs.showContributionColor
             ? contributionColors.instanced
             : defaultColors.instanced;
-        const highlightBase = parameters.showContributionColor
+        const highlightBase = parameters.inputs.showContributionColor
             ? contributionColors.raw[idx]
             : defaultColors.raw[idx];
         const highlight = multColor.set(highlightBase).multiplyScalar(1.6).getHex();
@@ -187,17 +130,17 @@ export function SkylineModel(props: SkylineModelProps) {
                 key={day.date.toString()}
                 day={day}
                 x={
-                    weekIdx * parameters.towerSize - variables.xMidpointOffset + variables.towerSizeOffset
+                    weekIdx * parameters.inputs.towerSize - parameters.computed.xMidpointOffset + parameters.computed.towerSizeOffset
                 }
                 y={
                     centerOffset +
                     YEAR_OFFSET +
-                    ((dayIdx + weekOffset) * parameters.towerSize -
-                        variables.yMidpointOffset +
-                        variables.towerSizeOffset)
+                    ((dayIdx + weekOffset) * parameters.inputs.towerSize -
+                        parameters.computed.yMidpointOffset +
+                        parameters.computed.towerSizeOffset)
                 }
-                size={getDefaultParameters().towerSize}
-                dampening={parameters.dampening}
+                size={getDefaultParameters().inputs.towerSize}
+                dampening={parameters.inputs.dampening}
                 onPointerEnter={() =>
                     tempColor.set(highlight).toArray(towerColors, idx * 3)
                 }
@@ -239,28 +182,6 @@ export function SkylineModel(props: SkylineModelProps) {
         return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx, id));
     };
 
-    const logo = useRef<Group | null>(null);
-    const material = useMemo(
-        () =>
-            new MeshStandardMaterial({
-                color: parameters.showContributionColor
-                    ? getDefaultParameters().color
-                    : parameters.color,
-            }),
-        [parameters.color, parameters.showContributionColor],
-    );
-    const { meshes } = useSvgMesh(LOGOS.Circle, material);
-    useEffect(() => {
-        if (logo.current === null) {
-            return;
-        }
-        logo.current.clear();
-        for (const mesh of meshes) {
-            logo.current?.add(mesh);
-        }
-        logo.current.scale.set(0.005, -0.005, 0.005);
-    }, [logo.current, meshes]);
-
     return (
         <group ref={group}>
             <group name="export_group" />
@@ -270,14 +191,14 @@ export function SkylineModel(props: SkylineModelProps) {
                         castShadow
                         receiveShadow
                         name="instances"
-                        key={`${years.length}-${parameters.showContributionColor}`}
+                        key={`${years.length}-${parameters.inputs.showContributionColor}`}
                         limit={contributionColors.instanced.length}
                     >
                         <boxGeometry>
                             <instancedBufferAttribute
                                 attach="attributes-color"
                                 args={[
-                                    parameters.showContributionColor
+                                    parameters.inputs.showContributionColor
                                         ? contributionColors.instanced
                                         : defaultColors.instanced,
                                     3,
@@ -289,63 +210,7 @@ export function SkylineModel(props: SkylineModelProps) {
                     </Instances>
                 </group>
             )}
-            <mesh castShadow receiveShadow position={[0, -variables.platformMidpoint, 0]}>
-                {/* <boxGeometry
-                    args={[
-                        MODEL_LENGTH + PADDING_WIDTH,
-                        PLATFORM_HEIGHT,
-                        MODEL_WIDTH * years.length + PADDING_WIDTH,
-                    ]}
-                /> */}
-                {/* <meshStandardMaterial color={modelColor} /> */}
-            </mesh>
-            <RectangularFrustum
-                width={variables.modelLength + variables.paddingWidth}
-                length={variables.modelWidth * years.length + variables.paddingWidth}
-                height={variables.platformHeight}
-                color={modelColor}
-                years={years}
-            />
-            <group
-                ref={logo}
-                position={[
-                    -variables.xMidpointOffset + 5,
-                    -variables.platformMidpoint / 2 + 0.5,
-                    (variables.modelWidth * years.length) / 2 + parameters.padding - 0.1,
-                ]}
-            />
-            {/* <Text3D
-                ref={nameRef}
-                font={parameters.font}
-                receiveShadow
-                castShadow
-                position={[
-                    -X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 12,
-                    -PLATFORM_MIDPOINT - 0.5,
-                    (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
-                ]}
-                height={parameters.textDepth}
-                size={TEXT_SIZE}
-            >
-                {parameters.name}
-                <meshStandardMaterial color={modelColor} />
-            </Text3D>
-            <Text3D
-                ref={yearRef}
-                font={parameters.font}
-                receiveShadow
-                castShadow
-                position={[
-                    X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 5,
-                    -PLATFORM_MIDPOINT - 0.5,
-                    (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
-                ]}
-                height={parameters.textDepth}
-                size={TEXT_SIZE}
-            >
-                {formatYearText(parameters.startYear, parameters.endYear)}
-                <meshStandardMaterial color={modelColor} />
-            </Text3D> */}
+            <SkylineBase color={renderColor} years={years} />
         </group>
     );
 }

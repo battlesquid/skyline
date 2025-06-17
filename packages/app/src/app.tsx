@@ -18,9 +18,9 @@ export default function App() {
         loading: profileLoading,
     } = useProfile();
     const { years, fetching, ok } = useExtendedQuery({
-        name: parameters.name,
-        start: parameters.startYear,
-        end: parameters.endYear,
+        name: parameters.inputs.name,
+        start: parameters.inputs.startYear,
+        end: parameters.inputs.endYear,
         profile: profilePromise,
     });
 

@@ -9,6 +9,7 @@ import {
     Group,
     NumberInput,
     ScrollArea,
+    Select,
     Stack,
     Text,
     TextInput,
@@ -23,6 +24,8 @@ import { exportScene, getDimensionsText } from "../three/utils";
 import { FontInput } from "./font_input";
 import { Profile } from "./profile";
 import { formatYearText } from "../api/utils";
+import { SkylineBaseShape } from "../three/skyline_base";
+import { capitalize } from "../utils";
 
 interface SidebarProps {
     profile: UserProfile | null;
@@ -48,8 +51,8 @@ export function Sidebar(props: SidebarProps) {
     const { profile, authenticated, ok } = props;
     const { parameters, setParameters } = useParametersStore();
     const [name, setName] = useState(profile?.login ?? "");
-    const [startYear, setStartYear] = useState(parameters.startYear);
-    const [endYear, setEndYear] = useState(parameters.endYear);
+    const [startYear, setStartYear] = useState(parameters.inputs.startYear);
+    const [endYear, setEndYear] = useState(parameters.inputs.endYear);
     const [scale, setScale] = useState(1);
     const [modified, setModified] = useState(false);
     const [filename, setFilename] = useState("");
@@ -148,7 +151,7 @@ export function Sidebar(props: SidebarProps) {
                     <Button
                         fullWidth
                         onClick={() =>
-                            setParameters({ ...parameters, name, startYear, endYear })
+                            setParameters({ name, startYear, endYear })
                         }
                         variant="light"
                     >
@@ -168,10 +171,9 @@ export function Sidebar(props: SidebarProps) {
                                         placeholder="Tower Dampening"
                                         min={1}
                                         allowDecimal={false}
-                                        value={parameters.dampening}
+                                        value={parameters.inputs.dampening}
                                         onChange={(value) =>
                                             setParameters({
-                                                ...parameters,
                                                 dampening: safeInt(value, 1),
                                             })
                                         }
@@ -181,15 +183,29 @@ export function Sidebar(props: SidebarProps) {
                                         placeholder="Base Padding"
                                         min={0}
                                         step={0.5}
-                                        value={parameters.padding}
+                                        value={parameters.inputs.padding}
                                         onChange={(value) =>
                                             setParameters({
-                                                ...parameters,
                                                 padding: safeFloat(value, 0),
                                             })
                                         }
                                     />
                                     <FontInput />
+                                    <Select
+                                        label="Base Shape"
+                                        data={[
+                                            { value: SkylineBaseShape.Prism, label: capitalize(SkylineBaseShape.Prism) },
+                                            { value: SkylineBaseShape.Frustum, label: capitalize(SkylineBaseShape.Frustum) }
+                                        ]}
+                                        defaultValue={SkylineBaseShape.Prism}
+                                        allowDeselect={false}
+                                        onChange={(value) => {
+                                            if (value === null) {
+                                                return;
+                                            }
+                                            setParameters({ shape: value as SkylineBaseShape });
+                                        }}
+                                    />
                                 </Stack>
                             </Accordion.Panel>
                         </Accordion.Item>
@@ -201,20 +217,19 @@ export function Sidebar(props: SidebarProps) {
                                 <Stack gap={10}>
                                     <ColorInput
                                         label="Render Color"
-                                        value={parameters.color}
-                                        disabled={parameters.showContributionColor}
+                                        value={parameters.inputs.color}
+                                        disabled={parameters.inputs.showContributionColor}
                                         onChange={(color) =>
-                                            setParameters({ ...parameters, color })
+                                            setParameters({ color })
                                         }
                                     />
                                     <Checkbox
                                         label="Show Contribution Colors"
-                                        checked={parameters.showContributionColor}
+                                        checked={parameters.inputs.showContributionColor}
                                         onChange={() =>
                                             setParameters({
-                                                ...parameters,
                                                 showContributionColor:
-                                                    !parameters.showContributionColor,
+                                                    !parameters.inputs.showContributionColor,
                                             })
                                         }
                                     />
@@ -237,7 +252,7 @@ export function Sidebar(props: SidebarProps) {
                                     />
                                     <TextInput
                                         label="File Name"
-                                        placeholder={`${parameters.name}_${formatYearText(parameters.startYear, parameters.endYear)}_contribution`}
+                                        placeholder={`${parameters.inputs.name}_${formatYearText(parameters.inputs.startYear, parameters.inputs.endYear)}_contribution`}
                                         value={filename}
                                         onChange={(e) => setFilename(e.target.value)}
                                     />
@@ -258,7 +273,7 @@ export function Sidebar(props: SidebarProps) {
                         exportScene(
                             scene,
                             filename.trim() === ""
-                                ? `${parameters.name}_${formatYearText(parameters.startYear, parameters.endYear)}_skyline`
+                                ? `${parameters.inputs.name}_${formatYearText(parameters.inputs.startYear, parameters.inputs.endYear)}_skyline`
                                 : filename,
                         )
                     }

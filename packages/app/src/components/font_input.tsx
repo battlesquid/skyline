@@ -55,7 +55,7 @@ export function FontInput() {
 					if (value === null) {
 						return;
 					}
-					setParameters({ ...parameters, font: fonts[value] });
+					setParameters({ font: fonts[value] });
 				}}
 				error={fontLoadFailed ? "Unable to load font" : ""}
 			/>

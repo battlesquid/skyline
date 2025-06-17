@@ -47,7 +47,7 @@ export function Skyline(props: SkylineProps) {
             <Environment preset="forest" />
             <Grid
                 name="grid"
-                position={[0, -(parameters.towerSize * 3), 0]}
+                position={[0, -(parameters.inputs.towerSize * 3), 0]}
                 cellSize={0}
                 sectionColor={"#555"}
                 sectionSize={40}

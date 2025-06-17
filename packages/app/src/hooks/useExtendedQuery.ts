@@ -86,7 +86,7 @@ export const useExtendedQuery = (
 				if (profile === null) {
 					return props;
 				}
-				setParameters({ ...parameters, name: profile.login });
+				setParameters({ name: profile.login });
 				return { ...props, name: profile.login };
 			})
 			.then((props) => doRangeQuery(props))
