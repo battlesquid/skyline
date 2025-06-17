@@ -1,13 +1,13 @@
 import {
 	type DependencyList,
-	type RefObject,
+	type MutableRefObject,
 	useEffect,
 	useState,
 } from "react";
 import { Box3, type Object3D, Vector3 } from "three";
 
 export interface BoundingBoxProps {
-	obj: RefObject<Object3D | null>;
+	obj: MutableRefObject<Object3D | null>;
 	setter?: (size: Vector3) => void;
 }
 

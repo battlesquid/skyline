@@ -1,324 +1,222 @@
-import { Instances, Text3D, useBounds } from "@react-three/drei";
+import { Instances, useBounds } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { type RefObject, useEffect, useMemo, useRef, useState } from "react";
-import { Color, type Group, type Mesh, MeshStandardMaterial } from "three";
+import { type MutableRefObject, useEffect, useMemo, useRef } from "react";
+import { Color, type Group } from "three";
 import type {
-    ContributionDay,
-    ContributionWeek,
-    ContributionWeeks,
+	ContributionDay,
+	ContributionWeek,
+	ContributionWeeks,
 } from "../api/types";
-import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
+import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
-import { useSvgMesh } from "../hooks/useSvgMesh";
-import { LOGOS } from "../logos";
-import { useParametersStore, useSceneStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
+import { useSceneStore } from "../stores/scene";
 import { ContributionTower } from "./contribution_tower";
-import { calculateFirstDayOffset, formatYearText } from "../api/utils";
-import { type Dimensions, getDimensions } from "./utils";
+import { SkylineBase } from "./skyline_base";
 
 export interface SkylineModelProps {
-    group: RefObject<Group | null>;
-    years: ContributionWeeks[];
+	group: MutableRefObject<Group | null>;
+	years: ContributionWeeks[];
 }
 
 export function SkylineModel(props: SkylineModelProps) {
-    const { group, years } = props;
-    const { parameters } = useParametersStore();
-    const MODEL_LENGTH = WEEKS_IN_YEAR * parameters.towerSize;
-    const MODEL_WIDTH = DAYS_IN_WEEK * parameters.towerSize;
-    const PLATFORM_HEIGHT = parameters.towerSize * 3;
-    const PLATFORM_MIDPOINT = PLATFORM_HEIGHT / 2;
-    const TEXT_SIZE = PLATFORM_HEIGHT / 2.2;
-    const TOWER_SIZE_OFFSET = parameters.towerSize / 2;
-    const X_MIDPOINT_OFFSET = MODEL_LENGTH / 2;
-    const Y_MIDPOINT_OFFSET = MODEL_WIDTH / 2;
-    const PADDING_WIDTH = parameters.padding * 2;
+	const { group, years } = props;
+	const { parameters } = useParametersStore();
 
-    const scene = useThree((state) => state.scene);
-    const sceneStore = useSceneStore();
+	const scene = useThree((state) => state.scene);
+	const sceneStore = useSceneStore();
 
-    const bounds = useBounds();
-    let boundsTimeout: number | undefined = undefined;
-    useEffect(() => {
-        if (boundsTimeout !== undefined) {
-            clearTimeout(boundsTimeout);
-        }
-        sceneStore.setDirty(true);
-        boundsTimeout = setTimeout(() => {
-            if (group.current === null) {
-                return;
-            }
-            sceneStore.setScene(scene.clone());
-            bounds.refresh(group.current).clip().fit().reset();
-            sceneStore.setDirty(false);
-        }, 1500);
+	const bounds = useBounds();
+	let boundsTimeout: number | undefined = undefined;
+	useEffect(() => {
+		if (boundsTimeout !== undefined) {
+			clearTimeout(boundsTimeout);
+		}
+		sceneStore.setDirty(true);
+		boundsTimeout = setTimeout(() => {
+			if (group.current === null) {
+				return;
+			}
+			sceneStore.setScene(scene.clone());
+			bounds.refresh(group.current).clip().fit().reset();
+			sceneStore.setDirty(false);
+		}, 1500);
 
-        return () => {
-            if (boundsTimeout !== undefined) {
-                clearTimeout(boundsTimeout);
-            }
-        };
-    }, [
-        parameters.dampening,
-        parameters.name,
-        parameters.startYear,
-        parameters.endYear,
-        parameters.padding,
-        parameters.font,
-    ]);
+		return () => {
+			if (boundsTimeout !== undefined) {
+				clearTimeout(boundsTimeout);
+			}
+		};
+	}, [
+		parameters.inputs.dampening,
+		parameters.inputs.name,
+		parameters.inputs.startYear,
+		parameters.inputs.endYear,
+		parameters.inputs.padding,
+		parameters.inputs.font,
+		parameters.inputs.shape,
+	]);
 
-    const yearRef = useRef<Mesh | null>(null);
-    const nameRef = useRef<Mesh | null>(null);
+	useBoundingBox(
+		{
+			obj: group,
+			setter: (bb) => sceneStore.setSize(bb),
+		},
+		[parameters, years],
+	);
 
-    const [yearDimensions, setYearDimensions] = useState<Dimensions>({
-        width: 0,
-        height: 0,
-    });
-    const [nameDimensions, setNameDimensions] = useState<Dimensions>({
-        width: 0,
-        height: 0,
-    });
-    useEffect(() => {
-        if (nameRef.current === null || yearRef.current === null) {
-            return;
-        }
-        setNameDimensions(getDimensions(nameRef.current));
-        setYearDimensions(getDimensions(yearRef.current));
-    }, [
-        parameters.name,
-        parameters.startYear,
-        parameters.endYear,
-        parameters.font,
-        years,
-    ]);
+	const id = useRef<number>(0);
+	const tempColor = new Color();
+	const multColor = new Color();
 
-    useBoundingBox(
-        {
-            obj: group,
-            setter: (bb) => sceneStore.setSize(bb),
-        },
-        [parameters, yearDimensions, nameDimensions, years],
-    );
+	const renderColor = parameters.inputs.showContributionColor
+		? getDefaultParameters().inputs.color
+		: parameters.inputs.color;
 
-    const id = useRef<number>(0);
-    const tempColor = new Color();
-    const multColor = new Color();
+	const contributionColors = useMemo(() => {
+		if (years.length === 0) {
+			return { raw: [], instanced: Float32Array.from([]) };
+		}
+		const raw = years.flatMap((weeks) => {
+			return weeks.flatMap((week) => {
+				return week.contributionDays
+					.filter((day) => day.contributionCount > 0)
+					.flatMap((day) => day.color);
+			});
+		});
+		const instanced = Float32Array.from(
+			raw.flatMap((c) => tempColor.set(c).toArray()),
+		);
+		return { raw, instanced };
+	}, [years]);
 
-    const modelColor = parameters.showContributionColor
-        ? getDefaultParameters().color
-        : parameters.color;
+	const defaultColors = useMemo(() => {
+		if (contributionColors.raw.length === 0) {
+			return { raw: [], instanced: Float32Array.from([]) };
+		}
+		const raw = Array(contributionColors.raw.length)
+			.fill(0)
+			.flatMap((_) => tempColor.set(parameters.inputs.color));
+		const instanced = Float32Array.from(
+			raw.flatMap((_) => tempColor.set(parameters.inputs.color).toArray()),
+		);
+		return { raw, instanced };
+	}, [contributionColors.raw.length, parameters.inputs.color]);
 
-    const contributionColors = useMemo(() => {
-        if (years.length === 0) {
-            return { raw: [], instanced: Float32Array.from([]) };
-        }
-        const raw = years.flatMap((weeks) => {
-            return weeks.flatMap((week) => {
-                return week.contributionDays
-                    .filter((day) => day.contributionCount > 0)
-                    .flatMap((day) => day.color);
-            });
-        });
-        const instanced = Float32Array.from(
-            raw.flatMap((c) => tempColor.set(c).toArray()),
-        );
-        return { raw, instanced };
-    }, [years]);
+	const renderDay = (
+		day: ContributionDay,
+		yearIdx: number,
+		weekIdx: number,
+		weekOffset: number,
+		dayIdx: number,
+		id: MutableRefObject<number>,
+	) => {
+		if (day.contributionCount === 0) {
+			return null;
+		}
+		const idx = id.current;
+		id.current++;
+		const YEAR_OFFSET = parameters.computed.modelWidth * yearIdx;
+		const centerOffset =
+			years.length === 1
+				? 0
+				: -(parameters.computed.modelWidth * (years.length - 1)) / 2;
+		const towerColors = parameters.inputs.showContributionColor
+			? contributionColors.instanced
+			: defaultColors.instanced;
+		const highlightBase = parameters.inputs.showContributionColor
+			? contributionColors.raw[idx]
+			: defaultColors.raw[idx];
+		const highlight = multColor.set(highlightBase).multiplyScalar(1.6).getHex();
+		return (
+			<ContributionTower
+				key={day.date.toString()}
+				day={day}
+				x={
+					weekIdx * parameters.inputs.towerSize -
+					parameters.computed.xMidpointOffset +
+					parameters.computed.towerSizeOffset
+				}
+				y={
+					centerOffset +
+					YEAR_OFFSET +
+					((dayIdx + weekOffset) * parameters.inputs.towerSize -
+						parameters.computed.yMidpointOffset +
+						parameters.computed.towerSizeOffset)
+				}
+				size={getDefaultParameters().inputs.towerSize}
+				dampening={parameters.inputs.dampening}
+				onPointerEnter={() =>
+					tempColor.set(highlight).toArray(towerColors, idx * 3)
+				}
+				onPointerLeave={() =>
+					tempColor.set(highlightBase).toArray(towerColors, idx * 3)
+				}
+			/>
+		);
+	};
 
-    const defaultColors = useMemo(() => {
-        if (contributionColors.raw.length === 0) {
-            return { raw: [], instanced: Float32Array.from([]) };
-        }
-        const raw = Array(contributionColors.raw.length)
-            .fill(0)
-            .flatMap((_) => tempColor.set(parameters.color));
-        const instanced = Float32Array.from(
-            raw.flatMap((_) => tempColor.set(parameters.color).toArray()),
-        );
-        return { raw, instanced };
-    }, [contributionColors.raw.length, parameters.color]);
+	const renderWeek = (
+		week: ContributionWeek,
+		yearIdx: number,
+		weekIdx: number,
+		weekOffset: number,
+		id: MutableRefObject<number>,
+	) => {
+		return week.contributionDays.map((day, dayIdx) =>
+			renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id),
+		);
+	};
 
-    const renderDay = (
-        day: ContributionDay,
-        yearIdx: number,
-        weekIdx: number,
-        weekOffset: number,
-        dayIdx: number,
-        id: RefObject<number>,
-    ) => {
-        if (day.contributionCount === 0) {
-            return null;
-        }
-        const idx = id.current;
-        id.current++;
-        const YEAR_OFFSET = MODEL_WIDTH * yearIdx;
-        const centerOffset =
-            years.length === 1 ? 0 : -(MODEL_WIDTH * (years.length - 1)) / 2;
-        const towerColors = parameters.showContributionColor
-            ? contributionColors.instanced
-            : defaultColors.instanced;
-        const highlightBase = parameters.showContributionColor
-            ? contributionColors.raw[idx]
-            : defaultColors.raw[idx];
-        const highlight = multColor.set(highlightBase).multiplyScalar(1.6).getHex();
-        return (
-            <ContributionTower
-                key={day.date.toString()}
-                day={day}
-                x={
-                    weekIdx * parameters.towerSize - X_MIDPOINT_OFFSET + TOWER_SIZE_OFFSET
-                }
-                y={
-                    centerOffset +
-                    YEAR_OFFSET +
-                    ((dayIdx + weekOffset) * parameters.towerSize -
-                        Y_MIDPOINT_OFFSET +
-                        TOWER_SIZE_OFFSET)
-                }
-                size={getDefaultParameters().towerSize}
-                dampening={parameters.dampening}
-                onPointerEnter={() =>
-                    tempColor.set(highlight).toArray(towerColors, idx * 3)
-                }
-                onPointerLeave={() =>
-                    tempColor.set(highlightBase).toArray(towerColors, idx * 3)
-                }
-            />
-        );
-    };
+	const renderYear = (
+		weeks: ContributionWeeks,
+		yearIdx: number,
+		id: MutableRefObject<number>,
+	) => {
+		return weeks.map((week, weekIdx) => {
+			let weekOffset = 0;
+			if (weekIdx === 0) {
+				weekOffset = calculateFirstDayOffset(week, weekIdx);
+			}
+			return renderWeek(week, yearIdx, weekIdx, weekOffset, id);
+		});
+	};
 
-    const renderWeek = (
-        week: ContributionWeek,
-        yearIdx: number,
-        weekIdx: number,
-        weekOffset: number,
-        id: RefObject<number>,
-    ) => {
-        return week.contributionDays.map((day, dayIdx) =>
-            renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id),
-        );
-    };
+	const render = () => {
+		id.current = 0;
+		return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx, id));
+	};
 
-    const renderYear = (
-        weeks: ContributionWeeks,
-        yearIdx: number,
-        id: RefObject<number>,
-    ) => {
-        return weeks.map((week, weekIdx) => {
-            let weekOffset = 0;
-            if (weekIdx === 0) {
-                weekOffset = calculateFirstDayOffset(week, weekIdx);
-            }
-            return renderWeek(week, yearIdx, weekIdx, weekOffset, id);
-        });
-    };
-
-    const render = () => {
-        id.current = 0;
-        return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx, id));
-    };
-
-    const logo = useRef<Group | null>(null);
-    const material = useMemo(
-        () =>
-            new MeshStandardMaterial({
-                color: parameters.showContributionColor
-                    ? getDefaultParameters().color
-                    : parameters.color,
-            }),
-        [parameters.color, parameters.showContributionColor],
-    );
-    const { meshes } = useSvgMesh(LOGOS.Circle, material);
-    useEffect(() => {
-        if (logo.current === null) {
-            return;
-        }
-        logo.current.clear();
-        for (const mesh of meshes) {
-            logo.current?.add(mesh);
-        }
-        logo.current.scale.set(0.005, -0.005, 0.005);
-    }, [logo.current, meshes]);
-
-    return (
-        <group ref={group}>
-            <group name="export_group" />
-            {years.length > 0 && years[0].length > 0 && (
-                <group name="instances_group">
-                    <Instances
-                        castShadow
-                        receiveShadow
-                        name="instances"
-                        key={`${years.length}-${parameters.showContributionColor}`}
-                        limit={contributionColors.instanced.length}
-                    >
-                        <boxGeometry>
-                            <instancedBufferAttribute
-                                attach="attributes-color"
-                                args={[
-                                    parameters.showContributionColor
-                                        ? contributionColors.instanced
-                                        : defaultColors.instanced,
-                                    3,
-                                ]}
-                            />
-                        </boxGeometry>
-                        <meshStandardMaterial toneMapped={false} vertexColors={true} />
-                        {render()}
-                    </Instances>
-                </group>
-            )}
-            <mesh castShadow receiveShadow position={[0, -PLATFORM_MIDPOINT, 0]}>
-                <boxGeometry
-                    args={[
-                        MODEL_LENGTH + PADDING_WIDTH,
-                        PLATFORM_HEIGHT,
-                        MODEL_WIDTH * years.length + PADDING_WIDTH,
-                    ]}
-                />
-                <meshStandardMaterial color={modelColor} />
-            </mesh>
-            <group
-                ref={logo}
-                position={[
-                    -X_MIDPOINT_OFFSET + 5,
-                    -PLATFORM_MIDPOINT / 2 + 0.5,
-                    (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
-                ]}
-            />
-            <Text3D
-                ref={nameRef}
-                font={parameters.font}
-                receiveShadow
-                castShadow
-                position={[
-                    -X_MIDPOINT_OFFSET + nameDimensions.width / 2 + 12,
-                    -PLATFORM_MIDPOINT - 0.5,
-                    (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
-                ]}
-                height={parameters.textDepth}
-                size={TEXT_SIZE}
-            >
-                {parameters.name}
-                <meshStandardMaterial color={modelColor} />
-            </Text3D>
-            <Text3D
-                ref={yearRef}
-                font={parameters.font}
-                receiveShadow
-                castShadow
-                position={[
-                    X_MIDPOINT_OFFSET - yearDimensions.width / 2 - 5,
-                    -PLATFORM_MIDPOINT - 0.5,
-                    (MODEL_WIDTH * years.length) / 2 + parameters.padding - 0.1,
-                ]}
-                height={parameters.textDepth}
-                size={TEXT_SIZE}
-            >
-                {formatYearText(parameters.startYear, parameters.endYear)}
-                <meshStandardMaterial color={modelColor} />
-            </Text3D>
-        </group>
-    );
+	return (
+		<group ref={group}>
+			<group name="export_group" />
+			{years.length > 0 && years[0].length > 0 && (
+				<group name="instances_group">
+					<Instances
+						castShadow
+						receiveShadow
+						name="instances"
+						key={`${years.length}-${parameters.inputs.showContributionColor}`}
+						limit={contributionColors.instanced.length}
+					>
+						<boxGeometry>
+							<instancedBufferAttribute
+								attach="attributes-color"
+								args={[
+									parameters.inputs.showContributionColor
+										? contributionColors.instanced
+										: defaultColors.instanced,
+									3,
+								]}
+							/>
+						</boxGeometry>
+						<meshStandardMaterial toneMapped={false} vertexColors={true} />
+						{render()}
+					</Instances>
+				</group>
+			)}
+			<SkylineBase color={renderColor} years={years} />
+		</group>
+	);
 }

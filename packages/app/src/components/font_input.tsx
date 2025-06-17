@@ -12,7 +12,8 @@ import {
 import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useState } from "react";
 import { DEFAULT_FONT_SELECTION } from "../defaults";
-import { useFontStore, useParametersStore } from "../stores";
+import { useFontStore } from "../stores/fonts";
+import { useParametersStore } from "../stores/parameters";
 
 export function FontInput() {
 	const { parameters, setParameters } = useParametersStore();
@@ -55,7 +56,7 @@ export function FontInput() {
 					if (value === null) {
 						return;
 					}
-					setParameters({ ...parameters, font: fonts[value] });
+					setParameters({ font: fonts[value] });
 				}}
 				error={fontLoadFailed ? "Unable to load font" : ""}
 			/>

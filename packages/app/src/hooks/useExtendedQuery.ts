@@ -5,7 +5,7 @@ import type { UserProfile } from "../api/auth";
 import { client } from "../api/client";
 import { ContributionQuery } from "../api/query";
 import type { ContributionWeeks } from "../api/types";
-import { useParametersStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
 
 interface ExtendedQueryProps {
 	name?: string;
@@ -86,7 +86,7 @@ export const useExtendedQuery = (
 				if (profile === null) {
 					return props;
 				}
-				setParameters({ ...parameters, name: profile.login });
+				setParameters({ name: profile.login });
 				return { ...props, name: profile.login };
 			})
 			.then((props) => doRangeQuery(props))

@@ -46,7 +46,7 @@ export const resolveToken = async (): Promise<string | null> => {
 		location.search.replace(/\bcode=\w+/, "").replace(/\?$/, "");
 	history.pushState({}, "", path);
 
-	const response = await fetch(import.meta.env.VITE_WORKER_URL, {
+	const response = await fetch(import.meta.env.PUBLIC_WORKER_URL, {
 		method: "POST",
 		mode: "cors",
 		headers: {

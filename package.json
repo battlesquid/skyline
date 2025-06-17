@@ -2,9 +2,7 @@
 	"name": "skyline",
 	"private": true,
 	"version": "1.0.0",
-	"workspaces": [
-		"packages/*"
-	],
+	"workspaces": ["packages/*"],
 	"scripts": {
 		"dev": "pnpm --filter=@skyline/app run dev",
 		"neat": "biome check .",
