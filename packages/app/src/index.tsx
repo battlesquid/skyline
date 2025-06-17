@@ -3,8 +3,8 @@ import "@mantine/core/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "urql";
-import App from "./app";
 import { client } from "./api/client";
+import App from "./app";
 import { preloadDefaultFonts } from "./stores/fonts";
 
 preloadDefaultFonts();
@@ -19,6 +19,6 @@ if (rootEl) {
 					<App />
 				</Provider>
 			</MantineProvider>
-		</React.StrictMode>
+		</React.StrictMode>,
 	);
 }

@@ -1,24 +1,24 @@
 import type { InstancedMesh, Mesh, Scene, Vector3 } from "three";
-import { SceneUtils, STLExporter } from "three-stdlib";
+import { STLExporter, SceneUtils } from "three-stdlib";
 
 export interface Dimensions {
-    width: number;
-    height: number;
-};
+	width: number;
+	height: number;
+}
 
 export const getDimensions = (mesh: Mesh | null): Dimensions => {
-    if (mesh === null) {
-        return { width: 0, height: 0 };
-    }
-    mesh.geometry.computeBoundingBox();
-    mesh.geometry.center();
-    if (mesh?.geometry.boundingBox === null) {
-        return { width: 0, height: 0 };
-    }
-    return {
-        width: mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x,
-        height: mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y,
-    };
+	if (mesh === null) {
+		return { width: 0, height: 0 };
+	}
+	mesh.geometry.computeBoundingBox();
+	mesh.geometry.center();
+	if (mesh?.geometry.boundingBox === null) {
+		return { width: 0, height: 0 };
+	}
+	return {
+		width: mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x,
+		height: mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y,
+	};
 };
 
 export const exportScene = (scene: Scene | null, name: string) => {

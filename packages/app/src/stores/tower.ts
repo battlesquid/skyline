@@ -1,25 +1,25 @@
-import { Vector3, type Scene } from "three";
+import { type Scene, Vector3 } from "three";
 import { create } from "zustand";
 import type { ContributionDay } from "../api/types";
 
 interface TowerPosition {
-    x: number;
-    y: number;
+	x: number;
+	y: number;
 }
 
 interface TowerStore {
-    position: TowerPosition;
-    target: ContributionDay | null;
-    setPosition(position: TowerPosition): void;
-    setTarget(target: ContributionDay | null): void;
+	position: TowerPosition;
+	target: ContributionDay | null;
+	setPosition(position: TowerPosition): void;
+	setTarget(target: ContributionDay | null): void;
 }
 
 export const useTowerStore = create<TowerStore>((set) => ({
-    position: {
-        x: 0,
-        y: 0
-    },
-    target: null,
-    setPosition: (position) => set(() => ({ position })),
-    setTarget: (target) => set(() => ({ target })),
+	position: {
+		x: 0,
+		y: 0,
+	},
+	target: null,
+	setPosition: (position) => set(() => ({ position })),
+	setTarget: (target) => set(() => ({ target })),
 }));
