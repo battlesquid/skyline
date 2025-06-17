@@ -6,7 +6,6 @@ export const getSvgBoundingBox = (svg: string) => {
     el.innerHTML = svg;
     document.body.append(el);
     const { width, height } = el.getBBox();
-    console.log(width, height)
     document.body.removeChild(el);
     return {
         width,

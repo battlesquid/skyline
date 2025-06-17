@@ -55,6 +55,7 @@ export function SkylineModel(props: SkylineModelProps) {
         parameters.inputs.endYear,
         parameters.inputs.padding,
         parameters.inputs.font,
+        parameters.inputs.shape
     ]);
 
     useBoundingBox(

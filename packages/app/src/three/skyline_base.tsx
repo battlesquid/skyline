@@ -67,7 +67,7 @@ export function SkylineBase(props: SkylineBaseProps) {
             case SkylineBaseShape.Frustum: {
                 const geom = new RectangularFrustumGeometry(width, length, height);
                 setGeometry(geom);
-                setRot(geom.atan2());
+                setRot(geom.calculateSlopeAngle());
                 break;
             }
         }
@@ -93,23 +93,20 @@ export function SkylineBase(props: SkylineBaseProps) {
         for (const mesh of meshes) {
             logo.current?.add(mesh);
         }
-        const wantedHeight = 0.70 * parameters.computed.platformHeight;
+        const wantedHeight = 0.65 * parameters.computed.platformHeight;
         const { height } = getSvgBoundingBox(LOGOS.Circle);
-        const scale = 0.005;
+
+        const scale = wantedHeight / height;
         logo.current.scale.set(scale, -scale, scale);
     }, [logo.current, meshes]);
 
 
-    const { size } = useBoundingBox(
-        {
-            obj: logo,
-        },
-        [logo.current, meshes],
-    );
-    const LOGO_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 1 : 0;
-    const TEXT_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 3 : -0.1;
+    const { size } = useBoundingBox({
+        obj: logo,
+    }, [logo.current, meshes]);
     const LOGO_Y_OFFSET = size.y / 2;
-    console.log(size, LOGO_Y_OFFSET)
+    const LOGO_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 0.5 : 0;
+    const TEXT_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 2 : -0.1;
 
     return (
         <group>

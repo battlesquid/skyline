@@ -2,7 +2,7 @@ import { BufferAttribute, BufferGeometry } from "three";
 
 export class RectangularFrustumGeometry extends BufferGeometry {
     private static readonly BASE_WIDTH_PADDING = 5;
-    private static readonly BASE_LENGTH_PADDING = 10;
+    private static readonly BASE_LENGTH_PADDING = 7;
 
     readonly width: number;
     readonly length: number;
@@ -63,11 +63,57 @@ export class RectangularFrustumGeometry extends BufferGeometry {
     }
 
     /**
-     * Returns the angle of the frustum's sloped side. 
-     * Useful for aligning objects to the face of the frustum.
+     * Calculates the slope angle of the frustum in radians.
+     * This is the angle between the sloped face and the horizontal plane.
+     * @param side - Optional parameter to specify which side: 'width' or 'length'. Defaults to 'length'.
+     * @returns The slope angle in radians
      */
-    atan2() {
+    calculateSlopeAngle(side: 'width' | 'length' = 'length'): number {
+        const baseWidth = this.width + RectangularFrustumGeometry.BASE_WIDTH_PADDING;
         const baseLength = this.length + RectangularFrustumGeometry.BASE_LENGTH_PADDING;
-        return Math.atan2(-this.height, baseLength - this.length);
+        
+        // Calculate the horizontal distance from center to edge at the base vs top
+        const baseDimension = side === 'width' ? baseWidth : baseLength;
+        const topDimension = side === 'width' ? this.width : this.length;
+        
+        // The horizontal difference between base and top edge
+        const horizontalDifference = (baseDimension - topDimension) / 2;
+        
+        // Calculate the slope angle using arctangent
+        const slopeAngle = Math.atan(horizontalDifference / -this.height);
+        
+        return slopeAngle;
+    }
+
+    /**
+     * Calculates the slope angle of the frustum in degrees.
+     * @param side - Optional parameter to specify which side: 'width' or 'length'. Defaults to 'length'.
+     * @returns The slope angle in degrees
+     */
+    calculateSlopeAngleDegrees(side: 'width' | 'length' = 'length'): number {
+        return this.calculateSlopeAngle(side) * (180 / Math.PI);
+    }
+
+    /**
+     * Calculates the slope angles for both width and length sides.
+     * @returns An object containing slope angles for both dimensions in radians and degrees
+     */
+    calculateAllSlopeAngles(): {
+        width: { radians: number; degrees: number };
+        length: { radians: number; degrees: number };
+    } {
+        const widthRadians = this.calculateSlopeAngle('width');
+        const lengthRadians = this.calculateSlopeAngle('length');
+        
+        return {
+            width: {
+                radians: widthRadians,
+                degrees: widthRadians * (180 / Math.PI)
+            },
+            length: {
+                radians: lengthRadians,
+                degrees: lengthRadians * (180 / Math.PI)
+            }
+        };
     }
 }

@@ -27,6 +27,7 @@ import { Profile } from "./profile";
 import { formatYearText } from "../api/utils";
 import { SkylineBaseShape } from "../three/skyline_base";
 import { capitalize } from "../utils";
+import { getDefaultParameters } from "../defaults";
 
 interface SidebarProps {
     profile: UserProfile | null;
@@ -198,7 +199,7 @@ export function Sidebar(props: SidebarProps) {
                                             { value: SkylineBaseShape.Prism, label: capitalize(SkylineBaseShape.Prism) },
                                             { value: SkylineBaseShape.Frustum, label: capitalize(SkylineBaseShape.Frustum) }
                                         ]}
-                                        defaultValue={SkylineBaseShape.Prism}
+                                        defaultValue={getDefaultParameters().inputs.shape}
                                         allowDeselect={false}
                                         onChange={(value) => {
                                             if (value === null) {
