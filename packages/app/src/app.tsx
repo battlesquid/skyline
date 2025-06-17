@@ -6,7 +6,7 @@ import { HoverCard } from "./components/hover_card";
 import { Sidebar } from "./components/sidebar";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { useProfile } from "./hooks/useProfile";
-import { useParametersStore } from "./stores";
+import { useParametersStore } from "./stores/parameters";
 import { Skyline } from "./three/skyline";
 
 export default function App() {

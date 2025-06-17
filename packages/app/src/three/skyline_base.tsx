@@ -6,7 +6,7 @@ import { formatYearText } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
-import { useParametersStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
 import { getSvgBoundingBox } from "../utils";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { type Dimensions, getDimensions } from "./utils";
@@ -109,7 +109,7 @@ export function SkylineBase(props: SkylineBaseProps) {
     const LOGO_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 1 : 0;
     const TEXT_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 3 : -0.1;
     const LOGO_Y_OFFSET = size.y / 2;
-    console.log(LOGO_Y_OFFSET)
+    console.log(size, LOGO_Y_OFFSET)
 
     return (
         <group>

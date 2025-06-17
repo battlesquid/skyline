@@ -12,7 +12,8 @@ import {
 import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useState } from "react";
 import { DEFAULT_FONT_SELECTION } from "../defaults";
-import { useFontStore, useParametersStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
+import { useFontStore } from "../stores/fonts";
 
 export function FontInput() {
 	const { parameters, setParameters } = useParametersStore();

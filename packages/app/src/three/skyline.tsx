@@ -3,7 +3,7 @@ import { Bounds, Environment, Grid, OrbitControls, Wireframe } from "@react-thre
 import { Canvas, type RenderProps } from "@react-three/fiber";
 import { Suspense, useMemo, useRef } from "react";
 import type { Group } from "three";
-import { useParametersStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
 import { SkylineModel, type SkylineModelProps } from "./skyline_model";
 
 export type SkylineProps = Omit<SkylineModelProps, "group">;

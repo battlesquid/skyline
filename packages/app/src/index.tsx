@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "urql";
 import App from "./app";
 import { client } from "./api/client";
-import { preloadDefaultFonts } from "./stores";
+import { preloadDefaultFonts } from "./stores/fonts";
 
 preloadDefaultFonts();
 

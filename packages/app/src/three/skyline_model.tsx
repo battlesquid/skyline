@@ -10,7 +10,8 @@ import type {
 import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
-import { useParametersStore, useSceneStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
+import { useSceneStore } from "../stores/scene";
 import { ContributionTower } from "./contribution_tower";
 import { SkylineBase } from "./skyline_base";
 

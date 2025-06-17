@@ -18,7 +18,8 @@ import {
 import { IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "../api/auth";
-import { useParametersStore, useSceneStore } from "../stores";
+import { useParametersStore } from "../stores/parameters";
+import { useSceneStore } from "../stores/scene";
 import accordionClasses from "../styles/accordion.module.css";
 import { exportScene, getDimensionsText } from "../three/utils";
 import { FontInput } from "./font_input";

@@ -1,5 +1,5 @@
 import { WEEKS_IN_YEAR, DAYS_IN_WEEK } from "./api/constants";
-import type { SkylineModelParameters } from "./stores";
+import type { SkylineModelParameters } from "./stores/parameters";
 import { SkylineBaseShape } from "./three/skyline_base";
 
 export const getDefaultFonts = () => ({
