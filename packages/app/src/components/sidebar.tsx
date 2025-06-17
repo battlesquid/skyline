@@ -203,7 +203,7 @@ export function Sidebar(props: SidebarProps) {
 												label: capitalize(SkylineBaseShape.Frustum),
 											},
 										]}
-										defaultValue={getDefaultParameters().inputs.shape}
+										defaultValue={SkylineBaseShape.Prism}
 										allowDeselect={false}
 										onChange={(value) => {
 											if (value === null) {
