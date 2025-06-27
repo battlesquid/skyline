@@ -57,14 +57,14 @@ export function Skyline(props: SkylineProps) {
             <directionalLight color="#3077cf" position={[0, 10, -50]} />
             <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
             <Environment
-                preset="forest"
+                files="/qwantani_dusk_2_4k.hdr"
             />
             <Grid
                 side={DoubleSide}
                 name="grid"
                 position={[0, -parameters.computed.platformHeight, 0]}
                 cellSize={0}
-                sectionColor={"#525380"}
+                sectionColor={"#3bdeff"}
                 sectionSize={20}
                 fadeDistance={1000}
                 fadeStrength={1}

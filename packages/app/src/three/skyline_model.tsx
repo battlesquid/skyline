@@ -189,7 +189,7 @@ export function SkylineModel(props: SkylineModelProps) {
 	};
 
 	return (
-		<group ref={group}>
+		<group ref={group} position={[0, 1, 0]}>
 			<group name="export_group" />
 			{years.length > 0 && years[0].length > 0 && (
 				<group name="instances_group">
