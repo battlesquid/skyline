@@ -21,7 +21,7 @@ export function Profile(props: ProfileProps) {
 	const { name, avatarUrl, login } = props.profile;
 	const theme = useMantineTheme();
 	return (
-		<Paper p={15} style={{ backgroundColor: theme.colors.dark[8] }}>
+		<Paper p={15} withBorder>
 			<Flex align="center" justify="space-between">
 				<Flex align="center" gap={10}>
 					<Avatar src={avatarUrl} alt={login ?? ""} />

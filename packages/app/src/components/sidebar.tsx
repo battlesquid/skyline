@@ -2,12 +2,14 @@ import {
 	Accordion,
 	AppShell,
 	Button,
+	Card,
 	Center,
 	Checkbox,
 	ColorInput,
 	Divider,
 	Group,
 	NumberInput,
+	Paper,
 	ScrollArea,
 	Select,
 	Stack,
@@ -84,27 +86,26 @@ export function Sidebar(props: SidebarProps) {
 					>
 						Login to Github
 					</Button>
-					{/* TODO: add back when enterprise oauth flow can be verified */}
-					{/* <Button
+					<Button
                         component="a"
                         href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
                         fullWidth={true}
                     >
                         Login to Github (Enterprise)
-                    </Button> */}
+                    </Button>
 				</Stack>
 			</AppShell.Section>
 		);
 	}
 	return (
-		<>
+		<Card h="100%">
 			<AppShell.Section>
 				<Title my={5} order={4}>
 					{import.meta.env.PUBLIC_APP_NAME}
 				</Title>
 			</AppShell.Section>
 			<Divider p={5} />
-			<AppShell.Section grow component={ScrollArea} type="always">
+			<AppShell.Section grow component={ScrollArea} type="always" offsetScrollbars>
 				<Stack gap={10}>
 					<TextInput
 						label="Github Username"
@@ -267,7 +268,6 @@ export function Sidebar(props: SidebarProps) {
 			</AppShell.Section>
 			<AppShell.Section pb={10}>
 				<Button
-					variant="light"
 					size="md"
 					fullWidth
 					loading={scene === null || dirty}
@@ -292,6 +292,6 @@ export function Sidebar(props: SidebarProps) {
 			<AppShell.Section>
 				<Profile profile={profile} />
 			</AppShell.Section>
-		</>
+		</Card>
 	);
 }

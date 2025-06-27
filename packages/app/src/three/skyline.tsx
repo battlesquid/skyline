@@ -26,7 +26,7 @@ export function Skyline(props: SkylineProps) {
 
 	return (
 		<Canvas style={style} camera={camera} shadows>
-			<color attach="background" args={[theme.colors.dark[6]]} />
+			{/* <color attach="background" /> */}
 			<Bounds fit clip margin={1}>
 				<SkylineModel group={group} years={years} />
 			</Bounds>

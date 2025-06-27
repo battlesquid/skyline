@@ -12,7 +12,7 @@ body,
 }
 
 body {
-	background: var(--mantine-color-dark-7);
+	background: var(--mantine-color-default);
 }
 
 @keyframes scaleAndFadeIn {
