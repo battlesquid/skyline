@@ -7,7 +7,7 @@ import {
 } from "@react-three/drei";
 import { Canvas, type RenderProps } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
-import type { Group } from "three";
+import { DoubleSide, type Group } from "three";
 import { useParametersStore } from "../stores/parameters";
 import { SkylineModel, type SkylineModelProps } from "./skyline_model";
 
@@ -50,7 +50,8 @@ export function Skyline(props: SkylineProps) {
 			<Environment preset="forest" />
 			<Grid
 				name="grid"
-				position={[0, -(parameters.inputs.towerSize * 3), 0]}
+				position={[0, -parameters.computed.platformHeight, 0]}
+                side={DoubleSide}
 				cellSize={0}
 				sectionColor={"#555"}
 				sectionSize={40}
