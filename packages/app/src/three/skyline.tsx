@@ -26,52 +26,42 @@ export function Skyline(props: SkylineProps) {
     );
     const theme = useMantineTheme();
 
-    return (
-        <Canvas style={style} camera={camera} shadows>
-            <color attach="background" args={["#120727"]} />
-            <Bounds fit clip margin={1}>
-                <SkylineModel group={group} years={years} />
-            </Bounds>
-            <ambientLight intensity={Math.PI / 2} />
-            <spotLight
-                castShadow
-                position={[0, 20, 200]}
-                angle={0.5}
-                penumbra={0.1}
-                decay={0.4}
-                intensity={Math.PI}
-            />
-            <pointLight
-                castShadow
-                position={[0, 40, 50]}
-                decay={0}
-                intensity={Math.PI}
-            />
-            <pointLight
-                color={"#c734c4"}
-                castShadow
-                position={[0, 40, 0]}
-                decay={0}
-                intensity={Math.PI}
-            />
-            <directionalLight color="#3077cf" position={[0, 10, -50]} />
-            <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
-            <Environment
-                files="/qwantani_dusk_2_4k.hdr"
-            />
-            <Grid
+	return (
+		<Canvas style={style} camera={camera} shadows>
+			<Bounds fit clip margin={1}>
+				<SkylineModel group={group} years={years} />
+			</Bounds>
+			<ambientLight intensity={Math.PI / 2} />
+			<spotLight
+				castShadow
+				position={[0, 20, 200]}
+				angle={0.5}
+				penumbra={0.1}
+				decay={0.4}
+				intensity={Math.PI}
+			/>
+			<pointLight
+				castShadow
+				position={[0, 40, 50]}
+				decay={0}
+				intensity={Math.PI}
+			/>
+			<directionalLight color="#fff" position={[0, 10, -50]} />
+			<OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI} />
+			<Environment preset="forest" />
+			<Grid
+				name="grid"
+				position={[0, -parameters.computed.platformHeight, 0]}
                 side={DoubleSide}
-                name="grid"
-                position={[0, -parameters.computed.platformHeight, 0]}
-                cellSize={0}
-                sectionColor={"#3bdeff"}
-                sectionSize={20}
-                fadeDistance={1000}
-                fadeStrength={1}
-                fadeFrom={1}
-                infiniteGrid={true}
-            />
+				cellSize={0}
+				sectionColor={"#555"}
+				sectionSize={40}
+				fadeDistance={10000}
+				fadeStrength={10}
+				fadeFrom={1}
+				infiniteGrid={true}
+			/>
             <GridEffects />
-        </Canvas>
-    );
+		</Canvas>
+	);
 }
