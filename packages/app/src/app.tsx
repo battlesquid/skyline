@@ -8,6 +8,7 @@ import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { useProfile } from "./hooks/useProfile";
 import { useParametersStore } from "./stores/parameters";
 import { Skyline } from "./three/skyline";
+import { SkylineControls } from "./components/skyline_controls";
 
 export default function App() {
 	const { parameters } = useParametersStore();
@@ -63,6 +64,7 @@ export default function App() {
 					<HoverCard />
 				</div>
 			</AppShell.Main>
+			{/* <SkylineControls /> */}
 		</AppShell>
 	);
 }

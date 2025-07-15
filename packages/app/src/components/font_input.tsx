@@ -31,7 +31,7 @@ export function FontInput() {
 						<HoverCard>
 							<HoverCard.Target>
 								<ThemeIcon size={16} radius={"lg"} variant="light">
-									<IconHelp size={16} />
+									<IconHelp stroke={1} size={16} />
 								</ThemeIcon>
 							</HoverCard.Target>
 							<HoverCard.Dropdown>
@@ -80,7 +80,7 @@ export function FontInput() {
 				>
 					{(props) => (
 						<ActionIcon variant="light" size="input-sm" {...props}>
-							<IconFolder />
+							<IconFolder stroke={1} />
 						</ActionIcon>
 					)}
 				</FileButton>
