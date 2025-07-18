@@ -23,6 +23,7 @@
 		"react-dom": "^18.3.1",
 		"three": "^0.169.0",
 		"three-stdlib": "^2.35.2",
+		"tunnel-rat": "^0.1.2",
 		"urql": "^4.2.1",
 		"zustand": "^5.0.5"
 	},

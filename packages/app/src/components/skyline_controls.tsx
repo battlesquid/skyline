@@ -1,5 +1,5 @@
 import { ActionIcon, Card, Group, Portal } from "@mantine/core";
-import { IconCamera, IconHome, IconPerspective, IconReload, IconRotate360, IconSettings } from "@tabler/icons-react";
+import { IconCamera, IconHome, IconRotate360, IconSettings } from "@tabler/icons-react";
 import classes from "../styles/dock.module.css";
 
 export function SkylineControls() {
