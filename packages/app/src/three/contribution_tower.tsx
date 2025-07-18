@@ -18,7 +18,8 @@ export function ContributionTower(props: ContributionTowerProps) {
 	const { x, y, day, dampening, size } = props;
 	const height = (day.contributionCount * size) / dampening;
 	const mesh = useRef<InstancedMesh | null>(null);
-	const { setPosition, setTarget } = useTowerStore();
+	const setPosition = useTowerStore(state => state.setPosition);
+	const setTarget = useTowerStore(state => state.setTarget);
 	return (
 		<Instance
 			ref={mesh}

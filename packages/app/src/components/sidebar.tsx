@@ -1,27 +1,22 @@
 import {
 	Accordion,
-	ActionIcon,
-	Anchor,
 	AppShell,
-	Box,
 	Button,
 	Card,
 	Center,
 	Checkbox,
 	ColorInput,
 	Divider,
-	Flex,
 	Group,
 	NumberInput,
-	Paper,
 	ScrollArea,
 	Select,
 	Stack,
 	Text,
 	TextInput,
-	Title,
+	Title
 } from "@mantine/core";
-import { IconBrandGithub, IconBrandGithubFilled, IconBuildings, IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
+import { IconBrandGithubFilled, IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import { useEffect, useMemo, useState } from "react";
 import type { UserProfile } from "../api/auth";
 import { formatYearText } from "../api/utils";
@@ -63,7 +58,9 @@ export function Sidebar(props: SidebarProps) {
 	const [scale, setScale] = useState(1);
 	const [modified, setModified] = useState(false);
 	const [filename, setFilename] = useState("");
-	const { scene, dirty, size } = useSceneStore();
+	const scene = useSceneStore(state => state.scene);
+	const dirty = useSceneStore(state => state.dirty);
+	const size = useSceneStore(state => state.size);
 
 	useEffect(() => {
 		setModified(false);
@@ -128,7 +125,7 @@ export function Sidebar(props: SidebarProps) {
 							<NumberInput
 								label="Start Year"
 								placeholder="Start Year"
-								min={2015}
+								min={2000}
 								max={new Date().getFullYear()}
 								stepHoldDelay={500}
 								stepHoldInterval={100}
@@ -139,13 +136,13 @@ export function Sidebar(props: SidebarProps) {
 									}
 								}}
 								onChange={(value) => {
-									setStartYear(safeInt(value, 2015));
+									setStartYear(safeInt(value, 2000));
 								}}
 							/>
 							<NumberInput
 								label="End Year"
 								placeholder="End Year"
-								min={2015}
+								min={2000}
 								max={new Date().getFullYear()}
 								stepHoldDelay={500}
 								stepHoldInterval={100}
@@ -155,7 +152,7 @@ export function Sidebar(props: SidebarProps) {
 										setStartYear(endYear);
 									}
 								}}
-								onChange={(value) => setEndYear(safeInt(value, 2015))}
+								onChange={(value) => setEndYear(safeInt(value, 2000))}
 							/>
 						</Group>
 						<Button

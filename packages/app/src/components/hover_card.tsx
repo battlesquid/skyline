@@ -3,7 +3,8 @@ import { useRef } from "react";
 import { useTowerStore } from "../stores/tower";
 
 export function HoverCard() {
-	const { position, target } = useTowerStore();
+	const position = useTowerStore(state => state.position);
+	const target = useTowerStore(state => state.target);
 	const date =
 		target !== null
 			? new Date(target.date).toLocaleDateString(undefined, {

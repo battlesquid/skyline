@@ -54,3 +54,7 @@ canvas {
 	animation: fade-in 2s ease 0.3s forwards;
 	animation-delay: 0s;
 }
+
+.sticky {
+	position: fixed;
+}
