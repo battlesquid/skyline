@@ -1,10 +1,10 @@
 import { ActionIcon, Card, Group, Portal, Tooltip } from "@mantine/core";
 import { IconCamera, IconHome, IconRotate360 } from "@tabler/icons-react";
+import { useControlsStore } from "../stores/controls";
 import classes from "../styles/dock.module.css";
-import { ControlsCommand, useControlsStore } from "../stores/controls";
 
 export function SkylineControls() {
-    const setCommand = useControlsStore(state => state.setCommand);
+    const resetView = useControlsStore(state => state.resetView);
     const toggleAutoRotation = useControlsStore(state => state.toggleAutoRotate);
     const toggleProjectionMode = useControlsStore(state => state.toggleProjectionMode);
     const autoRotate = useControlsStore(state => state.autoRotate);
@@ -17,7 +17,7 @@ export function SkylineControls() {
                         <ActionIcon
                             variant="subtle"
                             aria-label="Reset View"
-                            onClick={() => setCommand(ControlsCommand.Reset)}
+                            onClick={() => resetView()}
                         >
                             <IconHome stroke={1} />
                         </ActionIcon>

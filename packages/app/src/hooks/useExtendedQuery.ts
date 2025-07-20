@@ -63,7 +63,7 @@ export const useExtendedQuery = (
 	const [fetching, setFetching] = useState(false);
 	const [ok, setOk] = useState(true);
 	const [initialized, setInitialized] = useState(false);
-	const  setParameters = useParametersStore(state => state.setParameters);
+	const  setParameters = useParametersStore(state => state.setInputs);
 	const init = async () => {
 		if (initialized) {
 			return null;

@@ -3,14 +3,14 @@ import { useThree } from "@react-three/fiber";
 import { type MutableRefObject, useEffect, useMemo, useRef } from "react";
 import { Color, type Group as ThreeGroup } from "three";
 import type {
-	ContributionDay,
-	ContributionWeek,
-	ContributionWeeks,
+    ContributionDay,
+    ContributionWeek,
+    ContributionWeeks,
 } from "../api/types";
 import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
-import { ControlsCommand, useControlsStore } from "../stores/controls";
+import { useControlsStore } from "../stores/controls";
 import { useParametersStore } from "../stores/parameters";
 import { useSceneStore } from "../stores/scene";
 import { ContributionTower } from "./contribution_tower";
@@ -30,8 +30,8 @@ export function SkylineModel(props: SkylineModelProps) {
 	const setSize = useSceneStore(state => state.setSize);
 	const setScene = useSceneStore(state => state.setScene);
 
-	const command = useControlsStore(state => state.command);
-	const clearCommand = useControlsStore(state => state.clearCommand);
+	const reset = useControlsStore(state => state.reset);
+	const clearReset = useControlsStore(state => state.clearReset);
 
 	const bounds = useBounds();
 	let boundsTimeout: number | undefined = undefined;
@@ -65,23 +65,12 @@ export function SkylineModel(props: SkylineModelProps) {
 	]);
 
 	useEffect(() => {
-		if (command === null) {
+		if (reset === null) {
 			return;
 		}
-		switch (command) {
-			case ControlsCommand.Reset:
-				bounds.refresh().clip().fit().reset();
-				break;
-			case ControlsCommand.TogglePerspective:
-				break;
-			case ControlsCommand.ToggleRotate:
-				break;
-			default:
-				((_: never) => { })(command);
-				break;
-		}
-		clearCommand();
-	}, [command]);
+        bounds.refresh().clip().fit().reset();
+		clearReset();
+	}, [reset]);
 
 	useBoundingBox(
 		{

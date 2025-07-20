@@ -36,15 +36,17 @@ export interface SkylineModelParameters {
 }
 
 export type ParametersStore = {
-	parameters: SkylineModelParameters;
-	setParameters: (parameters: Partial<SkylineModelInputParameters>) => void;
+    inputs: SkylineModelInputParameters;
+    computed: SkylineModelComputedParameters;
+	setInputs: (parameters: Partial<SkylineModelInputParameters>) => void;
 };
 
 export const useParametersStore = create<ParametersStore>((set, get) => ({
-	parameters: getDefaultParameters(),
-	setParameters: (_inputs: Partial<SkylineModelInputParameters>) => {
+    inputs: getDefaultParameters().inputs,
+    computed: getDefaultParameters().computed,
+	setInputs: (_inputs: Partial<SkylineModelInputParameters>) => {
 		const inputs: SkylineModelInputParameters = {
-			...get().parameters.inputs,
+			...get().inputs,
 			..._inputs,
 		};
 
@@ -70,6 +72,6 @@ export const useParametersStore = create<ParametersStore>((set, get) => ({
 			paddingWidth,
 		};
 
-		set(() => ({ parameters: { inputs, computed } }));
+		set(() => ({ inputs, computed }));
 	},
 }));

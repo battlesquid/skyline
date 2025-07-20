@@ -17,7 +17,7 @@ import {
 	Title
 } from "@mantine/core";
 import { IconBrandGithubFilled, IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { UserProfile } from "../api/auth";
 import { formatYearText } from "../api/utils";
 import { useParametersStore } from "../stores/parameters";
@@ -28,6 +28,7 @@ import { exportScene, getDimensionsText } from "../three/utils";
 import { capitalize } from "../utils";
 import { FontInput } from "./font_input";
 import { Profile } from "./profile";
+import { GenerateSection } from "./sidebar/generate_section";
 
 interface SidebarProps {
 	profile: UserProfile | null;
@@ -42,7 +43,7 @@ const safeFloat = (value: string | number, min: number) => {
 	return Number.parseFloat(`${value}`);
 };
 
-const safeInt = (value: string | number, min: number) => {
+export const safeInt = (value: string | number, min: number) => {
 	if (value === "") {
 		return min;
 	}
@@ -51,26 +52,12 @@ const safeInt = (value: string | number, min: number) => {
 
 export function Sidebar(props: SidebarProps) {
 	const { profile, authenticated, ok } = props;
-	const { parameters, setParameters } = useParametersStore();
-	const [name, setName] = useState(profile?.login ?? "");
-	const [startYear, setStartYear] = useState(parameters.inputs.startYear);
-	const [endYear, setEndYear] = useState(parameters.inputs.endYear);
+	const { parameters, setInputs: setParameters } = useParametersStore();
 	const [scale, setScale] = useState(1);
-	const [modified, setModified] = useState(false);
 	const [filename, setFilename] = useState("");
 	const scene = useSceneStore(state => state.scene);
 	const dirty = useSceneStore(state => state.dirty);
 	const size = useSceneStore(state => state.size);
-
-	useEffect(() => {
-		setModified(false);
-	}, [ok]);
-
-	useEffect(() => {
-		if (!ok) {
-			setModified(true);
-		}
-	}, [name]);
 
 	const defaultFilename = useMemo(() => {
 		return `${parameters.inputs.name}_${formatYearText(parameters.inputs.startYear, parameters.inputs.endYear)}_skyline`;
@@ -112,57 +99,7 @@ export function Sidebar(props: SidebarProps) {
 			<Card h="100%" p="md">
 				<AppShell.Section grow component={ScrollArea} type="always" offsetScrollbars>
 					<Stack gap={10}>
-						<TextInput
-							label="Github Username"
-							placeholder="Github Username"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							error={
-								ok || modified ? "" : `Unable to find profile for "${name}".`
-							}
-						/>
-						<Group grow>
-							<NumberInput
-								label="Start Year"
-								placeholder="Start Year"
-								min={2000}
-								max={new Date().getFullYear()}
-								stepHoldDelay={500}
-								stepHoldInterval={100}
-								value={startYear}
-								onBlur={() => {
-									if (startYear > endYear) {
-										setEndYear(startYear);
-									}
-								}}
-								onChange={(value) => {
-									setStartYear(safeInt(value, 2000));
-								}}
-							/>
-							<NumberInput
-								label="End Year"
-								placeholder="End Year"
-								min={2000}
-								max={new Date().getFullYear()}
-								stepHoldDelay={500}
-								stepHoldInterval={100}
-								value={endYear}
-								onBlur={() => {
-									if (endYear < startYear) {
-										setStartYear(endYear);
-									}
-								}}
-								onChange={(value) => setEndYear(safeInt(value, 2000))}
-							/>
-						</Group>
-						<Button
-							fullWidth
-							onClick={() => setParameters({ name, startYear, endYear })}
-							variant="light"
-							size="sm"
-						>
-							Generate
-						</Button>
+				        <GenerateSection ok={ok} login={profile?.login ?? ""} />
 						<Divider />
 						<Title order={5}>Settings</Title>
 						<Accordion classNames={accordionClasses}>

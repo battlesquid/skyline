@@ -16,7 +16,7 @@ import { useFontStore } from "../stores/fonts";
 import { useParametersStore } from "../stores/parameters";
 
 export function FontInput() {
-	const { parameters, setParameters } = useParametersStore();
+	const { parameters, setInputs: setParameters } = useParametersStore();
 	const [fontLoadFailed, setFontLoadFailed] = useState(false);
 	const fonts = useFontStore((state) => state.fonts);
 	const addFont = useFontStore((state) => state.addFont);

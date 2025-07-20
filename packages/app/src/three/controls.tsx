@@ -11,6 +11,7 @@ export function CameraControls() {
         <OrbitControls
             args={[camera, gl.domElement]}
             autoRotate={autoRotate}
+            autoRotateSpeed={0.8}
             makeDefault
             minPolarAngle={0}
             maxPolarAngle={Math.PI}
