@@ -24,8 +24,10 @@ export function SkylineModel(props: SkylineModelProps) {
 	const { group, years } = props;
 	const { parameters } = useParametersStore();
 
-	const scene = useThree((state) => state.scene);
-	const sceneStore = useSceneStore();
+	const scene = useThree((state) => state.scene)
+    const setDirty = useSceneStore(state => state.setDirty);
+    const setScene = useSceneStore(state => state.setScene);
+    const setSize = useSceneStore(state => state.setSize);
 
 	const bounds = useBounds();
 	let boundsTimeout: number | undefined = undefined;
@@ -33,14 +35,14 @@ export function SkylineModel(props: SkylineModelProps) {
 		if (boundsTimeout !== undefined) {
 			clearTimeout(boundsTimeout);
 		}
-		sceneStore.setDirty(true);
+		setDirty(true);
 		boundsTimeout = setTimeout(() => {
 			if (group.current === null) {
 				return;
 			}
-			sceneStore.setScene(scene.clone());
+			setScene(scene.clone());
 			bounds.refresh(group.current).clip().fit().reset();
-			sceneStore.setDirty(false);
+			setDirty(false);
 		}, 1500);
 
 		return () => {
@@ -61,7 +63,7 @@ export function SkylineModel(props: SkylineModelProps) {
 	useBoundingBox(
 		{
 			obj: group,
-			setter: (bb) => sceneStore.setSize(bb),
+			setter: setSize,
 		},
 		[parameters, years],
 	);

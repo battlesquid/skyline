@@ -22,11 +22,9 @@ export function Skyline(props: SkylineProps) {
 		() => ({ position: [0, 0, 10], fov: 10 }),
 		[],
 	);
-	const theme = useMantineTheme();
 
 	return (
 		<Canvas style={style} camera={camera} shadows>
-			{/* <color attach="background" /> */}
 			<Bounds fit clip margin={1}>
 				<SkylineModel group={group} years={years} />
 			</Bounds>

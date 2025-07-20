@@ -21,9 +21,9 @@ export const getDimensions = (mesh: Mesh | null): Dimensions => {
 	};
 };
 
-export const exportScene = (scene: Scene | null, name: string) => {
+export const exportScene = (scene: Scene | null) => {
 	if (scene === null) {
-		return;
+		return null;
 	}
 	const clone = scene.clone();
 	const exportGroup = clone.getObjectByName("export_group");
@@ -50,11 +50,7 @@ export const exportScene = (scene: Scene | null, name: string) => {
 	clone.rotation.set(Math.PI / 2, 0, 0);
 	clone.updateMatrixWorld();
 	const exporter = new STLExporter();
-	const data = exporter.parse(clone);
-	const link = document.createElement("a");
-	link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-	link.download = `${name}.stl`;
-	link.click();
+	return exporter.parse(clone);
 };
 
 export const getDimensionsText = (scale: number, size: Vector3) => {
