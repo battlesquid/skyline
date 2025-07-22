@@ -1,7 +1,7 @@
 import { NumberInput, Group, Button, TextInput } from "@mantine/core";
-import { safeInt } from "../sidebar";
 import { useEffect, useState } from "react";
 import { useParametersStore } from "../../stores/parameters";
+import { safeInt } from "../../utils";
 
 export interface GenerateSectionProps {
     ok: boolean;
@@ -10,11 +10,13 @@ export interface GenerateSectionProps {
 
 export function GenerateSection(props: GenerateSectionProps) {
     const { ok, login } = props
-    const { parameters, setInputs: setParameters } = useParametersStore();
+    const initialStartYear = useParametersStore.getInitialState().inputs.startYear;
+    const initialEndYear = useParametersStore.getInitialState().inputs.endYear;
+    const setInputs = useParametersStore(state => state.setInputs);
 
     const [name, setName] = useState(login ?? "");
-    const [startYear, setStartYear] = useState(parameters.inputs.startYear);
-    const [endYear, setEndYear] = useState(parameters.inputs.endYear);
+    const [startYear, setStartYear] = useState(initialStartYear);
+    const [endYear, setEndYear] = useState(initialEndYear);
     const [modified, setModified] = useState(false);
 
     useEffect(() => {
@@ -75,7 +77,7 @@ export function GenerateSection(props: GenerateSectionProps) {
             </Group>
             <Button
                 fullWidth
-                onClick={() => setParameters({ name, startYear, endYear })}
+                onClick={() => setInputs({ name, startYear, endYear })}
                 variant="light"
                 size="sm"
             >

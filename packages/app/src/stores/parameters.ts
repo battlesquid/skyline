@@ -2,7 +2,8 @@ import type { FontData } from "@react-three/drei";
 import { create } from "zustand";
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
 import { getDefaultParameters } from "../defaults";
-import type { SkylineBaseShape } from "../three/skyline_base";
+import { formatYearText } from "../api/utils";
+import { SkylineBaseShape } from "../three/types";
 
 export interface SkylineModelInputParameters {
 	name: string;
@@ -16,6 +17,8 @@ export interface SkylineModelInputParameters {
 	textDepth: number;
 	color: string;
 	showContributionColor: boolean;
+	filename: string;
+	scale: number;
 }
 
 export interface SkylineModelComputedParameters {
@@ -28,6 +31,7 @@ export interface SkylineModelComputedParameters {
 	xMidpointOffset: number;
 	yMidpointOffset: number;
 	paddingWidth: number;
+	defaultFilename: string;
 }
 
 export interface SkylineModelParameters {
@@ -36,14 +40,16 @@ export interface SkylineModelParameters {
 }
 
 export type ParametersStore = {
-    inputs: SkylineModelInputParameters;
-    computed: SkylineModelComputedParameters;
+	inputs: SkylineModelInputParameters;
+	computed: SkylineModelComputedParameters;
 	setInputs: (parameters: Partial<SkylineModelInputParameters>) => void;
 };
 
+const DEFAULT_PARAMETERS = getDefaultParameters();
+
 export const useParametersStore = create<ParametersStore>((set, get) => ({
-    inputs: getDefaultParameters().inputs,
-    computed: getDefaultParameters().computed,
+	inputs: DEFAULT_PARAMETERS.inputs,
+	computed: DEFAULT_PARAMETERS.computed,
 	setInputs: (_inputs: Partial<SkylineModelInputParameters>) => {
 		const inputs: SkylineModelInputParameters = {
 			...get().inputs,
@@ -59,6 +65,7 @@ export const useParametersStore = create<ParametersStore>((set, get) => ({
 		const xMidpointOffset = modelLength / 2;
 		const yMidpointOffset = modelWidth / 2;
 		const paddingWidth = inputs.padding * 2;
+		const defaultFilename = `${inputs.name}_${formatYearText(inputs.startYear, inputs.endYear)}_skyline`;
 
 		const computed: SkylineModelComputedParameters = {
 			modelLength,
@@ -70,6 +77,7 @@ export const useParametersStore = create<ParametersStore>((set, get) => ({
 			xMidpointOffset,
 			yMidpointOffset,
 			paddingWidth,
+			defaultFilename
 		};
 
 		set(() => ({ inputs, computed }));

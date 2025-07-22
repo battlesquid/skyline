@@ -1,6 +1,7 @@
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "./api/constants";
-import type { SkylineModelParameters } from "./stores/parameters";
-import { SkylineBaseShape } from "./three/skyline_base";
+import { formatYearText } from "./api/utils";
+import type { SkylineModelComputedParameters, SkylineModelInputParameters, SkylineModelParameters } from "./stores/parameters";
+import { SkylineBaseShape } from "./three/types";
 
 export const getDefaultFonts = () => ({
 	Inter: "/Inter_Regular.json",
@@ -16,8 +17,8 @@ export const DEFAULT_FONT_SELECTION = "Inter Bold";
 export const DEFAULT_FONT = getDefaultFonts()[DEFAULT_FONT_SELECTION];
 
 export const getDefaultParameters = (): SkylineModelParameters => {
-	const inputs = {
-		name: "Battlesquid",
+	const inputs: SkylineModelInputParameters = {
+		name: "battlesquid",
 		startYear: new Date().getFullYear(),
 		endYear: new Date().getFullYear(),
 		color: "#575757",
@@ -28,6 +29,8 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		towerSize: 2.5,
 		dampening: 4,
 		shape: SkylineBaseShape.Prism,
+		filename: `battlesquid_${new Date().getFullYear()}_skyline`,
+		scale: 1
 	};
 
 	const modelLength = WEEKS_IN_YEAR * inputs.towerSize;
@@ -39,8 +42,9 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 	const xMidpointOffset = modelLength / 2;
 	const yMidpointOffset = modelWidth / 2;
 	const paddingWidth = inputs.padding * 2;
+	const defaultFilename = `${inputs.name}_${formatYearText(inputs.startYear, inputs.endYear)}_skyline`;
 
-	const computed = {
+	const computed: SkylineModelComputedParameters = {
 		modelLength,
 		modelWidth,
 		platformMidpoint,
@@ -50,6 +54,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		xMidpointOffset,
 		yMidpointOffset,
 		paddingWidth,
+		defaultFilename,
 	};
 
 	return { inputs, computed };

@@ -16,7 +16,7 @@ import { useFontStore } from "../stores/fonts";
 import { useParametersStore } from "../stores/parameters";
 
 export function FontInput() {
-	const { parameters, setInputs: setParameters } = useParametersStore();
+	const setInputs = useParametersStore(state => state.setInputs);
 	const [fontLoadFailed, setFontLoadFailed] = useState(false);
 	const fonts = useFontStore((state) => state.fonts);
 	const addFont = useFontStore((state) => state.addFont);
@@ -56,7 +56,7 @@ export function FontInput() {
 					if (value === null) {
 						return;
 					}
-					setParameters({ font: fonts[value] });
+					setInputs({ font: fonts[value] });
 				}}
 				error={fontLoadFailed ? "Unable to load font" : ""}
 			/>

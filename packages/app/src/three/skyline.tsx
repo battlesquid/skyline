@@ -1,25 +1,23 @@
 import {
 	Bounds,
 	Environment,
-	Grid,
-	OrbitControls
+	Grid
 } from "@react-three/drei";
-import { Canvas, useThree, type RenderProps } from "@react-three/fiber";
+import { Canvas, type RenderProps } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { DoubleSide, type Group } from "three";
-import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { useParametersStore } from "../stores/parameters";
 import { SkylineControls } from "../components/skyline_controls";
 import { useControlsStore } from "../stores/controls";
-import { useParametersStore } from "../stores/parameters";
 import { Cameras } from "./cameras";
-import { SkylineModel, type SkylineModelProps } from "./skyline_model";
 import { CameraControls } from "./controls";
+import { SkylineModel, type SkylineModelProps } from "./skyline_model";
 
 export type SkylineProps = Omit<SkylineModelProps, "group">;
 
 export function Skyline(props: SkylineProps) {
 	const { years } = props;
-	const { parameters } = useParametersStore();
+	const computed  = useParametersStore(state => state.computed);
 	const group = useRef<Group | null>(null);
 	const style = useMemo(() => ({ height: "100%" }), []);
 	const camera = useMemo<RenderProps<HTMLCanvasElement>["camera"]>(
@@ -57,7 +55,7 @@ export function Skyline(props: SkylineProps) {
 				<Environment preset="forest" />
 				<Grid
 					name="grid"
-					position={[0, -parameters.computed.platformHeight, 0]}
+					position={[0, -computed.platformHeight, 0]}
 					side={DoubleSide}
 					cellSize={0}
 					sectionColor={"#555"}
