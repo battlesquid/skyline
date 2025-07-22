@@ -7,7 +7,6 @@ import { Canvas, type RenderProps } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { DoubleSide, type Group } from "three";
 import { useParametersStore } from "../stores/parameters";
-import { SkylineControls } from "../components/skyline_controls";
 import { useControlsStore } from "../stores/controls";
 import { Cameras } from "./cameras";
 import { CameraControls } from "./controls";
@@ -25,7 +24,6 @@ export function Skyline(props: SkylineProps) {
 		[],
 	);
 
-	const autoRotate = useControlsStore(state => state.autoRotate);
 	const orthographic = useControlsStore(state => state.projectionMode === "orthographic");
 
 	return (
@@ -66,7 +64,6 @@ export function Skyline(props: SkylineProps) {
 					infiniteGrid={true}
 				/>
 			</Canvas>
-			<SkylineControls />
 		</>
 	);
 }

@@ -1,17 +1,17 @@
 import { Button, Text } from "@mantine/core";
 import { useSceneStore } from "../../stores/scene";
 import { exportScene, getDimensionsText } from "../../three/utils";
-import { useShallow } from "zustand/shallow";
 import { useParametersStore } from "../../stores/parameters";
+import { useShallow } from "zustand/shallow";
 
 export function ExportButton() {
-    const filename = useParametersStore(useShallow(state => state.inputs.filename));
-    const scale = useParametersStore(useShallow(state => state.inputs.scale));
-    const defaultFilename = useParametersStore(useShallow(state => state.computed.defaultFilename));
+    const filename = useParametersStore(state => state.inputs.filename);
+    const scale = useParametersStore(state => state.inputs.scale);
+    const defaultFilename = useParametersStore(state => state.computed.defaultFilename);
 
     const scene = useSceneStore(state => state.scene);
     const dirty = useSceneStore(state => state.dirty);
-    const size = useSceneStore(state => state.size);
+    const size = useSceneStore(useShallow(state => state.size));
 
     return (
         <Button

@@ -10,13 +10,14 @@ import { useParametersStore } from "./stores/parameters";
 import { Skyline } from "./three/skyline";
 import tunnel from "tunnel-rat";
 import { useShallow } from "zustand/shallow";
+import { SkylineControls } from "./components/skyline_controls";
 
 export const t = tunnel();
 
 export default function App() {
-	const name = useParametersStore(useShallow(state => state.inputs.name));
-	const start = useParametersStore(useShallow(state => state.inputs.startYear));
-	const end = useParametersStore(useShallow(state => state.inputs.endYear));
+	const name = useParametersStore(state => state.inputs.name);
+	const start = useParametersStore(state => state.inputs.startYear);
+	const end = useParametersStore(state => state.inputs.endYear);
 	const authenticated = isAuthenticated();
 	const {
 		profile,
@@ -32,7 +33,6 @@ export default function App() {
 
 	const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
 	const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-console.log("rendered!")
 	return (
 		<AppShell
 			header={{ height: 0 }}
@@ -68,8 +68,9 @@ console.log("rendered!")
 				>
 					<HoverCard />
 				</div>
+				<SkylineControls />
 			</AppShell.Main>
-            <t.Out />
+			<t.Out />
 		</AppShell>
 	);
 }

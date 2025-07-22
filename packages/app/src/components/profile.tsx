@@ -9,7 +9,6 @@ import {
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
 import { type UserProfile, logout } from "../api/auth";
-import { BoxHelper } from "three";
 
 export interface ProfileProps {
 	profile: UserProfile | null;

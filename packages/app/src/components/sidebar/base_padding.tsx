@@ -1,10 +1,9 @@
 import { NumberInput } from "@mantine/core";
-import { useShallow } from "zustand/shallow";
 import { useParametersStore } from "../../stores/parameters";
 import { safeFloat } from "../../utils";
 
 export function BasePaddingInput() {
-    const padding = useParametersStore(useShallow(state => state.inputs.padding));
+    const padding = useParametersStore(state => state.inputs.padding);
     const setInputs = useParametersStore(state => state.setInputs);
 
     return (

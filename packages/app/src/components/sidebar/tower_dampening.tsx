@@ -1,10 +1,9 @@
-import { useShallow } from "zustand/shallow"
 import { useParametersStore } from "../../stores/parameters"
 import { NumberInput } from "@mantine/core";
 import { safeInt } from "../../utils";
 
 export function TowerDampeningInput() {
-    const dampening = useParametersStore(useShallow(state => state.inputs.dampening));
+    const dampening = useParametersStore(state => state.inputs.dampening);
     const setInputs = useParametersStore(state => state.setInputs);
     return (
         <NumberInput

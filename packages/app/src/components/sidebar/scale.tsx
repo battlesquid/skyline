@@ -1,10 +1,9 @@
 import { NumberInput } from "@mantine/core";
 import { safeFloat } from "../../utils";
-import { useShallow } from "zustand/shallow";
 import { useParametersStore } from "../../stores/parameters";
 
 export function ScaleInput() {
-    const scale = useParametersStore(useShallow(state => state.inputs.scale));
+    const scale = useParametersStore(state => state.inputs.scale);
     const setInputs = useParametersStore(state => state.setInputs);
 
     return (

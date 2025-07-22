@@ -10,7 +10,6 @@ import {
 	Title
 } from "@mantine/core";
 import { IconBrandGithubFilled, IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
-import { useState } from "react";
 import type { UserProfile } from "../api/auth";
 import accordionClasses from "../styles/accordion.module.css";
 import { FontInput } from "./font_input";

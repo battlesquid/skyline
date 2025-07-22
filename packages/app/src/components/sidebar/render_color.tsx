@@ -1,10 +1,9 @@
-import { useShallow } from "zustand/shallow";
 import { useParametersStore } from "../../stores/parameters";
 import { Checkbox, ColorInput } from "@mantine/core";
 
 export function RenderColorInput() {
-    const color = useParametersStore(useShallow(state => state.inputs.color));
-    const showContributionColor = useParametersStore(useShallow(state => state.inputs.showContributionColor));
+    const color = useParametersStore(state => state.inputs.color);
+    const showContributionColor = useParametersStore(state => state.inputs.showContributionColor);
     const setInputs = useParametersStore(state => state.setInputs);
 
     return (
