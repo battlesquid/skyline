@@ -1,13 +1,15 @@
 import { ActionIcon, Card, Group, Portal, Tooltip } from "@mantine/core";
 import { IconCamera, IconHome, IconRotate360 } from "@tabler/icons-react";
-import { useControlsStore } from "../stores/controls";
+import { type ProjectionMode, useControlsStore } from "../stores/controls";
 import classes from "../styles/dock.module.css";
+import { capitalize } from "../utils";
 
 export function SkylineControls() {
     const resetView = useControlsStore(state => state.resetView);
     const toggleAutoRotation = useControlsStore(state => state.toggleAutoRotate);
     const toggleProjectionMode = useControlsStore(state => state.toggleProjectionMode);
     const autoRotate = useControlsStore(state => state.autoRotate);
+    const otherMode: ProjectionMode = useControlsStore(state => state.projectionMode === "orthographic" ? "perspective" : "orthographic");
 
     return (
         <Portal target="#skyline-canvas">
@@ -22,16 +24,16 @@ export function SkylineControls() {
                             <IconHome stroke={1} />
                         </ActionIcon>
                     </Tooltip>
-                    <Tooltip label="Toggle Projection Mode">
+                    <Tooltip label={`Enable ${capitalize(otherMode)} Camera`}>
                         <ActionIcon
                             variant="subtle"
-                            aria-label="Toggle Camera Perspective"
+                            aria-label="Toggle Projection Mode"
                             onClick={() => toggleProjectionMode()}
                         >
                             <IconCamera stroke={1} />
                         </ActionIcon>
                     </Tooltip>
-                    <Tooltip label="Toggle Rotation">
+                    <Tooltip label={`${autoRotate ? "Disable" : "Enable"} Rotation`}>
                         <ActionIcon
                             variant={autoRotate ? "filled" : "subtle"}
                             aria-label="Toggle Rotation"

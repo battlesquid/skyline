@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
 import { getDefaultParameters } from "../defaults";
 import { formatYearText } from "../api/utils";
-import { SkylineBaseShape } from "../three/types";
+import type { SkylineBaseShape } from "../three/types";
 
 export interface SkylineModelInputParameters {
 	name: string;

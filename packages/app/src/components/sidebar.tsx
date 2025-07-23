@@ -12,23 +12,22 @@ import {
 import { IconBrandGithubFilled, IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
 import type { UserProfile } from "../api/auth";
 import accordionClasses from "../styles/accordion.module.css";
-import { FontInput } from "./font_input";
+import { FontInput } from "./sidebar_inputs/font_input";
 import { Profile } from "./profile";
-import { BasePaddingInput } from "./sidebar/base_padding";
-import { BaseShapeInput } from "./sidebar/base_shape";
-import { ExportButton } from "./sidebar/export";
-import { FilenameInput } from "./sidebar/filename";
-import { GenerateSection } from "./sidebar/generate_section";
-import { RenderColorInput } from "./sidebar/render_color";
-import { ScaleInput } from "./sidebar/scale";
-import { TowerDampeningInput } from "./sidebar/tower_dampening";
+import { BasePaddingInput } from "./sidebar_inputs/base_padding";
+import { BaseShapeInput } from "./sidebar_inputs/base_shape";
+import { ExportButton } from "./sidebar_inputs/export";
+import { FilenameInput } from "./sidebar_inputs/filename";
+import { GenerateSection } from "./sidebar_inputs/generate_section";
+import { RenderColorInput } from "./sidebar_inputs/render_color";
+import { ScaleInput } from "./sidebar_inputs/scale";
+import { TowerDampeningInput } from "./sidebar_inputs/tower_dampening";
 
 interface SidebarProps {
 	profile: UserProfile | null;
 	authenticated: boolean;
 	ok: boolean;
 }
-
 
 export function Sidebar(props: SidebarProps) {
 	const { profile, authenticated, ok } = props;
@@ -113,7 +112,6 @@ export function Sidebar(props: SidebarProps) {
 				<AppShell.Section>
 					<ExportButton />
 				</AppShell.Section>
-
 			</Card>
 			<AppShell.Section>
 				<Profile profile={profile} />
@@ -129,7 +127,6 @@ export function Sidebar(props: SidebarProps) {
 					fullWidth
 				>
 					View on Github
-
 				</Button>
 			</AppShell.Section>
 		</Stack>

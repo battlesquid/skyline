@@ -5,8 +5,8 @@
  */
 
 import { useThree } from "@react-three/fiber"
-import { useRef, useLayoutEffect } from "react"
-import { PerspectiveCamera as PerspectiveCameraImpl, OrthographicCamera as OrthographicCameraImpl } from "three"
+import { useRef, useLayoutEffect, useState } from "react"
+import type { PerspectiveCamera as PerspectiveCameraImpl, OrthographicCamera as OrthographicCameraImpl } from "three"
 import { useControlsStore } from "../stores/controls";
 import { OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
 
@@ -16,6 +16,7 @@ export function Cameras() {
     const orthoRef = useRef<OrthographicCameraImpl | null>(null)
     const pixelsFromCenterToTop = useThree((state) => state.size.height / 2);
     const orthographic = useControlsStore(state => state.projectionMode === "orthographic");
+    const [orthoDefault, setOrthoDefault] = useState(orthographic);
 
     useLayoutEffect(() => {
         if (persRef.current === null || orthoRef.current === null) {
@@ -38,13 +39,14 @@ export function Cameras() {
                 const distance = orthoZoomToPersDistance(ocam.zoom)
                 pcam.position.setLength(distance)
             }
+            setOrthoDefault(orthographic);
         })
     }, [orthographic]);
 
     return (
         <>
-            <PerspectiveCamera ref={persRef} makeDefault={!orthographic} fov={fov} />
-            <OrthographicCamera ref={orthoRef} makeDefault={orthographic} />
+            <PerspectiveCamera position={[5, 5, 10]} ref={persRef} makeDefault={!orthoDefault} fov={fov} />
+            <OrthographicCamera position={[5, 5, 10]} zoom={10} ref={orthoRef} makeDefault={orthoDefault} />
         </>
     )
 }

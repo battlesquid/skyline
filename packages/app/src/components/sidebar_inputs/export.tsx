@@ -24,6 +24,7 @@ export function ExportButton() {
                     filename.trim() === ""
                         ? defaultFilename
                         : filename,
+                    scale
                 )
             }
         >

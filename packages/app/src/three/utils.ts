@@ -21,8 +21,9 @@ export const getDimensions = (mesh: Mesh | null): Dimensions => {
 	};
 };
 
-export const exportScene = (scene: Scene | null, name: string) => {
+export const exportScene = (scene: Scene | null, name: string, scale: number) => {
 	if (scene === null) {
+        console.warn("Scene is null, skipping export");
 		return;
 	}
 	const clone = scene.clone();
@@ -48,6 +49,7 @@ export const exportScene = (scene: Scene | null, name: string) => {
 	}
 
 	clone.rotation.set(Math.PI / 2, 0, 0);
+    clone.scale.set(scale, scale, scale);
 	clone.updateMatrixWorld();
 	const exporter = new STLExporter();
 	const data = exporter.parse(clone);
