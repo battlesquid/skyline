@@ -17,7 +17,7 @@ export const client = new Client({
 						Authorization: `Bearer ${token}`,
 					});
 				},
-				didAuthError(error, operation) {
+				didAuthError(error, _operation) {
 					return getToken() === null || error.response?.status === 401;
 				},
 				async refreshAuth() {

@@ -10,14 +10,13 @@
 		"gql.tada": "gql-tada generate output"
 	},
 	"dependencies": {
-		"@mantine/core": "^8.0.2",
-		"@mantine/hooks": "^8.0.2",
+		"@mantine/core": "^8.2.1",
+		"@mantine/hooks": "^8.2.1",
 		"@octokit/graphql": "^9.0.1",
 		"@react-three/drei": "^9.122.0",
 		"@react-three/fiber": "^8.18.0",
-		"@tabler/icons-react": "^3.26.0",
+		"@tabler/icons-react": "^3.34.1",
 		"@urql/exchange-auth": "^2.2.0",
-		"geist": "^1.4.2",
 		"gql.tada": "^1.8.10",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
@@ -35,7 +34,7 @@
 		"@types/three": "^0.169.0",
 		"globals": "^15.11.0",
 		"postcss": "^8.4.49",
-		"postcss-preset-mantine": "^1.17.0",
+		"postcss-preset-mantine": "^1.18.0",
 		"postcss-simple-vars": "^7.0.1"
 	},
 	"volta": {

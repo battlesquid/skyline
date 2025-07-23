@@ -51,7 +51,7 @@ const doRangeQuery = async (props: ExtendedQueryProps) => {
 			}
 		}
 		return years;
-	} catch (e) {
+	} catch (_e) {
 		return [];
 	}
 };
@@ -63,7 +63,7 @@ export const useExtendedQuery = (
 	const [fetching, setFetching] = useState(false);
 	const [ok, setOk] = useState(true);
 	const [initialized, setInitialized] = useState(false);
-	const { parameters, setParameters } = useParametersStore();
+	const setParameters = useParametersStore((state) => state.setInputs);
 	const init = async () => {
 		if (initialized) {
 			return null;

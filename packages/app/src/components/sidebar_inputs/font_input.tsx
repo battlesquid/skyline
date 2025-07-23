@@ -11,12 +11,12 @@ import {
 } from "@mantine/core";
 import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useState } from "react";
-import { DEFAULT_FONT_SELECTION } from "../defaults";
-import { useFontStore } from "../stores/fonts";
-import { useParametersStore } from "../stores/parameters";
+import { DEFAULT_FONT_SELECTION } from "../../defaults";
+import { useFontStore } from "../../stores/fonts";
+import { useParametersStore } from "../../stores/parameters";
 
 export function FontInput() {
-	const { parameters, setParameters } = useParametersStore();
+	const setInputs = useParametersStore((state) => state.setInputs);
 	const [fontLoadFailed, setFontLoadFailed] = useState(false);
 	const fonts = useFontStore((state) => state.fonts);
 	const addFont = useFontStore((state) => state.addFont);
@@ -31,7 +31,7 @@ export function FontInput() {
 						<HoverCard>
 							<HoverCard.Target>
 								<ThemeIcon size={16} radius={"lg"} variant="light">
-									<IconHelp size={16} />
+									<IconHelp stroke={1} size={16} />
 								</ThemeIcon>
 							</HoverCard.Target>
 							<HoverCard.Dropdown>
@@ -56,7 +56,7 @@ export function FontInput() {
 					if (value === null) {
 						return;
 					}
-					setParameters({ font: fonts[value] });
+					setInputs({ font: fonts[value] });
 				}}
 				error={fontLoadFailed ? "Unable to load font" : ""}
 			/>
@@ -80,7 +80,7 @@ export function FontInput() {
 				>
 					{(props) => (
 						<ActionIcon variant="light" size="input-sm" {...props}>
-							<IconFolder />
+							<IconFolder stroke={1} />
 						</ActionIcon>
 					)}
 				</FileButton>

@@ -16,12 +16,8 @@ import { LOGOS } from "../logos";
 import { useParametersStore } from "../stores/parameters";
 import { getSvgBoundingBox } from "../utils";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
+import { SkylineBaseShape } from "./types";
 import { type Dimensions, getDimensions } from "./utils";
-
-export enum SkylineBaseShape {
-	Prism = "prism",
-	Frustum = "frustum",
-}
 
 export interface SkylineBaseProps {
 	color: string;
@@ -30,7 +26,8 @@ export interface SkylineBaseProps {
 
 export function SkylineBase(props: SkylineBaseProps) {
 	const { color, years } = props;
-	const parameters = useParametersStore((state) => state.parameters);
+	const inputs = useParametersStore((state) => state.inputs);
+	const computed = useParametersStore((state) => state.computed);
 
 	const yearRef = useRef<Mesh | null>(null);
 	const nameRef = useRef<Mesh | null>(null);
@@ -49,13 +46,7 @@ export function SkylineBase(props: SkylineBaseProps) {
 		}
 		setNameDimensions(getDimensions(nameRef.current));
 		setYearDimensions(getDimensions(yearRef.current));
-	}, [
-		parameters.inputs.name,
-		parameters.inputs.startYear,
-		parameters.inputs.endYear,
-		parameters.inputs.font,
-		props.years,
-	]);
+	}, [inputs.name, inputs.startYear, inputs.endYear, inputs.font, props.years]);
 
 	const [geometry, setGeometry] = useState<BufferGeometry>(
 		new BoxGeometry(0, 0, 0),
@@ -63,14 +54,11 @@ export function SkylineBase(props: SkylineBaseProps) {
 	const [rot, setRot] = useState(0);
 
 	useEffect(() => {
-		const width =
-			parameters.computed.modelLength + parameters.computed.paddingWidth;
-		const length =
-			parameters.computed.modelWidth * years.length +
-			parameters.computed.paddingWidth;
-		const height = parameters.computed.platformHeight;
+		const width = computed.modelLength + computed.paddingWidth;
+		const length = computed.modelWidth * years.length + computed.paddingWidth;
+		const height = computed.platformHeight;
 
-		switch (parameters.inputs.shape) {
+		switch (inputs.shape) {
 			case SkylineBaseShape.Prism:
 				setGeometry(new BoxGeometry(width, height, length));
 				setRot(0);
@@ -82,17 +70,17 @@ export function SkylineBase(props: SkylineBaseProps) {
 				break;
 			}
 		}
-	}, [parameters.inputs.shape, years, parameters]);
+	}, [inputs.shape, years, computed]);
 
 	const logo = useRef<Group | null>(null);
 	const material = useMemo(
 		() =>
 			new MeshStandardMaterial({
-				color: parameters.inputs.showContributionColor
+				color: inputs.showContributionColor
 					? getDefaultParameters().inputs.color
-					: parameters.inputs.color,
+					: inputs.color,
 			}),
-		[parameters.inputs.color, parameters.inputs.showContributionColor],
+		[inputs.color, inputs.showContributionColor],
 	);
 
 	const { meshes } = useSvgMesh(LOGOS.Circle, material);
@@ -104,7 +92,7 @@ export function SkylineBase(props: SkylineBaseProps) {
 		for (const mesh of meshes) {
 			logo.current?.add(mesh);
 		}
-		const wantedHeight = 0.65 * parameters.computed.platformHeight;
+		const wantedHeight = 0.65 * computed.platformHeight;
 		const { height } = getSvgBoundingBox(LOGOS.Circle);
 
 		const scale = wantedHeight / height;
@@ -118,8 +106,8 @@ export function SkylineBase(props: SkylineBaseProps) {
 		[logo.current, meshes],
 	);
 	const LOGO_Y_OFFSET = size.y / 2;
-	const LOGO_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 0.5 : 0;
-	const TEXT_DEPTH_OFFSET = parameters.inputs.shape === "frustum" ? 2 : -0.1;
+	const LOGO_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
+	const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 2 : -0.1;
 
 	return (
 		<group>
@@ -127,49 +115,49 @@ export function SkylineBase(props: SkylineBaseProps) {
 				ref={logo}
 				rotation={[rot, 0, 0]}
 				position={[
-					-parameters.computed.xMidpointOffset + 5,
-					-parameters.computed.platformMidpoint + LOGO_Y_OFFSET,
-					(parameters.computed.modelWidth * years.length) / 2 +
-						parameters.inputs.padding +
+					-computed.xMidpointOffset + 5,
+					-computed.platformMidpoint + LOGO_Y_OFFSET,
+					(computed.modelWidth * years.length) / 2 +
+						inputs.padding +
 						LOGO_DEPTH_OFFSET,
 				]}
 			/>
 			<Text3D
 				ref={nameRef}
-				font={parameters.inputs.font}
+				font={inputs.font}
 				rotation={[rot, 0, 0]}
 				receiveShadow
 				castShadow
 				position={[
-					-parameters.computed.xMidpointOffset + nameDimensions.width / 2 + 12,
-					-parameters.computed.platformMidpoint - 0.5,
-					(parameters.computed.modelWidth * props.years.length) / 2 +
-						parameters.inputs.padding +
+					-computed.xMidpointOffset + nameDimensions.width / 2 + 12,
+					-computed.platformMidpoint - 0.5,
+					(computed.modelWidth * props.years.length) / 2 +
+						inputs.padding +
 						TEXT_DEPTH_OFFSET,
 				]}
-				height={parameters.inputs.textDepth}
-				size={parameters.computed.textSize}
+				height={inputs.textDepth}
+				size={computed.textSize}
 			>
-				{parameters.inputs.name}
+				{inputs.name}
 				<meshStandardMaterial color={color} />
 			</Text3D>
 			<Text3D
 				ref={yearRef}
-				font={parameters.inputs.font}
+				font={inputs.font}
 				receiveShadow
 				castShadow
 				rotation={[rot, 0, 0]}
 				position={[
-					parameters.computed.xMidpointOffset - yearDimensions.width / 2 - 5,
-					-parameters.computed.platformMidpoint - 0.5,
-					(parameters.computed.modelWidth * props.years.length) / 2 +
-						parameters.computed.paddingWidth / 2 +
+					computed.xMidpointOffset - yearDimensions.width / 2 - 5,
+					-computed.platformMidpoint - 0.5,
+					(computed.modelWidth * props.years.length) / 2 +
+						computed.paddingWidth / 2 +
 						TEXT_DEPTH_OFFSET,
 				]}
-				height={parameters.inputs.textDepth}
-				size={parameters.computed.textSize}
+				height={inputs.textDepth}
+				size={computed.textSize}
 			>
-				{formatYearText(parameters.inputs.startYear, parameters.inputs.endYear)}
+				{formatYearText(inputs.startYear, inputs.endYear)}
 				<meshStandardMaterial color={color} />
 			</Text3D>
 			<mesh
@@ -177,7 +165,7 @@ export function SkylineBase(props: SkylineBaseProps) {
 				castShadow
 				receiveShadow
 				geometry={geometry}
-				position={[0, -parameters.computed.platformMidpoint, 0]}
+				position={[0, -computed.platformMidpoint, 0]}
 			>
 				<meshStandardMaterial flatShading color={color} />
 			</mesh>

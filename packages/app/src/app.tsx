@@ -4,13 +4,16 @@ import { isAuthenticated } from "./api/auth";
 import "./styles/app.css";
 import { HoverCard } from "./components/hover_card";
 import { Sidebar } from "./components/sidebar";
+import { SkylineControls } from "./components/skyline_controls";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { useProfile } from "./hooks/useProfile";
 import { useParametersStore } from "./stores/parameters";
 import { Skyline } from "./three/skyline";
 
 export default function App() {
-	const { parameters } = useParametersStore();
+	const name = useParametersStore((state) => state.inputs.name);
+	const start = useParametersStore((state) => state.inputs.startYear);
+	const end = useParametersStore((state) => state.inputs.endYear);
 	const authenticated = isAuthenticated();
 	const {
 		profile,
@@ -18,21 +21,20 @@ export default function App() {
 		loading: profileLoading,
 	} = useProfile();
 	const { years, fetching, ok } = useExtendedQuery({
-		name: parameters.inputs.name,
-		start: parameters.inputs.startYear,
-		end: parameters.inputs.endYear,
+		name,
+		start,
+		end,
 		profile: profilePromise,
 	});
 
-	const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-	const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-
+	const [mobileOpened] = useDisclosure();
+	const [desktopOpened] = useDisclosure(true);
 	return (
 		<AppShell
 			header={{ height: 0 }}
 			padding={"xs"}
 			navbar={{
-				width: 350,
+				width: 320,
 				breakpoint: "sm",
 				collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
 			}}
@@ -62,6 +64,7 @@ export default function App() {
 				>
 					<HoverCard />
 				</div>
+				<SkylineControls />
 			</AppShell.Main>
 		</AppShell>
 	);

@@ -16,3 +16,17 @@ export const getSvgBoundingBox = (svg: string) => {
 		height,
 	};
 };
+
+export const safeFloat = (value: string | number, min: number) => {
+	if (value === "") {
+		return min;
+	}
+	return Number.parseFloat(`${value}`);
+};
+
+export const safeInt = (value: string | number, min: number) => {
+	if (value === "") {
+		return min;
+	}
+	return Number.parseInt(`${value}`);
+};
