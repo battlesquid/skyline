@@ -1,7 +1,8 @@
 import { Button, Group, NumberInput, TextInput } from "@mantine/core";
-import { useValidatedState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { useParametersStore } from "../../stores/parameters";
+import { safeInt } from "../../utils";
+import { useValidatedState } from "@mantine/hooks";
 
 export interface GenerateSectionProps {
     ok: boolean;
@@ -29,7 +30,12 @@ export function GenerateSection(props: GenerateSectionProps) {
         setStartYear
     ] = useValidatedState<string | number>(
         initialStartYear,
-        (value) => typeof value === "string" && value.trim() !== "",
+        (value) => {
+            if (typeof value === "string" && value.trim() === "") {
+                return false;
+            }
+            return true;
+        },
         true
     );
 
@@ -42,7 +48,12 @@ export function GenerateSection(props: GenerateSectionProps) {
         setEndYear
     ] = useValidatedState<string | number>(
         initialEndYear,
-        (value) => typeof value === "string" && value.trim() !== "",
+        (value) => {
+            if (typeof value === "string" && value.trim() === "") {
+                return false;
+            }
+            return true;
+        },
         true
     );
 
