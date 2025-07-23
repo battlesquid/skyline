@@ -16,10 +16,8 @@ import { LOGOS } from "../logos";
 import { useParametersStore } from "../stores/parameters";
 import { getSvgBoundingBox } from "../utils";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
-import { type Dimensions, getDimensions } from "./utils";
 import { SkylineBaseShape } from "./types";
-
-
+import { type Dimensions, getDimensions } from "./utils";
 
 export interface SkylineBaseProps {
 	color: string;
@@ -48,13 +46,7 @@ export function SkylineBase(props: SkylineBaseProps) {
 		}
 		setNameDimensions(getDimensions(nameRef.current));
 		setYearDimensions(getDimensions(yearRef.current));
-	}, [
-		inputs.name,
-		inputs.startYear,
-		inputs.endYear,
-		inputs.font,
-		props.years,
-	]);
+	}, [inputs.name, inputs.startYear, inputs.endYear, inputs.font, props.years]);
 
 	const [geometry, setGeometry] = useState<BufferGeometry>(
 		new BoxGeometry(0, 0, 0),
@@ -62,11 +54,8 @@ export function SkylineBase(props: SkylineBaseProps) {
 	const [rot, setRot] = useState(0);
 
 	useEffect(() => {
-		const width =
-			computed.modelLength + computed.paddingWidth;
-		const length =
-			computed.modelWidth * years.length +
-			computed.paddingWidth;
+		const width = computed.modelLength + computed.paddingWidth;
+		const length = computed.modelWidth * years.length + computed.paddingWidth;
 		const height = computed.platformHeight;
 
 		switch (inputs.shape) {

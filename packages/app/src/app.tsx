@@ -4,20 +4,16 @@ import { isAuthenticated } from "./api/auth";
 import "./styles/app.css";
 import { HoverCard } from "./components/hover_card";
 import { Sidebar } from "./components/sidebar";
+import { SkylineControls } from "./components/skyline_controls";
 import { useExtendedQuery } from "./hooks/useExtendedQuery";
 import { useProfile } from "./hooks/useProfile";
 import { useParametersStore } from "./stores/parameters";
 import { Skyline } from "./three/skyline";
-import tunnel from "tunnel-rat";
-import { useShallow } from "zustand/shallow";
-import { SkylineControls } from "./components/skyline_controls";
-
-export const t = tunnel();
 
 export default function App() {
-	const name = useParametersStore(state => state.inputs.name);
-	const start = useParametersStore(state => state.inputs.startYear);
-	const end = useParametersStore(state => state.inputs.endYear);
+	const name = useParametersStore((state) => state.inputs.name);
+	const start = useParametersStore((state) => state.inputs.startYear);
+	const end = useParametersStore((state) => state.inputs.endYear);
 	const authenticated = isAuthenticated();
 	const {
 		profile,
@@ -31,8 +27,8 @@ export default function App() {
 		profile: profilePromise,
 	});
 
-	const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-	const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+	const [mobileOpened] = useDisclosure();
+	const [desktopOpened] = useDisclosure(true);
 	return (
 		<AppShell
 			header={{ height: 0 }}
@@ -70,7 +66,6 @@ export default function App() {
 				</div>
 				<SkylineControls />
 			</AppShell.Main>
-			<t.Out />
 		</AppShell>
 	);
 }

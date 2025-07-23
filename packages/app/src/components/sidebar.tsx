@@ -7,17 +7,22 @@ import {
 	Divider,
 	ScrollArea,
 	Stack,
-	Title
+	Title,
 } from "@mantine/core";
-import { IconBrandGithubFilled, IconCube, IconDownload, IconPaint } from "@tabler/icons-react";
+import {
+	IconBrandGithubFilled,
+	IconCube,
+	IconDownload,
+	IconPaint,
+} from "@tabler/icons-react";
 import type { UserProfile } from "../api/auth";
 import accordionClasses from "../styles/accordion.module.css";
-import { FontInput } from "./sidebar_inputs/font_input";
 import { Profile } from "./profile";
 import { BasePaddingInput } from "./sidebar_inputs/base_padding";
 import { BaseShapeInput } from "./sidebar_inputs/base_shape";
 import { ExportButton } from "./sidebar_inputs/export";
 import { FilenameInput } from "./sidebar_inputs/filename";
+import { FontInput } from "./sidebar_inputs/font_input";
 import { GenerateSection } from "./sidebar_inputs/generate_section";
 import { RenderColorInput } from "./sidebar_inputs/render_color";
 import { ScaleInput } from "./sidebar_inputs/scale";
@@ -61,12 +66,15 @@ export function Sidebar(props: SidebarProps) {
 	return (
 		<Stack h={"100%"} gap={10}>
 			<AppShell.Section px={6} py={4}>
-				<Title order={4}>
-					{import.meta.env.PUBLIC_APP_NAME}
-				</Title>
+				<Title order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
 			</AppShell.Section>
 			<Card h="100%" p="md">
-				<AppShell.Section grow component={ScrollArea} type="always" offsetScrollbars>
+				<AppShell.Section
+					grow
+					component={ScrollArea}
+					type="always"
+					offsetScrollbars
+				>
 					<Stack gap={10}>
 						<GenerateSection ok={ok} login={profile?.login ?? ""} />
 						<Divider />

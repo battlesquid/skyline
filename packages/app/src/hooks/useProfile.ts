@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type UserProfile, fetchProfile } from "../api/auth";
+import { fetchProfile, type UserProfile } from "../api/auth";
 
 export const useProfile = () => {
 	const [profile, setProfile] = useState<UserProfile | null>(null);

@@ -5,10 +5,10 @@ import {
 	Flex,
 	Paper,
 	Text,
-	Tooltip
+	Tooltip,
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
-import { type UserProfile, logout } from "../api/auth";
+import { logout, type UserProfile } from "../api/auth";
 
 export interface ProfileProps {
 	profile: UserProfile | null;
@@ -16,7 +16,7 @@ export interface ProfileProps {
 
 export function Profile(props: ProfileProps) {
 	if (props.profile === null) {
-		return <></>;
+		return null;
 	}
 	const { name, avatarUrl, login } = props.profile;
 	return (

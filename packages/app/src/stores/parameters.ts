@@ -1,8 +1,8 @@
 import type { FontData } from "@react-three/drei";
 import { create } from "zustand";
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
-import { getDefaultParameters } from "../defaults";
 import { formatYearText } from "../api/utils";
+import { getDefaultParameters } from "../defaults";
 import type { SkylineBaseShape } from "../three/types";
 
 export interface SkylineModelInputParameters {
@@ -77,7 +77,7 @@ export const useParametersStore = create<ParametersStore>((set, get) => ({
 			xMidpointOffset,
 			yMidpointOffset,
 			paddingWidth,
-			defaultFilename
+			defaultFilename,
 		};
 
 		set(() => ({ inputs, computed }));

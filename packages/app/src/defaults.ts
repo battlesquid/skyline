@@ -1,6 +1,10 @@
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "./api/constants";
 import { formatYearText } from "./api/utils";
-import type { SkylineModelComputedParameters, SkylineModelInputParameters, SkylineModelParameters } from "./stores/parameters";
+import type {
+	SkylineModelComputedParameters,
+	SkylineModelInputParameters,
+	SkylineModelParameters,
+} from "./stores/parameters";
 import { SkylineBaseShape } from "./three/types";
 
 export const getDefaultFonts = () => ({
@@ -30,7 +34,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		dampening: 4,
 		shape: SkylineBaseShape.Prism,
 		filename: `battlesquid_${new Date().getFullYear()}_skyline`,
-		scale: 1
+		scale: 1,
 	};
 
 	const modelLength = WEEKS_IN_YEAR * inputs.towerSize;

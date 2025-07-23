@@ -1,5 +1,5 @@
 import type { InstancedMesh, Mesh, Scene, Vector3 } from "three";
-import { STLExporter, SceneUtils } from "three-stdlib";
+import { SceneUtils, STLExporter } from "three-stdlib";
 
 export interface Dimensions {
 	width: number;
@@ -21,9 +21,13 @@ export const getDimensions = (mesh: Mesh | null): Dimensions => {
 	};
 };
 
-export const exportScene = (scene: Scene | null, name: string, scale: number) => {
+export const exportScene = (
+	scene: Scene | null,
+	name: string,
+	scale: number,
+) => {
 	if (scene === null) {
-        console.warn("Scene is null, skipping export");
+		console.warn("Scene is null, skipping export");
 		return;
 	}
 	const clone = scene.clone();
@@ -49,7 +53,7 @@ export const exportScene = (scene: Scene | null, name: string, scale: number) =>
 	}
 
 	clone.rotation.set(Math.PI / 2, 0, 0);
-    clone.scale.set(scale, scale, scale);
+	clone.scale.set(scale, scale, scale);
 	clone.updateMatrixWorld();
 	const exporter = new STLExporter();
 	const data = exporter.parse(clone);
