@@ -1,8 +1,7 @@
 import { Button, Group, NumberInput, TextInput } from "@mantine/core";
+import { useValidatedState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { useParametersStore } from "../../stores/parameters";
-import { safeInt } from "../../utils";
-import { useValidatedState } from "@mantine/hooks";
 
 export interface GenerateSectionProps {
     ok: boolean;
@@ -19,8 +18,6 @@ export function GenerateSection(props: GenerateSectionProps) {
     const setInputs = useParametersStore((state) => state.setInputs);
 
     const [name, setName] = useState(login ?? "");
-    // const [startYear, setStartYear] = useState<number | string>(initialStartYear);
-    // const [endYear, setEndYear] = useState<number | string>(initialEndYear);
     const [modified, setModified] = useState(false);
 
     const [
@@ -32,15 +29,11 @@ export function GenerateSection(props: GenerateSectionProps) {
         setStartYear
     ] = useValidatedState<string | number>(
         initialStartYear,
-        (value) => {
-            if (typeof value === "string" && value.trim() === "") {
-                return false;
-            }
-            return true;
-        }
-    )
+        (value) => typeof value === "string" && value.trim() !== "",
+        true
+    );
 
-        const [
+    const [
         {
             value: endYear,
             lastValidValue: lastValidEndYear,
@@ -49,13 +42,9 @@ export function GenerateSection(props: GenerateSectionProps) {
         setEndYear
     ] = useValidatedState<string | number>(
         initialEndYear,
-        (value) => {
-            if (typeof value === "string" && value.trim() === "") {
-                return false;
-            }
-            return true;
-        }
-    )
+        (value) => typeof value === "string" && value.trim() !== "",
+        true
+    );
 
     useEffect(() => {
         setModified(false);
@@ -86,11 +75,13 @@ export function GenerateSection(props: GenerateSectionProps) {
                     stepHoldInterval={100}
                     value={startYear}
                     onBlur={() => {
-                        if (startYear > endYear) {
-                            setEndYear(startYear);
-                        }
+                        let currentStartYear = startYear;
                         if (!startYearValid && lastValidStartYear !== undefined) {
-                            setStartYear(lastValidStartYear)
+                            setStartYear(lastValidStartYear);
+                            currentStartYear = lastValidStartYear;
+                        }
+                        if (currentStartYear > endYear) {
+                            setEndYear(currentStartYear);
                         }
                     }}
                     onChange={setStartYear}
@@ -102,13 +93,15 @@ export function GenerateSection(props: GenerateSectionProps) {
                     max={new Date().getFullYear()}
                     stepHoldDelay={500}
                     stepHoldInterval={100}
-                    value={lastValidEndYear}
+                    value={endYear}
                     onBlur={() => {
-                        if (endYear < startYear) {
-                            setStartYear(endYear);
+                        let currentEndYear = endYear;
+                        if (!endYearValid && lastValidEndYear !== undefined) {
+                            setEndYear(lastValidEndYear);
+                            currentEndYear = lastValidEndYear;
                         }
-                                 if (!endYearValid && lastValidStartYear !== undefined) {
-                            setStartYear(lastValidStartYear)
+                        if (currentEndYear < startYear) {
+                            setStartYear(currentEndYear);
                         }
                     }}
                     onChange={setEndYear}
@@ -117,7 +110,7 @@ export function GenerateSection(props: GenerateSectionProps) {
             <Button
                 fullWidth
                 disabled={name.trim() === ""}
-                onClick={() => setInputs({ name, startYear, endYear })}
+                onClick={() => setInputs({ name, startYear: startYear as number, endYear: endYear as number })}
                 variant="light"
                 size="sm"
             >

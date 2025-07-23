@@ -80,7 +80,7 @@ export function SkylineModel(props: SkylineModelProps) {
 		if (reset === null) {
 			return;
 		}
-		bounds.refresh().clip().fit();
+		bounds.refresh().clip().fit().reset();
 		clearReset();
 	}, [reset]);
 
