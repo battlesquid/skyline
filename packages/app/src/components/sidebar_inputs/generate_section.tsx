@@ -1,7 +1,6 @@
 import { Button, Group, NumberInput, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParametersStore } from "../../stores/parameters";
-import { safeInt } from "../../utils";
 import { useValidatedState } from "@mantine/hooks";
 
 export interface GenerateSectionProps {
