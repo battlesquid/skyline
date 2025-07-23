@@ -58,7 +58,7 @@ export function SkylineModel(props: SkylineModelProps) {
 			}
 			setDirty(false);
 			if (initialized) {
-				bounds.refresh().clip().fit().reset();
+				bounds.refresh().clip().fit();
 			} else {
 				setInitialized(true);
 			}

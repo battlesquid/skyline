@@ -33,7 +33,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		towerSize: 2.5,
 		dampening: 4,
 		shape: SkylineBaseShape.Prism,
-		filename: `battlesquid_${new Date().getFullYear()}_skyline`,
+		filename: "",
 		scale: 1,
 	};
 
