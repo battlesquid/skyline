@@ -15,6 +15,7 @@
 		"@octokit/graphql": "^9.0.1",
 		"@react-three/drei": "^9.122.0",
 		"@react-three/fiber": "^8.18.0",
+		"@react-three/postprocessing": "2.16.5",
 		"@tabler/icons-react": "^3.34.1",
 		"@tanstack/react-router": "^1.129.8",
 		"@tanstack/react-router-devtools": "^1.129.8",
