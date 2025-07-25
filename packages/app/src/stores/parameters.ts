@@ -7,6 +7,7 @@ import type { SkylineBaseShape } from "../three/types";
 
 export interface SkylineModelInputParameters {
 	name: string;
+    nameOverride: string;
 	startYear: number;
 	endYear: number;
 	towerSize: number;

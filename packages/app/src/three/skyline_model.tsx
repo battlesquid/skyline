@@ -69,6 +69,7 @@ export function SkylineModel(props: SkylineModelProps) {
 	}, [
 		inputs.dampening,
 		inputs.name,
+        inputs.nameOverride,
 		inputs.startYear,
 		inputs.endYear,
 		inputs.padding,

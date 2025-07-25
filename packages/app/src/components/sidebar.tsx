@@ -27,6 +27,7 @@ import { GenerateSection } from "./sidebar_inputs/generate_section";
 import { RenderColorInput } from "./sidebar_inputs/render_color";
 import { ScaleInput } from "./sidebar_inputs/scale";
 import { TowerDampeningInput } from "./sidebar_inputs/tower_dampening";
+import { UsernameOverrideInput } from "./sidebar_inputs/username_override";
 
 interface SidebarProps {
 	profile: UserProfile | null;
@@ -86,6 +87,7 @@ export function Sidebar(props: SidebarProps) {
 								</Accordion.Control>
 								<Accordion.Panel>
 									<Stack gap={10}>
+                                        <UsernameOverrideInput />
 										<TowerDampeningInput />
 										<BasePaddingInput />
 										<FontInput />

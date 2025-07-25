@@ -1,16 +1,21 @@
 import { AppShell, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { isAuthenticated } from "./api/auth";
-import "./styles/app.css";
-import { HoverCard } from "./components/hover_card";
-import { Sidebar } from "./components/sidebar";
-import { SkylineControls } from "./components/skyline_controls";
-import { useExtendedQuery } from "./hooks/useExtendedQuery";
-import { useProfile } from "./hooks/useProfile";
-import { useParametersStore } from "./stores/parameters";
-import { Skyline } from "./three/skyline";
+import { isAuthenticated } from "../api/auth";
+import "../styles/app.css";
+import { HoverCard } from "../components/hover_card";
+import { Sidebar } from "../components/sidebar";
+import { SkylineControls } from "../components/skyline_controls";
+import { useExtendedQuery } from "../hooks/useExtendedQuery";
+import { useProfile } from "../hooks/useProfile";
+import { useParametersStore } from "../stores/parameters";
+import { Skyline } from "../three/skyline";
+import { createFileRoute } from "@tanstack/react-router";
 
-export default function App() {
+export const Route = createFileRoute("/editor")({
+  component: Editor,
+})
+
+function Editor() {
 	const name = useParametersStore((state) => state.inputs.name);
 	const start = useParametersStore((state) => state.inputs.startYear);
 	const end = useParametersStore((state) => state.inputs.endYear);
@@ -67,5 +72,5 @@ export default function App() {
 				<SkylineControls />
 			</AppShell.Main>
 		</AppShell>
-	);
+	)
 }
