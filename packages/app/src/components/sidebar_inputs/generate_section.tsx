@@ -1,7 +1,8 @@
-import { Button, Group, NumberInput, TextInput } from "@mantine/core";
+import { Button, Group, NumberInput } from "@mantine/core";
 import { useValidatedState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { useParametersStore } from "../../stores/parameters";
+import { GitHubUsernameInput } from "./github_username_input";
 
 export interface GenerateSectionProps {
 	ok: boolean;
@@ -64,11 +65,11 @@ export function GenerateSection(props: GenerateSectionProps) {
 
 	return (
 		<>
-			<TextInput
+			<GitHubUsernameInput
 				label="Github Username"
 				placeholder="Github Username"
 				value={name}
-				onChange={(e) => setName(e.target.value)}
+				onChange={setName}
 				error={ok || modified ? "" : `Unable to find profile for "${name}".`}
 			/>
 			<Group grow>
