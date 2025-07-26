@@ -23,7 +23,14 @@ export type GitHubUser = {
 async function fetchGitHubUsers(query: string): Promise<GitHubUser[]> {
 	if (!query) return [];
 	const result = await client.query(SearchUsersQuery, { query }).toPromise();
-	if (result.error || !result.data) return [];
+	if (result.error) {
+		console.error("Error fetching GitHub users:", result.error);
+		return [];
+	}
+	if (!result.data) {
+		console.warn("No data returned from GitHub users query.");
+		return [];
+	}
 	const nodes = (result.data.search.nodes ?? []) as Array<
 		{ login?: string; avatarUrl?: string } | null | undefined
 	>;
@@ -51,7 +58,6 @@ interface GitHubUsernameInputProps
 	description?: string;
 	error?: string;
 	required?: boolean;
-	// ...other Input props
 }
 
 export function GitHubUsernameInput({
