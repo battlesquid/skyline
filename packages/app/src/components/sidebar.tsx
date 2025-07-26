@@ -71,7 +71,7 @@ export function Sidebar(props: SidebarProps) {
 			<Card h="100%" p="md">
 				<AppShell.Section
 					style={{
-						marginRight: "calc(var(--scrollarea-scrollbar-size) * -1)",
+						marginRight: "calc(var(--scrollarea-scrollbar-size, 0px) * -1)",
 					}}
 					grow
 					component={ScrollArea}
