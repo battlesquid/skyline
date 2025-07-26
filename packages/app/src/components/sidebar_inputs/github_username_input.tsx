@@ -143,7 +143,11 @@ export function GitHubUsernameInput({
 						users.map((user) => (
 							<ComboboxOption key={user.login} value={user.login}>
 								<Group gap="xs" align="center">
-									<Avatar src={user.avatar_url} alt={user.login} />
+									<Avatar
+										size="sm"
+										src={user.avatar_url}
+										alt={`${user.login}'s avatar`}
+									/>
 									<Text size="sm">{user.login}</Text>
 								</Group>
 							</ComboboxOption>
