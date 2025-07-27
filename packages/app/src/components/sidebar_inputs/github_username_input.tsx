@@ -7,6 +7,7 @@ import {
 	Group,
 	Input,
 	InputWrapper,
+	ScrollArea,
 	Text,
 	useCombobox,
 } from "@mantine/core";
@@ -14,14 +15,16 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { useEffect, useRef, useState } from "react";
 import { client } from "../../api/client";
 import { SearchUsersQuery } from "../../api/query";
+import { IconLoader, IconSearch } from "@tabler/icons-react";
 
 export type GitHubUser = {
 	login: string;
-	avatar_url: string;
+	avatarUrl: string;
 };
 
 async function fetchGitHubUsers(query: string): Promise<GitHubUser[]> {
-	if (!query) return [];
+	if (query.trim().length === 0) return [];
+
 	const result = await client.query(SearchUsersQuery, { query }).toPromise();
 	if (result.error) {
 		console.error("Error fetching GitHub users:", result.error);
@@ -31,17 +34,8 @@ async function fetchGitHubUsers(query: string): Promise<GitHubUser[]> {
 		console.warn("No data returned from GitHub users query.");
 		return [];
 	}
-	const nodes = (result.data.search.nodes ?? []) as Array<
-		{ login?: string; avatarUrl?: string } | null | undefined
-	>;
-	return nodes
-		.filter(
-			(node): node is { login: string; avatarUrl: string } =>
-				!!node &&
-				typeof node.login === "string" &&
-				typeof node.avatarUrl === "string",
-		)
-		.map((node) => ({ login: node.login, avatar_url: node.avatarUrl }));
+	const nodes = result.data.search.nodes ?? [];
+	return nodes.filter((node): node is GitHubUser => !!node);
 }
 
 interface GitHubUsernameInputProps
@@ -75,7 +69,7 @@ export function GitHubUsernameInput({
 	const isControlled = value !== undefined;
 	const [internalValue, setInternalValue] = useState(defaultValue || "");
 	const inputValue = isControlled ? (value ?? "") : internalValue;
-	const [debounced] = useDebouncedValue(inputValue, debounceMs);
+	const [debouncedValue] = useDebouncedValue(inputValue, debounceMs);
 	const [users, setUsers] = useState<GitHubUser[]>([]);
 	const [loading, setLoading] = useState(false);
 	const combobox = useCombobox({
@@ -92,12 +86,12 @@ export function GitHubUsernameInput({
 
 	useEffect(() => {
 		let ignore = false;
-		if (!debounced) {
+		if (debouncedValue.trim().length === 0) {
 			setUsers([]);
 			return;
 		}
 		setLoading(true);
-		fetchGitHubUsers(debounced)
+		fetchGitHubUsers(debouncedValue)
 			.then((res) => {
 				if (!ignore) setUsers(res);
 			})
@@ -107,7 +101,7 @@ export function GitHubUsernameInput({
 		return () => {
 			ignore = true;
 		};
-	}, [debounced]);
+	}, [debouncedValue]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const val = e.currentTarget.value;
@@ -137,10 +131,17 @@ export function GitHubUsernameInput({
 						placeholder={placeholder ?? "GitHub Username"}
 						onFocus={() => combobox.openDropdown()}
 						autoComplete="off"
+						rightSection={
+							loading ? (
+								<IconLoader size={16} className="animate-spin" />
+							) : (
+								<IconSearch size={16} />
+							)
+						}
 						{...inputProps}
 					/>
 				</ComboboxTarget>
-				<ComboboxDropdown>
+				<ComboboxDropdown component={ScrollArea}>
 					{loading ? (
 						<ComboboxOption disabled value="loading">
 							Loading...
@@ -151,7 +152,7 @@ export function GitHubUsernameInput({
 								<Group gap="xs" align="center">
 									<Avatar
 										size="sm"
-										src={user.avatar_url}
+										src={user.avatarUrl}
 										alt={`${user.login}'s avatar`}
 									/>
 									<Text size="sm">{user.login}</Text>
