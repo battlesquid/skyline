@@ -35,7 +35,7 @@ async function fetchGitHubUsers(query: string): Promise<GitHubUser[]> {
 		return [];
 	}
 	const nodes = result.data.search.nodes ?? [];
-	return nodes.filter((node): node is GitHubUser => !!node);
+	return nodes.filter((node): node is GitHubUser => !!node && node.__typename === "User");
 }
 
 interface GitHubUsernameInputProps
