@@ -13,7 +13,7 @@ import type {
 	ContributionWeek,
 	ContributionWeeks,
 } from "../api/types";
-import { calculateFirstDayOffset } from "../api/utils";
+import { calculateFirstDayOffset, formatYearText } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
@@ -221,7 +221,7 @@ export function SkylineModel(props: SkylineModelProps) {
 						castShadow
 						receiveShadow
 						name="instances"
-						key={`${years.length}-${inputs.showContributionColor}`}
+						key={`${inputs.name}-${formatYearText(inputs.startYear, inputs.endYear)}-${inputs.showContributionColor}`}
 						limit={contributionColors.instanced.length}
 					>
 						<boxGeometry>
