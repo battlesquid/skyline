@@ -31,3 +31,16 @@ export const UserQuery = graphql(`
       }
   }
 `);
+
+export const SearchUsersQuery = graphql(`
+    query SearchUsers($query: String!) {
+        search(query: $query, type: USER, first: 10) {
+            nodes {
+                ... on User {
+                    login
+                    avatarUrl
+                }
+            }
+        }
+    }
+`);

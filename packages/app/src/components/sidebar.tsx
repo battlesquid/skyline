@@ -71,9 +71,12 @@ export function Sidebar(props: SidebarProps) {
 			</AppShell.Section>
 			<Card h="100%" p="md">
 				<AppShell.Section
+					style={{
+						marginRight: "calc(var(--scrollarea-scrollbar-size, 0px) * -1)",
+					}}
 					grow
 					component={ScrollArea}
-					type="always"
+					type="hover"
 					offsetScrollbars
 				>
 					<Stack gap={10}>
@@ -86,7 +89,7 @@ export function Sidebar(props: SidebarProps) {
 									Model
 								</Accordion.Control>
 								<Accordion.Panel>
-									<Stack gap={10}>
+									<Stack>
                                         <UsernameOverrideInput />
 										<TowerDampeningInput />
 										<BasePaddingInput />
