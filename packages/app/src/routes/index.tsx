@@ -1,6 +1,6 @@
 import { AppShell, HoverCard, LoadingOverlay } from '@mantine/core';
 import { useDisclosure } from "@mantine/hooks";
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { isAuthenticated } from "../api/auth";
 import { Sidebar } from "../components/sidebar";
 import { SkylineControls } from "../components/skyline_controls";
@@ -12,6 +12,16 @@ import "../styles/editor.css";
 
 export const Route = createFileRoute('/')({
     component: Editor,
+    beforeLoad: ({location}) => {
+        if (!isAuthenticated()) {
+            throw redirect({
+                to: "/login",
+                search: {
+                    redirect: location.href
+                }
+            })
+        }
+    }
 });
 
 export function Editor() {

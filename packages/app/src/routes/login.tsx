@@ -1,13 +1,52 @@
 import { ActionIcon, Affix, Box, Button, Center, Divider, Flex, Stack, Tabs, TextInput, Title } from "@mantine/core";
 import { IconArrowRight, IconBrandGithubFilled } from "@tabler/icons-react";
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
+import { useEffect } from "react";
+import { isAuthenticated, resolveToken } from "../api/auth";
 import "../styles/login.css";
+
+type LoginSearchParams = {
+    code?: string;
+    redirect?: string;
+}
 
 export const Route = createFileRoute('/login')({
     component: Login,
-})
+    beforeLoad: ({ location }) => {
+        if (isAuthenticated()) {
+            throw redirect({
+                to: "/",
+                search: {
+                    redirect: location.href
+                }
+            })
+        }
+    },
+    validateSearch: (search: Record<string, unknown>): LoginSearchParams => {
+        return {
+            code: (search.code as string) ?? "",
+            redirect: (search.redirect as string) ?? ""
+        }
+    }
+});
+
+
 
 function Login() {
+    const router = useRouter();
+    const { code, redirect } = Route.useSearch();
+
+    const handleRedirect = async (code: string) => {
+        await resolveToken(code);
+        await router.invalidate();
+    }
+
+    useEffect(() => {
+        if (code !== undefined) {
+            handleRedirect(code);
+        }
+    });
+
     const _3D = (
         <span style={{
             fontWeight: 900,
