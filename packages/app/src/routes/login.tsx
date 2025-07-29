@@ -1,6 +1,6 @@
 import { ActionIcon, Affix, Box, Button, Center, Divider, Flex, Stack, Tabs, TextInput, Title } from "@mantine/core";
 import { IconArrowRight, IconBrandGithubFilled } from "@tabler/icons-react";
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
+import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { isAuthenticated, resolveToken } from "../api/auth";
 import "../styles/login.css";
@@ -12,20 +12,19 @@ type LoginSearchParams = {
 
 export const Route = createFileRoute('/login')({
     component: Login,
-    beforeLoad: ({ location }) => {
+    beforeLoad: ({ search }) => {
         if (isAuthenticated()) {
             throw redirect({
-                to: "/",
-                search: {
-                    redirect: location.href
-                }
-            })
+                to: search.redirect ?? "/",
+                reloadDocument: true,
+                replace: true
+            });
         }
     },
     validateSearch: (search: Record<string, unknown>): LoginSearchParams => {
         return {
-            code: (search.code as string) ?? "",
-            redirect: (search.redirect as string) ?? ""
+            code: (search.code as string) ?? undefined,
+            redirect: (search.redirect as string) ?? undefined
         }
     }
 });
@@ -34,13 +33,13 @@ export const Route = createFileRoute('/login')({
 
 function Login() {
     const router = useRouter();
-    const { code, redirect } = Route.useSearch();
+    const { code } = Route.useSearch();
 
     const handleRedirect = async (code: string) => {
         await resolveToken(code);
         await router.invalidate();
     }
-
+    
     useEffect(() => {
         if (code !== undefined) {
             handleRedirect(code);

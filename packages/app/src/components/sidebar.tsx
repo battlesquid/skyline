@@ -1,19 +1,18 @@
 import {
-	Accordion,
-	AppShell,
-	Button,
-	Card,
-	Center,
-	Divider,
-	ScrollArea,
-	Stack,
-	Title,
+    Accordion,
+    AppShell,
+    Button,
+    Card,
+    Divider,
+    ScrollArea,
+    Stack,
+    Title
 } from "@mantine/core";
 import {
-	IconBrandGithubFilled,
-	IconCube,
-	IconDownload,
-	IconPaint,
+    IconBrandGithubFilled,
+    IconCube,
+    IconDownload,
+    IconPaint,
 } from "@tabler/icons-react";
 import type { UserProfile } from "../api/auth";
 import accordionClasses from "../styles/accordion.module.css";
@@ -31,39 +30,12 @@ import { UsernameOverrideInput } from "./sidebar_inputs/username_override";
 
 interface SidebarProps {
 	profile: UserProfile | null;
-	authenticated: boolean;
 	ok: boolean;
 }
 
 export function Sidebar(props: SidebarProps) {
-	const { profile, authenticated, ok } = props;
+	const { profile, ok } = props;
 
-	if (!authenticated) {
-		return (
-			<AppShell.Section grow>
-				<Stack h="100%" justify="center">
-					<Center>
-						<h2>{import.meta.env.PUBLIC_APP_NAME}</h2>
-					</Center>
-					<Divider />
-					<Button
-						component="a"
-						href={import.meta.env.PUBLIC_WORKER_URL}
-						fullWidth={true}
-					>
-						Login to Github
-					</Button>
-					<Button
-						component="a"
-						href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
-						fullWidth={true}
-					>
-						Login to Github (Enterprise)
-					</Button>
-				</Stack>
-			</AppShell.Section>
-		);
-	}
 	return (
 		<Stack h={"100%"} gap={10}>
 			<AppShell.Section px={6} py={4}>

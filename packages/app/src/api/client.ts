@@ -7,9 +7,10 @@ export const client = new Client({
 	exchanges: [
 		cacheExchange,
 		authExchange(async (utils) => {
-			const token = getToken();
-			return {
-				addAuthToOperation(operation) {
+            return {
+                addAuthToOperation(operation) {
+                    const token = getToken();
+                    console.trace("Token: ", token, "Location: ", location.href)
 					if (!token) {
 						return operation;
 					}
@@ -18,6 +19,7 @@ export const client = new Client({
 					});
 				},
 				didAuthError(error, _operation) {
+                    console.trace(getToken(), _operation)
 					return getToken() === null || error.response?.status === 401;
 				},
 				async refreshAuth() {

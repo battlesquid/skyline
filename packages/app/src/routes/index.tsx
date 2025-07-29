@@ -1,4 +1,4 @@
-import { AppShell, HoverCard, LoadingOverlay } from '@mantine/core';
+import { AppShell, LoadingOverlay } from '@mantine/core';
 import { useDisclosure } from "@mantine/hooks";
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { isAuthenticated } from "../api/auth";
@@ -9,6 +9,7 @@ import { useProfile } from "../hooks/useProfile";
 import { useParametersStore } from "../stores/parameters";
 import { Skyline } from "../three/skyline";
 import "../styles/editor.css";
+import { HoverCard } from '../components/hover_card';
 
 export const Route = createFileRoute('/')({
     component: Editor,
@@ -16,6 +17,7 @@ export const Route = createFileRoute('/')({
         if (!isAuthenticated()) {
             throw redirect({
                 to: "/login",
+                reloadDocument: true,
                 search: {
                     redirect: location.href
                 }
@@ -28,7 +30,6 @@ export function Editor() {
     const name = useParametersStore((state) => state.inputs.name);
     const start = useParametersStore((state) => state.inputs.startYear);
     const end = useParametersStore((state) => state.inputs.endYear);
-    const authenticated = isAuthenticated();
     const {
         profile,
         promise: profilePromise,
@@ -56,7 +57,7 @@ export function Editor() {
         >
             <AppShell.Navbar p="md" pr={0}>
                 {!profileLoading && (
-                    <Sidebar authenticated={authenticated} profile={profile} ok={ok} />
+                    <Sidebar profile={profile} ok={ok} />
                 )}
             </AppShell.Navbar>
             <AppShell.Main style={{ height: "calc(100vh)" }}>
@@ -65,7 +66,7 @@ export function Editor() {
                     zIndex={1000}
                     overlayProps={{ radius: "sm", blur: 2 }}
                 />
-                {authenticated && <Skyline years={years} />}
+                <Skyline years={years} />
                 <div
                     style={{
                         position: "absolute",

@@ -10,6 +10,7 @@ export interface UserProfile {
 }
 
 export const fetchProfile = async (): Promise<UserProfile | null> => {
+    console.trace("Profile: ", getToken())
 	const result = await client.query(UserQuery, {}).toPromise();
 	if (!result.data) {
 		return null;
@@ -23,10 +24,15 @@ export const fetchProfile = async (): Promise<UserProfile | null> => {
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 
-export const setToken = (token: string) =>
+export const setToken = (token: string) => {
+    console.trace("Setting Token")
 	localStorage.setItem(TOKEN_KEY, token);
+}
 
-export const deleteToken = () => localStorage.removeItem(TOKEN_KEY);
+export const deleteToken = () => {
+    console.trace("Deleting Token")
+    localStorage.removeItem(TOKEN_KEY);
+}
 
 export const isAuthenticated = () => localStorage.getItem(TOKEN_KEY) !== null;
 
