@@ -1,55 +1,75 @@
-import { ActionIcon, Button, Card, Center, Divider, Group, Stack, TextInput, Title, Image, Flex } from '@mantine/core'
-import { createFileRoute } from '@tanstack/react-router'
-import classes from "../styles/input_button.module.css";
-import { IconArrowRight } from '@tabler/icons-react';
-import { Box } from '@react-three/drei';
+import { AppShell, HoverCard, LoadingOverlay } from '@mantine/core';
+import { useDisclosure } from "@mantine/hooks";
+import { createFileRoute } from '@tanstack/react-router';
+import { isAuthenticated } from "../api/auth";
+import { Sidebar } from "../components/sidebar";
+import { SkylineControls } from "../components/skyline_controls";
+import { useExtendedQuery } from "../hooks/useExtendedQuery";
+import { useProfile } from "../hooks/useProfile";
+import { useParametersStore } from "../stores/parameters";
+import { Skyline } from "../three/skyline";
+import "../styles/editor.css";
 
 export const Route = createFileRoute('/')({
-    component: Login,
+    component: Editor,
 });
 
-// todo: mess w/ isometric tower graphics
+export function Editor() {
+    const name = useParametersStore((state) => state.inputs.name);
+    const start = useParametersStore((state) => state.inputs.startYear);
+    const end = useParametersStore((state) => state.inputs.endYear);
+    const authenticated = isAuthenticated();
+    const {
+        profile,
+        promise: profilePromise,
+        loading: profileLoading,
+    } = useProfile();
+    const { years, fetching, ok } = useExtendedQuery({
+        name,
+        start,
+        end,
+        profile: profilePromise,
+    });
 
-export function Login() {
+    const [mobileOpened] = useDisclosure();
+    const [desktopOpened] = useDisclosure(true);
     return (
-        <Center h="100%">
-            <Stack>
-                <Title order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
-                <Card padding="xl">
-                    <Flex gap={15}>
-                        <Stack justify="center" gap={0}>
-                            <Title>Your Contributions</Title>
-                            <Title>In 3D</Title>
-                        </Stack>
-                        <Stack justify="center">
-                            <Button
-                                component="a"
-                                href={import.meta.env.PUBLIC_WORKER_URL}
-                                fullWidth={true}
-                            >
-                                Login to Github
-                            </Button>
-                            <Button
-                                component="a"
-                                href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
-                                fullWidth={true}
-                            >
-                                Login to Github (Enterprise)
-                            </Button>
-                            <TextInput
-                                placeholder="Server Enterprise Host"
-                                radius={9}
-                                rightSection={
-                                    <ActionIcon>
-                                        <IconArrowRight stroke={1} />
-                                    </ActionIcon>
-                                }
-                            />
-                        </Stack>
-                    </Flex>
-
-                </Card>
-            </Stack>
-        </Center>
+        <AppShell
+            header={{ height: 0 }}
+            padding={"xs"}
+            navbar={{
+                width: 320,
+                breakpoint: "sm",
+                collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+            }}
+            withBorder={false}
+        >
+            <AppShell.Navbar p="md" pr={0}>
+                {!profileLoading && (
+                    <Sidebar authenticated={authenticated} profile={profile} ok={ok} />
+                )}
+            </AppShell.Navbar>
+            <AppShell.Main style={{ height: "calc(100vh)" }}>
+                <LoadingOverlay
+                    visible={fetching}
+                    zIndex={1000}
+                    overlayProps={{ radius: "sm", blur: 2 }}
+                />
+                {authenticated && <Skyline years={years} />}
+                <div
+                    style={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        pointerEvents: "none",
+                    }}
+                >
+                    <HoverCard />
+                </div>
+                <SkylineControls />
+            </AppShell.Main>
+        </AppShell>
     )
 }
