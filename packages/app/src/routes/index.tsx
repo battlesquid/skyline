@@ -1,19 +1,19 @@
 import { AppShell, LoadingOverlay } from '@mantine/core';
 import { useDisclosure } from "@mantine/hooks";
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { isAuthenticated } from "../api/auth";
+import { fetchProfile, isAuthenticated } from "../api/auth";
 import { Sidebar } from "../components/sidebar";
 import { SkylineControls } from "../components/skyline_controls";
 import { useExtendedQuery } from "../hooks/useExtendedQuery";
-import { useProfile } from "../hooks/useProfile";
 import { useParametersStore } from "../stores/parameters";
 import { Skyline } from "../three/skyline";
 import "../styles/editor.css";
 import { HoverCard } from '../components/hover_card';
+import { useEffect } from "react";
 
 export const Route = createFileRoute('/')({
     component: Editor,
-    beforeLoad: ({location}) => {
+    beforeLoad: ({ location }) => {
         if (!isAuthenticated()) {
             throw redirect({
                 to: "/login",
@@ -23,27 +23,29 @@ export const Route = createFileRoute('/')({
                 }
             })
         }
-    }
+    },
+    loader: () => fetchProfile()
 });
 
 export function Editor() {
+    const profile = Route.useLoaderData();
+    const setInputs = useParametersStore(state => state.setInputs);
     const name = useParametersStore((state) => state.inputs.name);
     const start = useParametersStore((state) => state.inputs.startYear);
     const end = useParametersStore((state) => state.inputs.endYear);
-    const {
-        profile,
-        promise: profilePromise,
-        loading: profileLoading,
-    } = useProfile();
     const { years, fetching, ok } = useExtendedQuery({
         name,
         start,
         end,
-        profile: profilePromise,
     });
 
     const [mobileOpened] = useDisclosure();
     const [desktopOpened] = useDisclosure(true);
+
+    useEffect(() => {
+        setInputs({ name: profile?.login ?? "" });
+    }, []);
+
     return (
         <AppShell
             header={{ height: 0 }}
@@ -56,9 +58,7 @@ export function Editor() {
             withBorder={false}
         >
             <AppShell.Navbar p="md" pr={0}>
-                {!profileLoading && (
-                    <Sidebar profile={profile} ok={ok} />
-                )}
+                <Sidebar profile={profile} ok={ok} />
             </AppShell.Navbar>
             <AppShell.Main style={{ height: "calc(100vh)" }}>
                 <LoadingOverlay

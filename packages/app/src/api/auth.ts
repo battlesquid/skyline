@@ -10,7 +10,6 @@ export interface UserProfile {
 }
 
 export const fetchProfile = async (): Promise<UserProfile | null> => {
-    console.trace("Profile: ", getToken())
 	const result = await client.query(UserQuery, {}).toPromise();
 	if (!result.data) {
 		return null;
@@ -41,11 +40,6 @@ export const resolveToken = async (code: string): Promise<string | null> => {
 	if (token !== null) {
 		return token;
 	}
-
-	// const path =
-	// 	location.pathname +
-	// 	location.search.replace(/\bcode=\w+/, "").replace(/\?$/, "");
-	// history.pushState({}, "", path);
 
 	const response = await fetch(import.meta.env.PUBLIC_WORKER_URL, {
 		method: "POST",
