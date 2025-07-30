@@ -9,7 +9,7 @@ export function UsernameOverrideInput() {
         <TextInput
             label="Username Override"
             value={nameOverride}
-            placeholder="Name Override"
+            placeholder="Username Override"
             onChange={(e) => setInputs({ nameOverride: e.target.value })}
         />
     );
