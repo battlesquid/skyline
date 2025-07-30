@@ -1,9 +1,10 @@
-import { ActionIcon, Affix, Box, Button, Center, Divider, Flex, LoadingOverlay, Stack, Tabs, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Affix, Box, Button, Card, Center, Divider, Flex, LoadingOverlay, Stack, Tabs, TextInput, Title } from "@mantine/core";
 import { IconArrowRight, IconBrandGithubFilled } from "@tabler/icons-react";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { isAuthenticated, resolveToken } from "../api/auth";
 import "../styles/login.css";
+import ContributionBackground from "../components/contribution_background";
 
 type LoginSearchParams = {
     code?: string;
@@ -62,7 +63,8 @@ function Login() {
     );
 
     return (
-        <>
+        <Box h="100%">
+            <ContributionBackground />
             <LoadingOverlay visible={loading.current ?? false} zIndex={1000} overlayProps={{ radius: "sm" }} loaderProps={{ type: "bars" }} />
             <Center h="100%">
                 <Flex gap={20}>
@@ -73,8 +75,8 @@ function Login() {
                             <Title>Story in {_3D}</Title>
                         </Stack>
                     </Center>
-                    <Divider orientation="vertical" />
-                    <Box miw={400}>
+                    <Divider variant="dotted" orientation="vertical" />
+                    <Card radius={"xs"} miw={400}>
                         <Center mb={5}>
                             <Title order={4}>Login</Title>
                         </Center>
@@ -116,7 +118,7 @@ function Login() {
                                 </Tabs.Panel>
                             </Tabs>
                         </Box>
-                    </Box>
+                    </Card>
                 </Flex>
 
                 <Affix position={{ bottom: 15, right: 15 }}>
@@ -133,6 +135,6 @@ function Login() {
                     </Button>
                 </Affix>
             </Center>
-        </>
+        </Box>
     )
 }
