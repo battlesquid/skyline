@@ -1,10 +1,10 @@
-import { ActionIcon, Affix, Box, Button, Card, Center, Divider, Flex, LoadingOverlay, Stack, Tabs, TextInput, Title } from "@mantine/core";
-import { IconArrowRight, IconBrandGithubFilled } from "@tabler/icons-react";
+import { Affix, Box, Button, Card, Center, Divider, Flex, LoadingOverlay, Stack, Title } from "@mantine/core";
+import { IconBrandGithubFilled } from "@tabler/icons-react";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { isAuthenticated, resolveToken } from "../api/auth";
-import "../styles/login.css";
 import ContributionBackground from "../components/contribution_background";
+import "../styles/login.css";
 
 type LoginSearchParams = {
     code?: string;
@@ -77,47 +77,25 @@ function Login() {
                     </Center>
                     <Divider variant="dotted" orientation="vertical" />
                     <Card radius={"xs"} miw={400}>
+                        <Stack miw={200}>
                         <Center mb={5}>
                             <Title order={4}>Login</Title>
                         </Center>
-                        <Box miw={200} mih={200}>
-                            <Tabs defaultValue="public">
-                                <Tabs.List grow>
-                                    <Tabs.Tab value="public">Free, Pro, & Team</Tabs.Tab>
-                                    <Tabs.Tab value="enterprise">Enterprise</Tabs.Tab>
-                                </Tabs.List>
-                                <Tabs.Panel value="public" p={10}>
-                                    <Button
-                                        component="a"
-                                        href={import.meta.env.PUBLIC_WORKER_URL}
-                                        fullWidth={true}
-                                    >
-                                        Login to Github
-                                    </Button>
-                                </Tabs.Panel>
-                                <Tabs.Panel p={10} value="enterprise">
-                                    <Stack justify="center" gap={5}>
-                                        <Button
-                                            component="a"
-                                            href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
-                                            fullWidth={true}
-                                        >
-                                            Login to Cloud Enterprise
-                                        </Button>
-                                        <Divider p={10} label="Or continue with Server Enterprise" />
-                                        <TextInput
-                                            placeholder="Server Enterprise URL"
-                                            radius={9}
-                                            rightSection={
-                                                <ActionIcon>
-                                                    <IconArrowRight stroke={1} />
-                                                </ActionIcon>
-                                            }
-                                        />
-                                    </Stack>
-                                </Tabs.Panel>
-                            </Tabs>
-                        </Box>
+                            <Button
+                                component="a"
+                                href={import.meta.env.PUBLIC_WORKER_URL}
+                                fullWidth={true}
+                            >
+                                Login to Github
+                            </Button>
+                            <Button
+                                component="a"
+                                href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
+                                fullWidth={true}
+                            >
+                                Login to Cloud Enterprise
+                            </Button>
+                        </Stack>
                     </Card>
                 </Flex>
 
