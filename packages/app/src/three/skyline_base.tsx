@@ -46,7 +46,7 @@ export function SkylineBase(props: SkylineBaseProps) {
 		}
 		setNameDimensions(getDimensions(nameRef.current));
 		setYearDimensions(getDimensions(yearRef.current));
-	}, [inputs.name, inputs.startYear, inputs.endYear, inputs.font, props.years]);
+	}, [inputs.name, inputs.startYear, inputs.endYear, inputs.font, props.years, inputs.nameOverride]);
 
 	const [geometry, setGeometry] = useState<BufferGeometry>(
 		new BoxGeometry(0, 0, 0),
@@ -138,7 +138,7 @@ export function SkylineBase(props: SkylineBaseProps) {
 				height={inputs.textDepth}
 				size={computed.textSize}
 			>
-				{inputs.name}
+				{inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name}
 				<meshStandardMaterial color={color} />
 			</Text3D>
 			<Text3D

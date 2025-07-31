@@ -1,15 +1,15 @@
 import { authExchange } from "@urql/exchange-auth";
 import { Client, cacheExchange, fetchExchange } from "urql";
-import { getToken, isAuthenticated, logout, resolveToken } from "./auth";
+import { getToken, isAuthenticated, logout } from "./auth";
 
 export const client = new Client({
 	url: "https://api.github.com/graphql",
 	exchanges: [
 		cacheExchange,
 		authExchange(async (utils) => {
-			const token = await resolveToken();
-			return {
-				addAuthToOperation(operation) {
+            return {
+                addAuthToOperation(operation) {
+                    const token = getToken();
 					if (!token) {
 						return operation;
 					}

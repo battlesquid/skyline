@@ -125,7 +125,7 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 		const slopeAngle = Math.atan(horizontalDifference / -this.height);
 
 		return slopeAngle;
-	}
+	}   
 
 	/**
 	 * Calculates the slope angle of the frustum in degrees.

@@ -23,6 +23,7 @@ export const DEFAULT_FONT = getDefaultFonts()[DEFAULT_FONT_SELECTION];
 export const getDefaultParameters = (): SkylineModelParameters => {
 	const inputs: SkylineModelInputParameters = {
 		name: "battlesquid",
+        nameOverride: "",
 		startYear: new Date().getFullYear(),
 		endYear: new Date().getFullYear(),
 		color: "#575757",

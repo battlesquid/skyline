@@ -23,28 +23,23 @@ export const fetchProfile = async (): Promise<UserProfile | null> => {
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 
-export const setToken = (token: string) =>
+export const setToken = (token: string) => {
+    console.trace("Setting Token")
 	localStorage.setItem(TOKEN_KEY, token);
+}
 
-export const deleteToken = () => localStorage.removeItem(TOKEN_KEY);
+export const deleteToken = () => {
+    console.trace("Deleting Token")
+    localStorage.removeItem(TOKEN_KEY);
+}
 
 export const isAuthenticated = () => localStorage.getItem(TOKEN_KEY) !== null;
 
-export const resolveToken = async (): Promise<string | null> => {
+export const resolveToken = async (code: string): Promise<string | null> => {
 	const token = getToken();
 	if (token !== null) {
 		return token;
 	}
-
-	const code = new URL(location.href).searchParams.get("code");
-	if (code === null) {
-		return null;
-	}
-
-	const path =
-		location.pathname +
-		location.search.replace(/\bcode=\w+/, "").replace(/\?$/, "");
-	history.pushState({}, "", path);
 
 	const response = await fetch(import.meta.env.PUBLIC_WORKER_URL, {
 		method: "POST",
@@ -68,5 +63,4 @@ export const resolveToken = async (): Promise<string | null> => {
 
 export const logout = () => {
 	deleteToken();
-	location.reload();
 };
