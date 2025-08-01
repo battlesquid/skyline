@@ -57,20 +57,22 @@ export function SkylineBase(props: SkylineBaseProps) {
 		const width = computed.modelLength + computed.paddingWidth;
 		const length = computed.modelWidth * years.length + computed.paddingWidth;
 		const height = computed.platformHeight;
+        
+        let geom: BufferGeometry;
+        let newRot = 0;
 
 		switch (inputs.shape) {
 			case SkylineBaseShape.Prism:
-				setGeometry(new BoxGeometry(width, height, length));
-				setRot(0);
+                geom = new BoxGeometry(width, height, length);
+                newRot = 0;
 				break;
 			case SkylineBaseShape.Frustum: {
-				const geom = new RectangularFrustumGeometry(width, length, height);
-				setGeometry(geom);
-				setRot(geom.calculateSlopeAngle());
+				geom = new RectangularFrustumGeometry(width, length, height);
+				newRot = (geom as RectangularFrustumGeometry).calculateSlopeAngle();
 				break;
 			}
 		}
-	}, [inputs.shape, years, computed]);
+	}, [inputs.shape, inputs.insetText, years, computed]);
 
 	const logo = useRef<Group | null>(null);
 	const material = useMemo(
