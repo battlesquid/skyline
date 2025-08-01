@@ -1,7 +1,7 @@
 import { Button, Group, NumberInput } from "@mantine/core";
 import { useValidatedState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { useParametersStore } from "../../stores/parameters";
+import { getParametersStore, useParametersContext } from "../../stores/parameters";
 import { GitHubUsernameInput } from "./github_username_input";
 
 export interface GenerateSectionProps {
@@ -14,9 +14,9 @@ const MIN_START_YEAR = 2000;
 export function GenerateSection(props: GenerateSectionProps) {
 	const { ok, login } = props;
 	const initialStartYear =
-		useParametersStore.getInitialState().inputs.startYear;
-	const initialEndYear = useParametersStore.getInitialState().inputs.endYear;
-	const setInputs = useParametersStore((state) => state.setInputs);
+		getParametersStore().getInitialState().inputs.startYear;
+	const initialEndYear = getParametersStore().getInitialState().inputs.endYear;
+	const setInputs = useParametersContext((state) => state.setInputs);
 
 	const [name, setName] = useState(login ?? "");
 	const [modified, setModified] = useState(false);

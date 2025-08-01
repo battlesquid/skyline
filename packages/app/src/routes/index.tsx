@@ -1,15 +1,9 @@
-import { AppShell, LoadingOverlay } from '@mantine/core';
-import { useDisclosure } from "@mantine/hooks";
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import { useRef } from "react";
 import { fetchProfile, isAuthenticated } from "../api/auth";
-import { Sidebar } from "../components/sidebar";
-import { SkylineControls } from "../components/skyline_controls";
-import { useExtendedQuery } from "../hooks/useExtendedQuery";
-import { useParametersStore } from "../stores/parameters";
-import { Skyline } from "../three/skyline";
+import { EditorAppShell } from "../components/appshell";
+import { createParametersStore, ParametersContext } from "../stores/parameters";
 import "../styles/editor.css";
-import { HoverCard } from '../components/hover_card';
-import { useEffect } from "react";
 
 export const Route = createFileRoute('/')({
     component: Editor,
@@ -24,63 +18,19 @@ export const Route = createFileRoute('/')({
             })
         }
     },
-    loader: () => fetchProfile()
+    loader: async () => {
+        const profile = await fetchProfile()
+        return profile;
+    }
 });
 
 export function Editor() {
     const profile = Route.useLoaderData();
-    const setInputs = useParametersStore(state => state.setInputs);
-    const name = useParametersStore((state) => state.inputs.name);
-    const start = useParametersStore((state) => state.inputs.startYear);
-    const end = useParametersStore((state) => state.inputs.endYear);
-    const { years, fetching, ok } = useExtendedQuery({
-        name,
-        start,
-        end,
-    });
-
-    const [mobileOpened] = useDisclosure();
-    const [desktopOpened] = useDisclosure(true);
-
-    useEffect(() => {
-        setInputs({ name: profile?.login ?? "" });
-    }, []);
+    const store = useRef(createParametersStore({ name: profile?.login ?? "" })).current;
 
     return (
-        <AppShell
-            header={{ height: 0 }}
-            padding={"xs"}
-            navbar={{
-                width: 320,
-                breakpoint: "sm",
-                collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
-            }}
-            withBorder={false}
-        >
-            <AppShell.Navbar p="md" pr={0}>
-                <Sidebar profile={profile} ok={ok} />
-            </AppShell.Navbar>
-            <AppShell.Main style={{ height: "calc(100vh)" }}>
-                <LoadingOverlay
-                    visible={fetching}
-                    zIndex={1000}
-                    overlayProps={{ radius: "sm", blur: 2 }}
-                />
-                <Skyline years={years} />
-                <div
-                    style={{
-                        position: "absolute",
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        pointerEvents: "none",
-                    }}
-                >
-                    <HoverCard />
-                </div>
-                <SkylineControls />
-            </AppShell.Main>
-        </AppShell>
+        <ParametersContext.Provider value={store}>
+            <EditorAppShell profile={profile} />
+        </ParametersContext.Provider>
     )
 }

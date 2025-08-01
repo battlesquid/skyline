@@ -1,10 +1,10 @@
 import { NumberInput } from "@mantine/core";
-import { useParametersStore } from "../../stores/parameters";
+import { useParametersContext } from "../../stores/parameters";
 import { safeInt } from "../../utils";
 
 export function TowerDampeningInput() {
-	const dampening = useParametersStore((state) => state.inputs.dampening);
-	const setInputs = useParametersStore((state) => state.setInputs);
+	const dampening = useParametersContext((state) => state.inputs.dampening);
+	const setInputs = useParametersContext((state) => state.setInputs);
 	return (
 		<NumberInput
 			label="Tower Dampening"
