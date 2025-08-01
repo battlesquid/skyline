@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo, useRef } from "react";
 import { DoubleSide, type Group } from "three";
 import { useControlsStore } from "../stores/controls";
-import { useParametersStore } from "../stores/parameters";
+import { useParametersContext } from "../stores/parameters";
 import { Cameras } from "./cameras";
 import { CameraControls } from "./controls";
 import { SkylineModel, type SkylineModelProps } from "./skyline_model";
@@ -12,7 +12,7 @@ export type SkylineProps = Omit<SkylineModelProps, "group">;
 
 export function Skyline(props: SkylineProps) {
 	const { years } = props;
-	const computed = useParametersStore((state) => state.computed);
+	const computed = useParametersContext((state) => state.computed);
 	const group = useRef<Group | null>(null);
 	const style = useMemo(() => ({ height: "100%" }), []);
 	const orthographic = useControlsStore(
