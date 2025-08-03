@@ -1,10 +1,10 @@
 import { NumberInput } from "@mantine/core";
-import { useParametersStore } from "../../stores/parameters";
+import { useParametersContext } from "../../stores/parameters";
 import { safeFloat } from "../../utils";
 
 export function BasePaddingInput() {
-	const padding = useParametersStore((state) => state.inputs.padding);
-	const setInputs = useParametersStore((state) => state.setInputs);
+	const padding = useParametersContext((state) => state.inputs.padding);
+	const setInputs = useParametersContext((state) => state.setInputs);
 
 	return (
 		<NumberInput

@@ -17,7 +17,7 @@ import { calculateFirstDayOffset, formatYearText } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
-import { useParametersStore } from "../stores/parameters";
+import { useParametersContext } from "../stores/parameters";
 import { useSceneStore } from "../stores/scene";
 import { ContributionTower } from "./contribution_tower";
 import { SkylineBase } from "./skyline_base";
@@ -30,8 +30,8 @@ export interface SkylineModelProps {
 export function SkylineModel(props: SkylineModelProps) {
 	const { group, years } = props;
 	const [initialized, setInitialized] = useState(false);
-	const computed = useParametersStore((state) => state.computed);
-	const inputs = useParametersStore((state) => state.inputs);
+	const computed = useParametersContext((state) => state.computed);
+	const inputs = useParametersContext((state) => state.inputs);
 
 	const scene = useThree((state) => state.scene);
 	const setDirty = useSceneStore((state) => state.setDirty);

@@ -1,9 +1,9 @@
 import { TextInput } from "@mantine/core";
-import { useParametersStore } from "../../stores/parameters";
+import { useParametersContext } from "../../stores/parameters";
 
 export function UsernameOverrideInput() {
-    const nameOverride = useParametersStore((state) => state.inputs.nameOverride);
-    const setInputs = useParametersStore((state) => state.setInputs);
+    const nameOverride = useParametersContext((state) => state.inputs.nameOverride);
+    const setInputs = useParametersContext((state) => state.setInputs);
 
     return (
         <TextInput

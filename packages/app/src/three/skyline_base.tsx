@@ -13,7 +13,7 @@ import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
-import { useParametersStore } from "../stores/parameters";
+import { useParametersContext } from "../stores/parameters";
 import { getSvgBoundingBox } from "../utils";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { SkylineBaseShape } from "./types";
@@ -26,8 +26,8 @@ export interface SkylineBaseProps {
 
 export function SkylineBase(props: SkylineBaseProps) {
 	const { color, years } = props;
-	const inputs = useParametersStore((state) => state.inputs);
-	const computed = useParametersStore((state) => state.computed);
+	const inputs = useParametersContext((state) => state.inputs);
+	const computed = useParametersContext((state) => state.computed);
 
 	const yearRef = useRef<Mesh | null>(null);
 	const nameRef = useRef<Mesh | null>(null);
