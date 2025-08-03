@@ -1,11 +1,11 @@
-import { Text3D } from "@react-three/drei";
+import { Text3D, useFont } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-	BoxGeometry,
-	type BufferGeometry,
-	type Group,
-	type Mesh,
-	MeshStandardMaterial,
+    BoxGeometry,
+    type BufferGeometry,
+    type Group,
+    type Mesh,
+    MeshStandardMaterial,
 } from "three";
 import type { ContributionWeeks } from "../api/types";
 import { formatYearText } from "../api/utils";
@@ -14,163 +14,191 @@ import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useSvgMesh } from "../hooks/useSvgMesh";
 import { LOGOS } from "../logos";
 import { useParametersContext } from "../stores/parameters";
-import { getSvgBoundingBox } from "../utils";
+import { getSvgBoundingBox, safeString } from "../utils";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { SkylineBaseShape } from "./types";
-import { type Dimensions, getDimensions } from "./utils";
+import { Base, Geometry, Subtraction } from "@react-three/csg";
+import { extend, type Object3DNode } from "@react-three/fiber";
+import { TextGeometry } from "three-stdlib";
 
-export interface SkylineBaseProps {
-	color: string;
-	years: ContributionWeeks[];
+extend({ TextGeometry })
+
+declare module '@react-three/fiber' {
+    interface ThreeElements {
+        textGeometry: Object3DNode<TextGeometry, typeof TextGeometry>
+    }
 }
 
-export function SkylineBase(props: SkylineBaseProps) {
-	const { color, years } = props;
-	const inputs = useParametersContext((state) => state.inputs);
-	const computed = useParametersContext((state) => state.computed);
+export interface SkylineBaseProps {
+    color: string;
+    years: ContributionWeeks[];
+}
 
-	const yearRef = useRef<Mesh | null>(null);
-	const nameRef = useRef<Mesh | null>(null);
+export function SkylineBase({
+    color,
+    years
+}: SkylineBaseProps) {
+    const inputs = useParametersContext((state) => state.inputs);
+    const computed = useParametersContext((state) => state.computed);
 
-	const [yearDimensions, setYearDimensions] = useState<Dimensions>({
-		width: 0,
-		height: 0,
-	});
-	const [nameDimensions, setNameDimensions] = useState<Dimensions>({
-		width: 0,
-		height: 0,
-	});
-	useEffect(() => {
-		if (nameRef.current === null || yearRef.current === null) {
-			return;
-		}
-		setNameDimensions(getDimensions(nameRef.current));
-		setYearDimensions(getDimensions(yearRef.current));
-	}, [inputs.name, inputs.startYear, inputs.endYear, inputs.font, props.years, inputs.nameOverride]);
+    const yearRef = useRef<Mesh | null>(null);
+    const nameRef = useRef<Mesh | null>(null);
 
-	const [geometry, setGeometry] = useState<BufferGeometry>(
-		new BoxGeometry(0, 0, 0),
-	);
-	const [rot, setRot] = useState(0);
+    const { size: yearBoundingBox } = useBoundingBox({
+        obj: yearRef
+    }, [inputs.name, inputs.startYear, inputs.endYear, inputs.font]);
 
-	useEffect(() => {
-		const width = computed.modelLength + computed.paddingWidth;
-		const length = computed.modelWidth * years.length + computed.paddingWidth;
-		const height = computed.platformHeight;
-        
+    const { size: nameBoundingBox } = useBoundingBox({
+        obj: nameRef
+    }, [inputs.name, inputs.nameOverride, inputs.font]);
+
+    const [geometry, setGeometry] = useState<BufferGeometry>(
+        new BoxGeometry(0, 0, 0),
+    );
+    const [rot, setRot] = useState(0);
+
+    useEffect(() => {
+        const width = computed.modelLength + computed.paddingWidth;
+        const length = computed.modelWidth * years.length + computed.paddingWidth;
+        const height = computed.platformHeight;
+
         let geom: BufferGeometry;
         let newRot = 0;
 
-		switch (inputs.shape) {
-			case SkylineBaseShape.Prism:
+        switch (inputs.shape) {
+            case SkylineBaseShape.Prism:
                 geom = new BoxGeometry(width, height, length);
                 newRot = 0;
-				break;
-			case SkylineBaseShape.Frustum: {
-				geom = new RectangularFrustumGeometry(width, length, height);
-				newRot = (geom as RectangularFrustumGeometry).calculateSlopeAngle();
-				break;
-			}
-		}
-	}, [inputs.shape, inputs.insetText, years, computed]);
+                break;
+            case SkylineBaseShape.Frustum: {
+                geom = new RectangularFrustumGeometry(width, length, height);
+                newRot = (geom as RectangularFrustumGeometry).calculateSlopeAngle();
+                break;
+            }
+        }
+        setGeometry(geom);
+        setRot(newRot);
+    }, [inputs.shape, inputs.insetText, years, computed]);
 
-	const logo = useRef<Group | null>(null);
-	const material = useMemo(
-		() =>
-			new MeshStandardMaterial({
-				color: inputs.showContributionColor
-					? getDefaultParameters().inputs.color
-					: inputs.color,
-			}),
-		[inputs.color, inputs.showContributionColor],
-	);
+    const logo = useRef<Group | null>(null);
+    const material = useMemo(
+        () =>
+            new MeshStandardMaterial({
+                color: inputs.showContributionColor
+                    ? getDefaultParameters().inputs.color
+                    : inputs.color,
+            }),
+        [inputs.color, inputs.showContributionColor],
+    );
 
-	const { meshes } = useSvgMesh(LOGOS.Circle, material);
-	useEffect(() => {
-		if (logo.current === null) {
-			return;
-		}
-		logo.current.clear();
-		for (const mesh of meshes) {
-			logo.current?.add(mesh);
-		}
-		const wantedHeight = 0.65 * computed.platformHeight;
-		const { height } = getSvgBoundingBox(LOGOS.Circle);
+    const { meshes } = useSvgMesh(LOGOS.Circle, material);
+    useEffect(() => {
+        if (logo.current === null) {
+            return;
+        }
+        logo.current.clear();
+        for (const mesh of meshes) {
+            logo.current?.add(mesh);
+        }
+        const wantedHeight = 0.65 * computed.platformHeight;
+        const { height } = getSvgBoundingBox(LOGOS.Circle);
 
-		const scale = wantedHeight / height;
-		logo.current.scale.set(scale, -scale, scale);
-	}, [logo.current, meshes]);
+        const scale = wantedHeight / height;
+        logo.current.scale.set(scale, -scale, scale);
+    }, [logo.current, meshes]);
 
-	const { size } = useBoundingBox(
-		{
-			obj: logo,
-		},
-		[logo.current, meshes],
-	);
-	const LOGO_Y_OFFSET = size.y / 2;
-	const LOGO_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
-	const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 2 : -0.1;
+    const { size: logoBoundingBox } = useBoundingBox(
+        {
+            obj: logo,
+        },
+        [logo.current, meshes],
+    );
+    const LOGO_Y_OFFSET = logoBoundingBox.y / 2;
+    const LOGO_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
+    const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 2 : -0.1;
+    const font = useFont(inputs.font);
 
-	return (
-		<group>
-			<group
-				ref={logo}
-				rotation={[rot, 0, 0]}
-				position={[
-					-computed.xMidpointOffset + 5,
-					-computed.platformMidpoint + LOGO_Y_OFFSET,
-					(computed.modelWidth * years.length) / 2 +
-						inputs.padding +
-						LOGO_DEPTH_OFFSET,
-				]}
-			/>
-			<Text3D
-				ref={nameRef}
-				font={inputs.font}
-				rotation={[rot, 0, 0]}
-				receiveShadow
-				castShadow
-				position={[
-					-computed.xMidpointOffset + nameDimensions.width / 2 + 12,
-					-computed.platformMidpoint - 0.5,
-					(computed.modelWidth * props.years.length) / 2 +
-						inputs.padding +
-						TEXT_DEPTH_OFFSET,
-				]}
-				height={inputs.textDepth}
-				size={computed.textSize}
-			>
-				{inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name}
-				<meshStandardMaterial color={color} />
-			</Text3D>
-			<Text3D
-				ref={yearRef}
-				font={inputs.font}
-				receiveShadow
-				castShadow
-				rotation={[rot, 0, 0]}
-				position={[
-					computed.xMidpointOffset - yearDimensions.width / 2 - 5,
-					-computed.platformMidpoint - 0.5,
-					(computed.modelWidth * props.years.length) / 2 +
-						computed.paddingWidth / 2 +
-						TEXT_DEPTH_OFFSET,
-				]}
-				height={inputs.textDepth}
-				size={computed.textSize}
-			>
-				{formatYearText(inputs.startYear, inputs.endYear)}
-				<meshStandardMaterial color={color} />
-			</Text3D>
-			<mesh
-				onPointerEnter={(e) => e.stopPropagation()}
-				castShadow
-				receiveShadow
-				geometry={geometry}
-				position={[0, -computed.platformMidpoint, 0]}
-			>
-				<meshStandardMaterial flatShading color={color} />
-			</mesh>
-		</group>
-	);
+    return (
+        <group>
+            <group
+                ref={logo}
+                rotation={[rot, 0, 0]}
+                position={[
+                    -computed.xMidpointOffset + 5,
+                    -computed.platformMidpoint + LOGO_Y_OFFSET,
+                    (computed.modelWidth * years.length) / 2 +
+                    inputs.padding +
+                    LOGO_DEPTH_OFFSET,
+                ]}
+            />
+            <mesh position={[0, -computed.platformMidpoint, 0]}>
+                <meshStandardMaterial color={color} />
+
+                <Geometry >
+                    <Base geometry={geometry} />
+                    <Subtraction
+                        position={[-computed.xMidpointOffset + nameBoundingBox.x / 2 + 12, -0.5, (computed.modelWidth * years.length) / 2 - TEXT_DEPTH_OFFSET]}
+                    >
+                        <textGeometry
+                            args={[
+                                safeString(inputs.nameOverride, inputs.name),
+                                {
+                                    height: inputs.textDepth,
+                                    size: computed.textSize,
+                                    font,
+                                    curveSegments: 7
+                                }
+                            ]}
+                        />
+                        {/* <Text3D
+                            ref={nameRef}
+                            font={inputs.font}
+                            rotation={[rot, 0, 0]}
+                            receiveShadow
+                            castShadow
+                               position={[
+                            -computed.xMidpointOffset + nameBoundingBox.x / 2 + 12,
+                            ,
+                            (computed.modelWidth * years.length) / 2,
+                        ]}
+                            height={inputs.textDepth}
+                            size={computed.textSize}
+                        >
+                            {}
+                        </Text3D> */}
+                    </Subtraction>
+                    {/* <Subtraction position={[
+                        computed.xMidpointOffset - yearBoundingBox.x / 2 - 5,
+                        -computed.platformMidpoint - 0.5,
+                        (computed.modelWidth * years.length) / 2 +
+                        computed.paddingWidth / 2 +
+                        TEXT_DEPTH_OFFSET,
+                    ]}>
+                        <Text3D
+                            ref={yearRef}
+                            font={inputs.font}
+                            receiveShadow
+                            castShadow
+                            rotation={[rot, 0, 0]}
+
+                            height={inputs.textDepth}
+                            size={computed.textSize}
+                        >
+                            {formatYearText(inputs.startYear, inputs.endYear)}
+                        </Text3D>
+                    </Subtraction> */}
+                </Geometry>
+                {/* 
+                <mesh
+                    onPointerEnter={(e) => e.stopPropagation()}
+                    castShadow
+                    receiveShadow
+                    geometry={geometry}
+                    position={[0, -computed.platformMidpoint, 0]}
+                >
+                    <meshStandardMaterial flatShading color={color} />
+                </mesh> */}
+            </mesh>
+        </group>
+    );
 }

@@ -4,7 +4,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { Box3, type Object3D, Vector3 } from "three";
+import { Box3, Mesh, type Object3D, Vector3 } from "three";
 
 export interface BoundingBoxProps {
 	obj: MutableRefObject<Object3D | null>;
@@ -21,6 +21,10 @@ export const useBoundingBox = (
 		if (!obj || !obj.current) {
 			return;
 		}
+        if (obj.current instanceof Mesh) {
+            obj.current.geometry.center();
+            obj.current.geometry.computeBoundingBox();
+        }
 		const bb = new Box3().setFromObject(obj.current, true);
 		if (setter) {
 			setter(bb.getSize(new Vector3()));

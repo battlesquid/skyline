@@ -1,11 +1,12 @@
-import { AppShell, HoverCard, LoadingOverlay } from "@mantine/core";
+import { AppShell, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { UserProfile } from "../api/auth";
+import type { UserProfile } from "../api/auth";
 import { useExtendedQuery } from "../hooks/useExtendedQuery";
 import { useParametersContext } from "../stores/parameters";
 import { Skyline } from "../three/skyline";
 import { Sidebar } from "./sidebar";
 import { SkylineControls } from "./skyline_controls";
+import { HoverCard } from "./hover_card";
 
 export interface EditorAppShellProps {
     profile: UserProfile | null;
