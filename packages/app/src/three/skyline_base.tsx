@@ -23,6 +23,10 @@ import { TextGeometry } from "three-stdlib";
 
 extend({ TextGeometry })
 
+// idea: thin mesh with text cut out, apply extrudegeom on it
+// use csg to cut out slot from base
+// place extruded mesh in the slot
+
 declare module '@react-three/fiber' {
     interface ThreeElements {
         textGeometry: Object3DNode<TextGeometry, typeof TextGeometry>
@@ -118,6 +122,8 @@ export function SkylineBase({
     const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 2 : -0.1;
     const font = useFont(inputs.font);
 
+    console.log(nameBoundingBox)
+
     return (
         <group>
             <group
@@ -131,6 +137,26 @@ export function SkylineBase({
                     LOGO_DEPTH_OFFSET,
                 ]}
             />
+            <Text3D
+            visible={false}
+				ref={nameRef}
+				font={inputs.font}
+				rotation={[rot, 0, 0]}
+				receiveShadow
+				castShadow
+				position={[
+					-computed.xMidpointOffset + nameBoundingBox.x/ 2 + 12,
+					-computed.platformMidpoint - 0.5,
+					(computed.modelWidth * years.length) / 2 +
+						inputs.padding +
+						TEXT_DEPTH_OFFSET,
+				]}
+				height={inputs.textDepth}
+				size={computed.textSize}
+			>
+				{inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name}
+				<meshStandardMaterial color={color} />
+			</Text3D>
             <mesh position={[0, -computed.platformMidpoint, 0]}>
                 <meshStandardMaterial color={color} />
 
@@ -139,17 +165,7 @@ export function SkylineBase({
                     <Subtraction
                         position={[-computed.xMidpointOffset + nameBoundingBox.x / 2 + 12, -0.5, (computed.modelWidth * years.length) / 2 - TEXT_DEPTH_OFFSET]}
                     >
-                        <textGeometry
-                            args={[
-                                safeString(inputs.nameOverride, inputs.name),
-                                {
-                                    height: inputs.textDepth,
-                                    size: computed.textSize,
-                                    font,
-                                    curveSegments: 7
-                                }
-                            ]}
-                        />
+                        <boxGeometry args={[nameBoundingBox.x, nameBoundingBox.y, 10]} />
                         {/* <Text3D
                             ref={nameRef}
                             font={inputs.font}
