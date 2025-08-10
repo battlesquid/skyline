@@ -8,12 +8,12 @@ import type {
 import { SkylineBaseShape } from "./three/types";
 
 export const getDefaultFonts = () => ({
-	Inter: "/Inter_Regular.json",
-	"Inter Bold": "/Inter_Bold.json",
-	"Press Start": "/Press Start 2P_Regular.json",
-	"Arvo Bold": "/Arvo_Bold.json",
-	"Bebas Neue": "/Bebas Neue_Regular.json",
-	Quicksilver: "/Quicksilver_Regular.json",
+	Inter: "/fonts/facetype/Inter_Regular.json",
+	"Inter Bold": "/fonts/facetype/Inter_Bold.json",
+	"Press Start": "/fonts/facetype/PressStart2P_Regular.json",
+	"Arvo Bold": "/fonts/facetype/Arvo_Bold.json",
+	"Bebas Neue": "/fonts/facetype/BebasNeue_Regular.json",
+	Quicksilver: "/fonts/facetype/Quicksilver_Regular.json",
 });
 
 export const DEFAULT_FONT_SELECTION = "Inter Bold";
@@ -28,6 +28,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		endYear: new Date().getFullYear(),
 		color: "#575757",
 		font: DEFAULT_FONT,
+        insetText: false,
 		showContributionColor: false,
 		padding: 1.5,
 		textDepth: 1.75,

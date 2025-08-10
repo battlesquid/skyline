@@ -20,6 +20,7 @@ import { SkylineBaseShape } from "./types";
 import { Base, Geometry, Subtraction } from "@react-three/csg";
 import { extend, type Object3DNode } from "@react-three/fiber";
 import { TextGeometry } from "three-stdlib";
+import { getInsetTextGeometry } from "./inset_text";
 
 extend({ TextGeometry })
 
@@ -95,7 +96,7 @@ export function SkylineBase({
         [inputs.color, inputs.showContributionColor],
     );
 
-    const { meshes } = useSvgMesh(LOGOS.Circle, material);
+    const { meshes } = useSvgMesh(LOGOS.Testing, material);
     useEffect(() => {
         if (logo.current === null) {
             return;
@@ -105,7 +106,7 @@ export function SkylineBase({
             logo.current?.add(mesh);
         }
         const wantedHeight = 0.65 * computed.platformHeight;
-        const { height } = getSvgBoundingBox(LOGOS.Circle);
+        const { height } = getSvgBoundingBox(LOGOS.Testing);
 
         const scale = wantedHeight / height;
         logo.current.scale.set(scale, -scale, scale);
@@ -121,8 +122,12 @@ export function SkylineBase({
     const LOGO_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
     const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 2 : -0.1;
     const font = useFont(inputs.font);
+    const name = inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name
 
-    console.log(nameBoundingBox)
+    useEffect(() => {
+        getInsetTextGeometry(name, inputs.font as string, computed.textSize)
+
+    }, [name, inputs.font])
 
     return (
         <group>
@@ -138,25 +143,25 @@ export function SkylineBase({
                 ]}
             />
             <Text3D
-            visible={false}
-				ref={nameRef}
-				font={inputs.font}
-				rotation={[rot, 0, 0]}
-				receiveShadow
-				castShadow
-				position={[
-					-computed.xMidpointOffset + nameBoundingBox.x/ 2 + 12,
-					-computed.platformMidpoint - 0.5,
-					(computed.modelWidth * years.length) / 2 +
-						inputs.padding +
-						TEXT_DEPTH_OFFSET,
-				]}
-				height={inputs.textDepth}
-				size={computed.textSize}
-			>
-				{inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name}
-				<meshStandardMaterial color={color} />
-			</Text3D>
+                visible={false}
+                ref={nameRef}
+                font={inputs.font}
+                rotation={[rot, 0, 0]}
+                receiveShadow
+                castShadow
+                position={[
+                    -computed.xMidpointOffset + nameBoundingBox.x / 2 + 12,
+                    -computed.platformMidpoint - 0.5,
+                    (computed.modelWidth * years.length) / 2 +
+                    inputs.padding +
+                    TEXT_DEPTH_OFFSET,
+                ]}
+                height={inputs.textDepth}
+                size={computed.textSize}
+            >
+                {inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name}
+                <meshStandardMaterial color={color} />
+            </Text3D>
             <mesh position={[0, -computed.platformMidpoint, 0]}>
                 <meshStandardMaterial color={color} />
 
