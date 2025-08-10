@@ -122,7 +122,8 @@ export function SkylineBase({
     );
     const LOGO_Y_OFFSET = logoBoundingBox.y / 2;
     const LOGO_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
-    const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 2 : -0.1;
+    const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
+    const BRUSH_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
     const font = useFont(inputs.font);
     const name = inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name
 
@@ -179,9 +180,9 @@ export function SkylineBase({
                     <Base geometry={geometry} />
                     <Subtraction
                         rotation={[rot, 0, 0]}
-                        position={[-computed.xMidpointOffset + nameBoundingBox.x / 2 + 12, -0.5, (computed.modelWidth * years.length) / 2 - TEXT_DEPTH_OFFSET]}
+                        position={[-computed.xMidpointOffset + nameBoundingBox.x / 2 + 12, -BRUSH_DEPTH_OFFSET, (computed.modelWidth * years.length) / 2 + (3 / 2 + BRUSH_DEPTH_OFFSET)]}
                     >
-                        <boxGeometry ref={brushRef} args={[nameBoundingBox.x, nameBoundingBox.y, 10]} />
+                        <boxGeometry ref={brushRef} args={[nameBoundingBox.x, nameBoundingBox.y, 3]} />
                         {/* <Text3D
                             ref={nameRef}
                             font={inputs.font}
