@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry } from "three";
+import { BufferAttribute, BufferGeometry, Float32BufferAttribute } from "three";
 
 export class RectangularFrustumGeometry extends BufferGeometry {
 	private static readonly BASE_WIDTH_PADDING = 5;
@@ -100,6 +100,9 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 
 		this.setIndex(indices);
 		this.computeVertexNormals();
+        // TODO: think about correctly computing uv coordinates
+        // only here to make csg happy
+        this.setAttribute("uv", new Float32BufferAttribute( [], 2 ));
 	}
 
 	/**

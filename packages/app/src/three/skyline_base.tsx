@@ -78,6 +78,7 @@ export function SkylineBase({
             case SkylineBaseShape.Frustum: {
                 geom = new RectangularFrustumGeometry(width, length, height);
                 newRot = (geom as RectangularFrustumGeometry).calculateSlopeAngle();
+                console.log(newRot)
                 break;
             }
         }
@@ -96,7 +97,7 @@ export function SkylineBase({
         [inputs.color, inputs.showContributionColor],
     );
 
-    const { meshes } = useSvgMesh(LOGOS.Testing, material);
+    const { meshes } = useSvgMesh(LOGOS.Circle, material);
     useEffect(() => {
         if (logo.current === null) {
             return;
@@ -106,9 +107,10 @@ export function SkylineBase({
             logo.current?.add(mesh);
         }
         const wantedHeight = 0.65 * computed.platformHeight;
-        const { height } = getSvgBoundingBox(LOGOS.Testing);
+        const { height } = getSvgBoundingBox(LOGOS.Circle);
 
         const scale = wantedHeight / height;
+        console.log(scale, height)
         logo.current.scale.set(scale, -scale, scale);
     }, [logo.current, meshes]);
 
@@ -128,6 +130,11 @@ export function SkylineBase({
         getInsetTextGeometry(name, inputs.font as string, computed.textSize)
 
     }, [name, inputs.font])
+
+    const brushRef = useRef<BoxGeometry | null>(null);
+    useEffect(() => {
+        brushRef.current?.center();
+    }, [inputs.shape]);
 
     return (
         <group>
@@ -162,15 +169,19 @@ export function SkylineBase({
                 {inputs.nameOverride.trim() !== "" ? inputs.nameOverride : inputs.name}
                 <meshStandardMaterial color={color} />
             </Text3D>
-            <mesh position={[0, -computed.platformMidpoint, 0]}>
-                <meshStandardMaterial color={color} />
+            <mesh
+                onPointerEnter={(e) => e.stopPropagation()}
+                position={[0, -computed.platformMidpoint, 0]}
+            >
+                <meshStandardMaterial flatShading color={color} />
 
-                <Geometry >
+                <Geometry showOperations>
                     <Base geometry={geometry} />
                     <Subtraction
+                        rotation={[rot, 0, 0]}
                         position={[-computed.xMidpointOffset + nameBoundingBox.x / 2 + 12, -0.5, (computed.modelWidth * years.length) / 2 - TEXT_DEPTH_OFFSET]}
                     >
-                        <boxGeometry args={[nameBoundingBox.x, nameBoundingBox.y, 10]} />
+                        <boxGeometry ref={brushRef} args={[nameBoundingBox.x, nameBoundingBox.y, 10]} />
                         {/* <Text3D
                             ref={nameRef}
                             font={inputs.font}
@@ -211,7 +222,7 @@ export function SkylineBase({
                 </Geometry>
                 {/* 
                 <mesh
-                    onPointerEnter={(e) => e.stopPropagation()}
+                    
                     castShadow
                     receiveShadow
                     geometry={geometry}

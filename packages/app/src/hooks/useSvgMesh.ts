@@ -13,7 +13,7 @@ export const useSvgMesh = (svg: string, material: MeshStandardMaterial) => {
 			const shapes = path.toShapes(true);
 			for (const shape of shapes) {
 				const geometry = new ExtrudeGeometry(shape, {
-					depth: 200,
+					depth: 3,
 					bevelEnabled: false,
 				});
 				const mesh = new Mesh(geometry, material);
