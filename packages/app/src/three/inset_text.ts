@@ -2,10 +2,11 @@ import * as opentype from "opentype.js";
 import { getSvgBoundingBox } from "../utils";
 import paper from "paper";
 
-export const getInsetTextGeometry = async (text: string, fontName: string, fontSize: number) => {
-    const response = await fetch(`/fonts/ttf/Inter_Bold.ttf`);
-    const buffer = await response.arrayBuffer();
-    const font = opentype.parse(buffer);
+export const getInsetTextSvg = (text: string, font: opentype.Font | null, fontSize: number) => {
+    if (font === null) {
+        return;
+    }
+
     const textPath = font.getPath(text, 0, fontSize, fontSize).toSVG(5);
     const svg = `<svg>${textPath}</svg>`
     const project = new paper.Project([100, 100]);
@@ -15,14 +16,14 @@ export const getInsetTextGeometry = async (text: string, fontName: string, fontS
         textSvg
     ]);
 
+    const padding = 3;
     const rectSvg = new paper.Path.Rectangle(
         [0, 0],
-        [bb.width, bb.height]
+        [bb.width + padding, bb.height + padding]
     );
     compoundPath.position = rectSvg.position;
     const result = rectSvg.subtract(compoundPath);
-    result.fillColor = new paper.Color("black")
-    console.log(result.exportSVG())
-    // console.log(svg);
-    // console.log(getSvgBoundingBox(svg))
+    result.fillColor = new paper.Color("black");
+    const output = `<svg xmlns="http://www.w3.org/2000/svg">${result.exportSVG({ asString: true })}</svg>`;
+    return output;
 }

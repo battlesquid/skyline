@@ -29,6 +29,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		color: "#575757",
 		font: DEFAULT_FONT,
         insetText: false,
+		insetDepth: 1,
 		showContributionColor: false,
 		padding: 1.5,
 		textDepth: 1.75,
@@ -49,6 +50,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 	const yMidpointOffset = modelWidth / 2;
 	const paddingWidth = inputs.padding * 2;
 	const defaultFilename = `${inputs.name}_${formatYearText(inputs.startYear, inputs.endYear)}_skyline`;
+	const resolvedName = inputs.name;
 
 	const computed: SkylineModelComputedParameters = {
 		modelLength,
@@ -61,6 +63,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		yMidpointOffset,
 		paddingWidth,
 		defaultFilename,
+		resolvedName,
 	};
 
 	return { inputs, computed };

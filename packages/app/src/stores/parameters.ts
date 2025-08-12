@@ -5,11 +5,13 @@ import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
 import { formatYearText } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import type { SkylineBaseShape } from "../three/types";
+import { safeString } from "../utils";
 
 export interface SkylineModelInputParameters {
 	name: string;
 	nameOverride: string;
     insetText: boolean;
+	insetDepth: number;
 	startYear: number;
 	endYear: number;
 	towerSize: number;
@@ -35,6 +37,7 @@ export interface SkylineModelComputedParameters {
 	yMidpointOffset: number;
 	paddingWidth: number;
 	defaultFilename: string;
+	resolvedName: string;
 }
 
 export interface SkylineModelParameters {
@@ -73,6 +76,7 @@ export const createParametersStore = (props?: Partial<SkylineModelInputParameter
 			const yMidpointOffset = modelWidth / 2;
 			const paddingWidth = inputs.padding * 2;
 			const defaultFilename = `${inputs.name}_${formatYearText(inputs.startYear, inputs.endYear)}_skyline`;
+			const resolvedName = safeString(inputs.nameOverride, inputs.name);
 
 			const computed: SkylineModelComputedParameters = {
 				modelLength,
@@ -85,6 +89,7 @@ export const createParametersStore = (props?: Partial<SkylineModelInputParameter
 				yMidpointOffset,
 				paddingWidth,
 				defaultFilename,
+				resolvedName,
 			};
 
 			set(() => ({ inputs, computed }));
