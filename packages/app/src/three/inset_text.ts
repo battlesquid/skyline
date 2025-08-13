@@ -16,7 +16,7 @@ export const getInsetTextSvg = (text: string, font: opentype.Font | null, fontSi
         textSvg
     ]);
 
-    const padding = 3;
+    const padding = 2;
     const rectSvg = new paper.Path.Rectangle(
         [0, 0],
         [bb.width + padding, bb.height + padding]

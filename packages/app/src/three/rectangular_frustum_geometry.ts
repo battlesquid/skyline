@@ -1,24 +1,29 @@
 import { BufferAttribute, BufferGeometry, Float32BufferAttribute } from "three";
 
 export class RectangularFrustumGeometry extends BufferGeometry {
-	private static readonly BASE_WIDTH_PADDING = 5;
-	private static readonly BASE_LENGTH_PADDING = 7;
+	private static readonly BASE_WIDTH_PADDING = 0;
+	private static readonly BASE_LENGTH_PADDING = 0;
 
 	readonly width: number;
 	readonly length: number;
 	readonly height: number;
+    readonly baseWidthPadding: number;
+    readonly baseLengthPadding: number;
 
-	constructor(width: number, length: number, height: number) {
+
+	constructor(width: number, length: number, height: number, baseWidthPadding = 0, baseLengthPadding = 0) {
 		super();
 		this.width = width;
 		this.length = length;
 		this.height = height;
+        this.baseWidthPadding = baseWidthPadding;
+        this.baseLengthPadding = baseLengthPadding;
 
-		const topWidth = width;
-		const topLength = length;
-		const baseWidth = topWidth + RectangularFrustumGeometry.BASE_WIDTH_PADDING;
+		const topWidth = this.width;
+		const topLength = this.length;
+		const baseWidth = topWidth + this.baseWidthPadding;
 		const baseLength =
-			topLength + RectangularFrustumGeometry.BASE_LENGTH_PADDING;
+			topLength + this.baseLengthPadding;
 
 		const vertices = new Float32Array([
 			// bottom
@@ -113,9 +118,9 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 	 */
 	calculateSlopeAngle(side: "width" | "length" = "length"): number {
 		const baseWidth =
-			this.width + RectangularFrustumGeometry.BASE_WIDTH_PADDING;
+			this.width + this.baseWidthPadding;
 		const baseLength =
-			this.length + RectangularFrustumGeometry.BASE_LENGTH_PADDING;
+			this.length + this.baseLengthPadding;
 
 		// Calculate the horizontal distance from center to edge at the base vs top
 		const baseDimension = side === "width" ? baseWidth : baseLength;

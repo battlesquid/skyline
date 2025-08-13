@@ -42,8 +42,8 @@ export function SkylineBase({
         obj: nameRef
     }, [computed.resolvedName, inputs.font]);
 
-    const [geometry, setGeometry] = useState<BufferGeometry>(
-        new BoxGeometry(0, 0, 0),
+    const [geometry, setGeometry] = useState<RectangularFrustumGeometry>(
+        new RectangularFrustumGeometry(0, 0, 0),
     );
     const [rot, setRot] = useState(0);
 
@@ -51,23 +51,11 @@ export function SkylineBase({
         const width = computed.modelLength + computed.paddingWidth;
         const length = computed.modelWidth * years.length + computed.paddingWidth;
         const height = computed.platformHeight;
-
-        let geom: BufferGeometry;
-        let newRot = 0;
-
-        switch (inputs.shape) {
-            case SkylineBaseShape.Prism:
-                geom = new BoxGeometry(width, height, length);
-                newRot = 0;
-                break;
-            case SkylineBaseShape.Frustum: {
-                geom = new RectangularFrustumGeometry(width, length, height);
-                newRot = (geom as RectangularFrustumGeometry).calculateSlopeAngle();
-                break;
-            }
-        }
+        const geom = inputs.shape === SkylineBaseShape.Frustum
+            ? new RectangularFrustumGeometry(width, length, height, 5, 7)
+            : new RectangularFrustumGeometry(width, length, height);
         setGeometry(geom);
-        setRot(newRot);
+        setRot(geom.calculateSlopeAngle());
     }, [inputs.shape, inputs.insetText, years, computed]);
 
     const material = useMemo(
@@ -121,7 +109,6 @@ export function SkylineBase({
     const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
     const BRUSH_Z_OFFSET = inputs.shape === "frustum" ? 2 : 0;
 
-
     return (
         <group>
             <group
@@ -141,7 +128,7 @@ export function SkylineBase({
                 position={[
                     -computed.xMidpointOffset + 12,
                     -computed.platformMidpoint + insetNameThreeBB.y / 2,
-                    (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth
+                    (computed.modelWidth * years.length) / 2
                 ]}
             />
             <Text3D
@@ -170,7 +157,7 @@ export function SkylineBase({
             >
                 <meshStandardMaterial flatShading color={color} />
 
-                <Geometry>
+                <Geometry >
                     <Base geometry={geometry} />
                     <Subtraction
                         rotation={[rot, 0, 0]}
