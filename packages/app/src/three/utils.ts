@@ -1,4 +1,4 @@
-import { type InstancedMesh, type Mesh, type Scene, type Vector3 } from "three";
+import type { InstancedMesh, Mesh, Scene, Vector3 } from "three";
 import { SceneUtils, STLExporter } from "three-stdlib";
 
 export interface Dimensions {

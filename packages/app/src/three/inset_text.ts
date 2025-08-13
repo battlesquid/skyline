@@ -1,6 +1,6 @@
-import * as opentype from "opentype.js";
-import { getSvgBoundingBox } from "../utils";
+import type * as opentype from "opentype.js";
 import paper from "paper";
+import { getSvgBoundingBox } from "../utils";
 
 export const getInsetTextSvg = (text: string, font: opentype.Font | null, fontSize: number) => {
     if (font === null) {
