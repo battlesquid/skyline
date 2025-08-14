@@ -1,11 +1,16 @@
 import { BufferAttribute, BufferGeometry, Float32BufferAttribute } from "three";
 
+export enum RectangularFrustumGeometrySide {
+	Width = "width",
+	Length = "length"
+}
+
 export class RectangularFrustumGeometry extends BufferGeometry {
 	readonly width: number;
 	readonly length: number;
 	readonly height: number;
-    readonly baseWidthPadding: number;
-    readonly baseLengthPadding: number;
+	readonly baseWidthPadding: number;
+	readonly baseLengthPadding: number;
 
 
 	constructor(width: number, length: number, height: number, baseWidthPadding = 0, baseLengthPadding = 0) {
@@ -13,8 +18,8 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 		this.width = width;
 		this.length = length;
 		this.height = height;
-        this.baseWidthPadding = baseWidthPadding;
-        this.baseLengthPadding = baseLengthPadding;
+		this.baseWidthPadding = baseWidthPadding;
+		this.baseLengthPadding = baseLengthPadding;
 
 		const topWidth = this.width;
 		const topLength = this.length;
@@ -102,9 +107,9 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 
 		this.setIndex(indices);
 		this.computeVertexNormals();
-        // TODO: think about correctly computing uv coordinates
-        // only here to make csg happy
-        this.setAttribute("uv", new Float32BufferAttribute( [], 2 ));
+		// TODO: think about correctly computing uv coordinates
+		// only here to make csg happy
+		this.setAttribute("uv", new Float32BufferAttribute([], 2));
 	}
 
 	/**
@@ -113,7 +118,7 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 	 * @param side - Optional parameter to specify which side: 'width' or 'length'. Defaults to 'length'.
 	 * @returns The slope angle in radians
 	 */
-	calculateSlopeAngle(side: "width" | "length" = "length"): number {
+	calculateSlopeAngle(side: RectangularFrustumGeometrySide = RectangularFrustumGeometrySide.Length): number {
 		const baseWidth =
 			this.width + this.baseWidthPadding;
 		const baseLength =
@@ -130,14 +135,20 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 		const slopeAngle = Math.atan(horizontalDifference / -this.height);
 
 		return slopeAngle;
-	}   
+	}
+
+	calculateMidpointSegmentLength(side: RectangularFrustumGeometrySide = RectangularFrustumGeometrySide.Length) {
+		return side === RectangularFrustumGeometrySide.Length
+			? this.baseLengthPadding / 4
+			: this.baseWidthPadding / 4;
+	}
 
 	/**
 	 * Calculates the slope angle of the frustum in degrees.
 	 * @param side - Optional parameter to specify which side: 'width' or 'length'. Defaults to 'length'.
 	 * @returns The slope angle in degrees
 	 */
-	calculateSlopeAngleDegrees(side: "width" | "length" = "length"): number {
+	calculateSlopeAngleDegrees(side: RectangularFrustumGeometrySide = RectangularFrustumGeometrySide.Length): number {
 		return this.calculateSlopeAngle(side) * (180 / Math.PI);
 	}
 
@@ -149,8 +160,8 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 		width: { radians: number; degrees: number };
 		length: { radians: number; degrees: number };
 	} {
-		const widthRadians = this.calculateSlopeAngle("width");
-		const lengthRadians = this.calculateSlopeAngle("length");
+		const widthRadians = this.calculateSlopeAngle(RectangularFrustumGeometrySide.Width);
+		const lengthRadians = this.calculateSlopeAngle(RectangularFrustumGeometrySide.Length);
 
 		return {
 			width: {

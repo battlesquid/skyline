@@ -1,7 +1,7 @@
 import { type MutableRefObject, useEffect, useState } from "react";
-import { ExtrudeGeometry, type Group, Mesh, type MeshStandardMaterial, Vector3 } from "three";
+import { Box3, BufferGeometry, ExtrudeGeometry, type Group, Mesh, type MeshStandardMaterial, Object3D, Vector3 } from "three";
 import { SVGLoader } from "three-stdlib";
-import type { Dimensions } from "../three/utils";
+import { getBoundingBoxVolume, type Dimensions } from "../three/utils";
 import { getSvgBoundingBox, isNullish } from "../utils";
 import { useBoundingBox } from "./useBoundingBox";
 
@@ -11,13 +11,18 @@ export interface UseExtrudedSvgOptions {
     depth?: number;
     castShadow?: boolean;
     receiveShadow?: boolean;
-    group?: MutableRefObject<Group | null>;
-    onGroupReady?: (group: Group) => void;
+    object?: MutableRefObject<Object3D | null>;
+    onObjectReady?: (group: Object3D) => void;
 }
 
 const loader = new SVGLoader();
 
 export type UseExtrudedSvgResult = [Mesh[], Dimensions, Vector3]
+
+export interface GeometryBB {
+    boundingBox: Box3;
+    geometry: BufferGeometry;
+}
 
 export const useExtrudedSvg = ({
     svg,
@@ -25,8 +30,8 @@ export const useExtrudedSvg = ({
     depth = 3,
     castShadow = true,
     receiveShadow = false,
-    group,
-    onGroupReady
+    object: group,
+    onObjectReady: onGroupReady
 }: UseExtrudedSvgOptions): UseExtrudedSvgResult => {
     const [meshes, setMeshes] = useState<Mesh[]>([]);
     const [svgBoundingBox, setSvgBoundingBox] = useState<Dimensions>({ width: 0, height: 0 });
@@ -37,18 +42,38 @@ export const useExtrudedSvg = ({
         }
         const meshes: Mesh[] = [];
         const data = loader.parse(svg);
+        const geometries: GeometryBB[] = []
         for (const path of data.paths) {
             const shapes = path.toShapes(true);
             for (const shape of shapes) {
                 const geometry = new ExtrudeGeometry(shape, {
                     depth,
                     bevelEnabled: false,
+                    bevelThickness: 0
                 });
-                const mesh = new Mesh(geometry, material);
-                mesh.castShadow = castShadow;
-                mesh.receiveShadow = receiveShadow;
-                meshes.push(mesh);
+                geometry.computeBoundingBox();
+                geometries.push({
+                    boundingBox: geometry.boundingBox as Box3,
+                    geometry
+                });
             }
+        }
+
+        geometries.sort((g1, g2) => getBoundingBoxVolume(g2.boundingBox) - getBoundingBoxVolume(g1.boundingBox));
+
+        const offset = new Vector3();
+        for (let i = 0; i < geometries.length; i++) {
+            const { geometry, boundingBox } = geometries[i];
+            if (i === 0) {
+                boundingBox.getCenter(offset).negate();
+                geometry.center();
+            } else {
+                geometry.translate(offset.x, offset.y, offset.z)
+            }
+            const mesh = new Mesh(geometry, material);
+            mesh.castShadow = castShadow;
+            mesh.receiveShadow = receiveShadow;
+            meshes.push(mesh);
         }
         setMeshes(meshes);
         setSvgBoundingBox(getSvgBoundingBox(svg));

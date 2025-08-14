@@ -4,7 +4,7 @@ import {
     useEffect,
     useState,
 } from "react";
-import { Box3, Mesh, type Object3D, Vector3 } from "three";
+import { Box3, Mesh, Object3D, Vector3 } from "three";
 import { isNullish } from "../utils";
 
 export interface BoundingBoxProps {
@@ -24,11 +24,13 @@ export const useBoundingBox = (
         if (isNullish(obj) || isNullish(obj.current)) {
             return;
         }
-        if (obj.current instanceof Mesh) {
-            obj.current.geometry.computeBoundingBox();
-            obj.current.geometry.center();
+		const copy = obj.current.clone();
+		copy.rotation.set(0, 0, 0);
+        if (copy instanceof Mesh) {
+            copy.geometry.computeBoundingBox();
+            copy.geometry.center();
         }
-        const bb = getThreeBoundingBox(obj.current);
+        const bb = getThreeBoundingBox(copy);
         if (setter) {
             setter(bb);
         } else {

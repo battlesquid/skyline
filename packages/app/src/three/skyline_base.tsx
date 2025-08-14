@@ -1,9 +1,8 @@
 import { Base, Geometry, Subtraction } from "@react-three/csg";
-import { Helper, Text3D } from "@react-three/drei";
+import { Text3D } from "@react-three/drei";
 import opentype from "opentype.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-    BoxHelper,
     type Group,
     type Mesh,
     MeshStandardMaterial
@@ -17,6 +16,7 @@ import { useParametersContext } from "../stores/parameters";
 import { getInsetTextSvg } from "./inset_text";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { SkylineBaseShape } from "./types";
+import { useFrame } from "@react-three/fiber";
 
 export interface SkylineBaseProps {
     color: string;
@@ -51,7 +51,7 @@ export function SkylineBase({
         const length = computed.modelWidth * years.length + computed.paddingWidth;
         const height = computed.platformHeight;
         const geom = inputs.shape === SkylineBaseShape.Frustum
-            ? new RectangularFrustumGeometry(width, length, height, 5, 7)
+            ? new RectangularFrustumGeometry(width, length, height, 0, 20)
             : new RectangularFrustumGeometry(width, length, height);
         setGeometry(geom);
         setRot(geom.calculateSlopeAngle());
@@ -81,55 +81,45 @@ export function SkylineBase({
     const logo = useRef<Group | null>(null);
     const [, logoSvgBoundingBox, logoThreeBB] = useExtrudedSvg({
         svg: LOGOS.Circle,
+        object: logo,
         material,
-        group: logo,
-        onGroupReady(group) {
+        onObjectReady(group) {
             const wantedHeight = 0.65 * computed.platformHeight;
             const scale = wantedHeight / logoSvgBoundingBox.height;
             group.scale.set(scale, -scale, scale);
-        }
+        },
     });
 
     const insetName = useRef<Group | null>(null);
     const [, insetNameSvgBB, insetNameThreeBB] = useExtrudedSvg({
         svg: getInsetTextSvg(computed.resolvedName, fontRef.current, computed.textSize * 9),
+        object: insetName,
         material,
         depth: inputs.insetDepth,
-        group: insetName,
-        onGroupReady(group) {
+        onObjectReady(group) {
             const wantedHeight = nameBoundingBox.y;
             const scale = wantedHeight / insetNameSvgBB.height;
             group.scale.set(scale, -scale, 1);
-        }
+        },
     });
 
-    const LOGO_Y_OFFSET = logoThreeBB.y / 2;
-    const LOGO_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : 0;
     const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
-    const BRUSH_Z_OFFSET = inputs.shape === "frustum" ? 2 : 0;
+    const INSET_DEPTH = inputs.shape === SkylineBaseShape.Frustum
+        ? inputs.insetDepth
+        : insetNameThreeBB.z / 2;
+
+    console.log(geometry.calculateMidpointSegmentLength())
+
+    // useFrame(() => {
+    //     if (logo.current === null) {
+    //         return;
+    //     }
+    //     logo.current.rotation.x += 0.01
+    // })
 
     return (
         <>
-            <group
-                ref={logo}
-                rotation={[rot, 0, 0]}
-                position={[
-                    -computed.xMidpointOffset + 5,
-                    -computed.platformMidpoint + LOGO_Y_OFFSET,
-                    (computed.modelWidth * years.length) / 2 +
-                    inputs.padding +
-                    LOGO_DEPTH_OFFSET,
-                ]}
-            />
-            {/* <group
-                ref={insetName}
-                rotation={[rot, 0, 0]}
-                position={[
-                    -computed.xMidpointOffset + 12,
-                    -computed.platformMidpoint + insetNameThreeBB.y / 2,
-                    (computed.modelWidth * years.length) / 2 + inputs.padding + 10
-                ]}
-            /> */}
+
             <Text3D
                 visible={false}
                 ref={nameRef}
@@ -150,40 +140,41 @@ export function SkylineBase({
                 {computed.resolvedName}
                 <meshStandardMaterial color={color} />
             </Text3D>
-            <group
+            <object3D
+                visible={false}
                 ref={insetName}
                 rotation={[rot, 0, 0]}
                 position={[
-                    -computed.xMidpointOffset + 12,
-                    -computed.platformMidpoint + insetNameThreeBB.y / 2,
-                    (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth
+                    -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
+                    -computed.platformMidpoint,
+                    (computed.modelWidth * years.length / 2) + inputs.padding - (inputs.insetDepth) + geometry.calculateMidpointSegmentLength() - insetNameThreeBB.z
                 ]}
-            >
-                <Helper type={BoxHelper} />
-                </group>
+            />
             <mesh
                 onPointerEnter={(e) => e.stopPropagation()}
                 position={[0, -computed.platformMidpoint, 0]}
+                castShadow
+            // receiveShadow
             >
-                <meshStandardMaterial flatShading color={color} />
+                            <object3D
+                ref={logo}
+                rotation={[rot, 0, 0]}
+                position={[
+                    -computed.xMidpointOffset + 8,
+                    0,
+                     (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() + logoThreeBB.z / 2
+                ]}
+            />
+                <meshStandardMaterial flatShading wireframe color={color} />
 
-                <Geometry >
+                <Geometry showOperations>
                     <Base geometry={geometry} />
-                    {/* <mesh
-                        position={[
-                            -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
-                            0,
-                            (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth / 2
-                        ]}
-                        rotation={[rot, 0, 0]}>
-                        <boxGeometry args={[insetNameThreeBB.x, insetNameThreeBB.y, inputs.insetDepth]} />
-                    </mesh> */}
                     <Subtraction
                         rotation={[rot, 0, 0]}
                         position={[
                             -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
                             0,
-                            (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth + 0.2
+                            (computed.modelWidth * years.length / 2) + inputs.padding - (inputs.insetDepth) + geometry.calculateMidpointSegmentLength()
                         ]}
                     >
                         <boxGeometry args={[insetNameThreeBB.x, insetNameThreeBB.y, inputs.insetDepth]} />
