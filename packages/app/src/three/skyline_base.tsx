@@ -1,13 +1,12 @@
 import { Base, Geometry, Subtraction } from "@react-three/csg";
-import { Text3D } from "@react-three/drei";
+import { Helper, Text3D } from "@react-three/drei";
 import opentype from "opentype.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-    BoxGeometry,
-    type BufferGeometry,
+    BoxHelper,
     type Group,
     type Mesh,
-    MeshStandardMaterial,
+    MeshStandardMaterial
 } from "three";
 import type { ContributionWeeks } from "../api/types";
 import { getDefaultParameters } from "../defaults";
@@ -110,7 +109,7 @@ export function SkylineBase({
     const BRUSH_Z_OFFSET = inputs.shape === "frustum" ? 2 : 0;
 
     return (
-        <group>
+        <>
             <group
                 ref={logo}
                 rotation={[rot, 0, 0]}
@@ -122,15 +121,15 @@ export function SkylineBase({
                     LOGO_DEPTH_OFFSET,
                 ]}
             />
-            <group
+            {/* <group
                 ref={insetName}
                 rotation={[rot, 0, 0]}
                 position={[
                     -computed.xMidpointOffset + 12,
                     -computed.platformMidpoint + insetNameThreeBB.y / 2,
-                    (computed.modelWidth * years.length) / 2
+                    (computed.modelWidth * years.length) / 2 + inputs.padding + 10
                 ]}
-            />
+            /> */}
             <Text3D
                 visible={false}
                 ref={nameRef}
@@ -151,6 +150,17 @@ export function SkylineBase({
                 {computed.resolvedName}
                 <meshStandardMaterial color={color} />
             </Text3D>
+            <group
+                ref={insetName}
+                rotation={[rot, 0, 0]}
+                position={[
+                    -computed.xMidpointOffset + 12,
+                    -computed.platformMidpoint + insetNameThreeBB.y / 2,
+                    (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth
+                ]}
+            >
+                <Helper type={BoxHelper} />
+                </group>
             <mesh
                 onPointerEnter={(e) => e.stopPropagation()}
                 position={[0, -computed.platformMidpoint, 0]}
@@ -159,12 +169,21 @@ export function SkylineBase({
 
                 <Geometry >
                     <Base geometry={geometry} />
+                    {/* <mesh
+                        position={[
+                            -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
+                            0,
+                            (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth / 2
+                        ]}
+                        rotation={[rot, 0, 0]}>
+                        <boxGeometry args={[insetNameThreeBB.x, insetNameThreeBB.y, inputs.insetDepth]} />
+                    </mesh> */}
                     <Subtraction
                         rotation={[rot, 0, 0]}
                         position={[
                             -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
                             0,
-                            (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth / 2
+                            (computed.modelWidth * years.length) / 2 + BRUSH_Z_OFFSET + inputs.padding - inputs.insetDepth + 0.2
                         ]}
                     >
                         <boxGeometry args={[insetNameThreeBB.x, insetNameThreeBB.y, inputs.insetDepth]} />
@@ -206,17 +225,7 @@ export function SkylineBase({
                         </Text3D>
                     </Subtraction> */}
                 </Geometry>
-                {/* 
-                <mesh
-                    
-                    castShadow
-                    receiveShadow
-                    geometry={geometry}
-                    position={[0, -computed.platformMidpoint, 0]}
-                >
-                    <meshStandardMaterial flatShading color={color} />
-                </mesh> */}
             </mesh>
-        </group>
+        </>
     );
 }

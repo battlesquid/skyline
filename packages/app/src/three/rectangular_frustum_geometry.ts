@@ -1,9 +1,6 @@
 import { BufferAttribute, BufferGeometry, Float32BufferAttribute } from "three";
 
 export class RectangularFrustumGeometry extends BufferGeometry {
-	private static readonly BASE_WIDTH_PADDING = 0;
-	private static readonly BASE_LENGTH_PADDING = 0;
-
 	readonly width: number;
 	readonly length: number;
 	readonly height: number;

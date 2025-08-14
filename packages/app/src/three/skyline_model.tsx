@@ -74,7 +74,7 @@ export function SkylineModel(props: SkylineModelProps) {
 		inputs.endYear,
 		inputs.padding,
 		inputs.font,
-		inputs.shape,
+		// inputs.shape,
 	]);
 
 	useEffect(() => {

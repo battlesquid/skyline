@@ -25,8 +25,8 @@ export const useBoundingBox = (
             return;
         }
         if (obj.current instanceof Mesh) {
-            obj.current.geometry.center();
             obj.current.geometry.computeBoundingBox();
+            obj.current.geometry.center();
         }
         const bb = getThreeBoundingBox(obj.current);
         if (setter) {

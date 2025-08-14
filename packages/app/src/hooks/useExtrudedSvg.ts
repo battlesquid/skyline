@@ -1,5 +1,5 @@
 import { type MutableRefObject, useEffect, useState } from "react";
-import { ExtrudeGeometry, type Group, Mesh, type MeshStandardMaterial, type Vector3 } from "three";
+import { ExtrudeGeometry, type Group, Mesh, type MeshStandardMaterial, Vector3 } from "three";
 import { SVGLoader } from "three-stdlib";
 import type { Dimensions } from "../three/utils";
 import { getSvgBoundingBox, isNullish } from "../utils";
