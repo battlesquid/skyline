@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, Float32BufferAttribute } from "three";
+import { BufferAttribute, BufferGeometry, Float32BufferAttribute, Vector3 } from "three";
 
 export enum RectangularFrustumGeometrySide {
 	Width = "width",
@@ -21,12 +21,14 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 		this.baseWidthPadding = baseWidthPadding;
 		this.baseLengthPadding = baseLengthPadding;
 
+
 		const topWidth = this.width;
 		const topLength = this.length;
 		const baseWidth = topWidth + this.baseWidthPadding;
 		const baseLength =
 			topLength + this.baseLengthPadding;
 
+		console.log(topLength)
 		const vertices = new Float32Array([
 			// bottom
 			-baseWidth / 2,
@@ -173,5 +175,21 @@ export class RectangularFrustumGeometry extends BufferGeometry {
 				degrees: lengthRadians * (180 / Math.PI),
 			},
 		};
+	}
+
+	/**
+	 * Calculates the normal vector of the angled face of the frustum.
+	 * @param side - The side to calculate the normal for ('width' or 'length'). Defaults to 'length'.
+	 * @returns The normal vector as [x, y, z] array
+	 */
+	getNormal(side: RectangularFrustumGeometrySide = RectangularFrustumGeometrySide.Length): Vector3 {
+		const slopeAngle = this.calculateSlopeAngle(side);
+		if (side === RectangularFrustumGeometrySide.Length) {
+			// For the front/back faces (length side), normal points in Z direction with Y component
+			return new Vector3(0, Math.sin(slopeAngle), Math.cos(slopeAngle));
+		} else {
+			// For the left/right faces (width side), normal points in X direction with Y component  
+			return new Vector3(Math.sin(slopeAngle), Math.sin(slopeAngle), 0);
+		}
 	}
 }

@@ -1,5 +1,6 @@
-import type { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
+import { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
 import { SceneUtils, STLExporter } from "three-stdlib";
+import { useSceneStore } from "../stores/scene";
 
 export interface Dimensions {
 	width: number;
@@ -25,6 +26,7 @@ export const exportScene = (
 	scene: Scene | null,
 	name: string,
 	scale: number,
+	extraMeshes?: Mesh[]
 ) => {
 	if (scene === null) {
 		console.warn("Scene is null, skipping export");
@@ -35,17 +37,25 @@ export const exportScene = (
 	const instances = clone.getObjectByName("instances") as InstancedMesh;
 
 	const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
+
 	meshes.position.set(0, meshes.position.y, 0);
 	meshes.updateMatrix();
 
 	// TODO: make this more bulletproof
 	exportGroup?.add(meshes);
+	if (extraMeshes) {
+		extraMeshes.forEach(mesh => exportGroup?.add(mesh))
+	}
+	clone.getObjectByName("csg_mesh")?.removeFromParent()
+	// exportGroup?.add(clone.getObjectByName("name_inset")!)
 
 	const instancesGroup = clone.getObjectByName("instances_group");
 	if (instancesGroup !== undefined) {
 		instancesGroup.removeFromParent();
 		instances.removeFromParent();
 	}
+
+	clone.getObjectByName("name_subtraction")?.removeFromParent();
 
 	const grid = clone.getObjectByName("grid");
 	if (grid !== undefined) {

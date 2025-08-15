@@ -1,8 +1,10 @@
-import { Base, Geometry, Subtraction } from "@react-three/csg";
-import { Text3D } from "@react-three/drei";
+import { Base, CSGGeometryRef, Geometry, Subtraction } from "@react-three/csg";
+import { Helper, Text3D } from "@react-three/drei";
 import opentype from "opentype.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+    BoxGeometry,
+    BoxHelper,
     type Group,
     type Mesh,
     MeshStandardMaterial
@@ -16,7 +18,7 @@ import { useParametersContext } from "../stores/parameters";
 import { getInsetTextSvg } from "./inset_text";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { SkylineBaseShape } from "./types";
-import { useFrame } from "@react-three/fiber";
+import { useSceneStore } from "../stores/scene";
 
 export interface SkylineBaseProps {
     color: string;
@@ -29,6 +31,7 @@ export function SkylineBase({
 }: SkylineBaseProps) {
     const inputs = useParametersContext((state) => state.inputs);
     const computed = useParametersContext((state) => state.computed);
+    const setBaseRef = useSceneStore((state) => state.setBaseRef);
 
     const yearRef = useRef<Mesh | null>(null);
     const nameRef = useRef<Mesh | null>(null);
@@ -51,7 +54,7 @@ export function SkylineBase({
         const length = computed.modelWidth * years.length + computed.paddingWidth;
         const height = computed.platformHeight;
         const geom = inputs.shape === SkylineBaseShape.Frustum
-            ? new RectangularFrustumGeometry(width, length, height, 0, 20)
+            ? new RectangularFrustumGeometry(width, length, height, 5, 7)
             : new RectangularFrustumGeometry(width, length, height);
         setGeometry(geom);
         setRot(geom.calculateSlopeAngle());
@@ -63,6 +66,7 @@ export function SkylineBase({
                 color: inputs.showContributionColor
                     ? getDefaultParameters().inputs.color
                     : inputs.color,
+                flatShading: true
             }),
         [inputs.color, inputs.showContributionColor],
     );
@@ -95,32 +99,35 @@ export function SkylineBase({
         svg: getInsetTextSvg(computed.resolvedName, fontRef.current, computed.textSize * 9),
         object: insetName,
         material,
-        depth: inputs.insetDepth,
+        depth: inputs.insetDepth - 0.1,
         onObjectReady(group) {
-            const wantedHeight = nameBoundingBox.y;
+            const wantedHeight = 0.65 * computed.platformHeight;
             const scale = wantedHeight / insetNameSvgBB.height;
             group.scale.set(scale, -scale, 1);
         },
     });
 
     const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
-    const INSET_DEPTH = inputs.shape === SkylineBaseShape.Frustum
-        ? inputs.insetDepth
-        : insetNameThreeBB.z / 2;
 
-    console.log(geometry.calculateMidpointSegmentLength())
+    const baseNormal = useMemo(() => {
+        return geometry.getNormal();
+    }, [geometry]);
 
-    // useFrame(() => {
-    //     if (logo.current === null) {
-    //         return;
-    //     }
-    //     logo.current.rotation.x += 0.01
-    // })
+    const NORMAL_TRANSLATION = {
+        LOGO: -logoThreeBB.z / 2,
+        NAME: insetNameThreeBB.z / 2
+    }
+
+    const csgRef = useRef<CSGGeometryRef | null>(null);
+    useEffect(() => {
+        if (csgRef.current !== null) {
+            setBaseRef(csgRef.current);
+        }
+    }, [csgRef, inputs.insetText])
 
     return (
         <>
-
-            <Text3D
+            {/* <Text3D
                 visible={false}
                 ref={nameRef}
                 font={inputs.font}
@@ -139,45 +146,47 @@ export function SkylineBase({
             >
                 {computed.resolvedName}
                 <meshStandardMaterial color={color} />
-            </Text3D>
+            </Text3D> */}
+
             <object3D
-                visible={false}
-                ref={insetName}
-                rotation={[rot, 0, 0]}
-                position={[
-                    -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
-                    -computed.platformMidpoint,
-                    (computed.modelWidth * years.length / 2) + inputs.padding - (inputs.insetDepth) + geometry.calculateMidpointSegmentLength() - insetNameThreeBB.z
-                ]}
-            />
-            <mesh
-                onPointerEnter={(e) => e.stopPropagation()}
-                position={[0, -computed.platformMidpoint, 0]}
-                castShadow
-            // receiveShadow
-            >
-                            <object3D
                 ref={logo}
                 rotation={[rot, 0, 0]}
                 position={[
-                    -computed.xMidpointOffset + 8,
-                    0,
-                     (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() + logoThreeBB.z / 2
+                    -computed.xMidpointOffset + 8 - (baseNormal.x * NORMAL_TRANSLATION.LOGO),
+                    -computed.platformMidpoint + (baseNormal.y * NORMAL_TRANSLATION.LOGO),
+                    (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * NORMAL_TRANSLATION.LOGO)
                 ]}
             />
-                <meshStandardMaterial flatShading wireframe color={color} />
+            <object3D
+                visible={true}
+                ref={insetName}
+                rotation={[rot, 0, 0]}
+                position={[
+                    -computed.xMidpointOffset + 12 - (baseNormal.x * NORMAL_TRANSLATION.NAME) + insetNameThreeBB.x / 2,
+                    -computed.platformMidpoint + (baseNormal.y * NORMAL_TRANSLATION.NAME),
+                    (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * NORMAL_TRANSLATION.NAME)
+                ]}
+            />
 
-                <Geometry showOperations>
-                    <Base geometry={geometry} />
+            <mesh
+                name="csg_mesh"
+                onPointerEnter={(e) => e.stopPropagation()}
+                position={[0, -computed.platformMidpoint, 0]}
+                castShadow
+            >
+                <meshStandardMaterial flatShading wireframe color={color} />
+                <Geometry ref={csgRef}>
+                    <Base geometry={new BoxGeometry( computed.modelLength + computed.paddingWidth, computed.platformHeight, computed.modelWidth * years.length + computed.paddingWidth,  )} />
                     <Subtraction
+
                         rotation={[rot, 0, 0]}
                         position={[
-                            -computed.xMidpointOffset + insetNameThreeBB.x / 2 + 12,
-                            0,
-                            (computed.modelWidth * years.length / 2) + inputs.padding - (inputs.insetDepth) + geometry.calculateMidpointSegmentLength()
+                            -computed.xMidpointOffset + 12 - (baseNormal.x * (NORMAL_TRANSLATION.NAME - 0.1)) + insetNameThreeBB.x / 2,
+                            (baseNormal.y * (NORMAL_TRANSLATION.NAME - 0.1)),
+                            (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * (NORMAL_TRANSLATION.NAME - 0.1))
                         ]}
                     >
-                        <boxGeometry args={[insetNameThreeBB.x, insetNameThreeBB.y, inputs.insetDepth]} />
+                        <boxGeometry name="name_subtraction" args={[insetNameThreeBB.x, insetNameThreeBB.y, inputs.insetDepth]} />
                         {/* <Text3D
                             ref={nameRef}
                             font={inputs.font}
