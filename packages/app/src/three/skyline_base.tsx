@@ -19,6 +19,7 @@ import { getInsetTextSvg } from "./inset_text";
 import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { SkylineBaseShape } from "./types";
 import { useSceneStore } from "../stores/scene";
+import { VertexNormalsHelper } from "three-stdlib";
 
 export interface SkylineBaseProps {
     color: string;
@@ -176,7 +177,10 @@ export function SkylineBase({
             >
                 <meshStandardMaterial flatShading wireframe color={color} />
                 <Geometry ref={csgRef}>
-                    <Base geometry={new BoxGeometry( computed.modelLength + computed.paddingWidth, computed.platformHeight, computed.modelWidth * years.length + computed.paddingWidth,  )} />
+                    <Base geometry={geometry}>
+                <Helper type={VertexNormalsHelper} args={[1]}/>
+
+                    </Base>
                     <Subtraction
 
                         rotation={[rot, 0, 0]}
