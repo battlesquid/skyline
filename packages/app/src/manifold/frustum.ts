@@ -29,14 +29,22 @@ function getSlopeAngle({ length, width, lengthPadding, widthPadding, height }: F
     const horizontalDifference = (baseDimension - topDimension) / 2;
 
     // Calculate the slope angle using arctangent
-    const slopeAngle = Math.atan(horizontalDifference / -height) * (180 / Math.PI);
+    const slopeAngle = Math.atan(horizontalDifference / height);
 
     return slopeAngle;
 }
 
+function toDeg(rad: number) {
+    return rad * (180 / Math.PI)
+}
+
+function toRad(deg: number) {
+    return deg * (Math.PI / 180);
+}
+
 function getNormal(props: FrustumProps) {
     const angle = getSlopeAngle(props);
-    return [0, -Math.sin(angle), -Math.cos(angle)]
+    return [0, Math.cos(angle), Math.sin(angle)]
 }
 
 function makeFrustum(props: FrustumProps) {
@@ -46,28 +54,41 @@ function makeFrustum(props: FrustumProps) {
     const topLengthScale = length / baseLength;
     const topWidthScale = width / baseWidth;
 
-    console.log(getSlopeAngle(props));
-    console.log(getNormal(props))
+    console.log(`Top Dimensions: ${topWidthScale} x ${topLengthScale}`)
 
-    const slotPosition = [0, length / 4, height / 2] as const;
+    const angle = toDeg(getSlopeAngle(props));
+    const normal = getNormal(props);
+    console.log(angle);
+    console.log(normal);
+
+    const TRANSLATION = 0.5;
+
+    const slotPosition = [
+        baseLength / 2 - 4 + (TRANSLATION * normal[0]),
+        (width / 2) + (widthPadding / 4) + (TRANSLATION * normal[1]),
+        (TRANSLATION * normal[2])
+    ] as const;
+    // const slotPosition = [0, 0, height - 0.5] as const;
 
     const cube = Manifold
-        .cube(10, true)
-        .rotate([90 - getSlopeAngle(props), 0, 0])
+        .cube(1, true)
+        .rotate([angle, 0, 0])
         .translate(slotPosition);
 
+    // return cube.add(Manifold.cube(1, true).translate(0, 0, 3));
     return CrossSection
         .square([baseLength, baseWidth], true)
         .extrude(height, 0, 0, [topLengthScale, topWidthScale], true)
-        .subtract(cube);
+        .add(cube);
+
 
 }
 
 const props: FrustumProps = {
     length: 30,
     width: 10,
-    lengthPadding: 1.5,
-    widthPadding: 6.5,
+    lengthPadding: 0,
+    widthPadding: 2,
     height: 2
 }
 
