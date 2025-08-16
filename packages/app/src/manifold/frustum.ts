@@ -4,22 +4,27 @@ const wasm = await Module();
 wasm.setup();
 
 const { Manifold, CrossSection } = wasm;
-interface Dimensions {
+
+export interface ManifoldDimensions {
     width: number;
     length: number;
     height: number;
 }
 
-interface FrustumProps extends Dimensions {
+export interface ManifoldFrustum extends ManifoldDimensions {
     lengthPadding: number;
     widthPadding: number;
 }
 
-function getSlopeAngle({ width, length, widthPadding, lengthPadding, height }: FrustumProps) {
-    const baseWidth =
-        width + widthPadding;
-    const baseLength =
-        length + lengthPadding;
+export interface ManifoldSlot extends ManifoldDimensions {
+    offset?: number;
+}
+
+function getSlopeAngle(frustum: ManifoldFrustum) {
+    const { width, length, widthPadding, lengthPadding, height } = frustum;
+
+    const baseWidth = width + widthPadding;
+    const baseLength = length + lengthPadding;
 
     // Calculate the horizontal distance from center to edge at the base vs top
     // const baseDimension = side === "width" ? baseWidth : baseLength;
@@ -37,70 +42,87 @@ function getSlopeAngle({ width, length, widthPadding, lengthPadding, height }: F
 }
 
 function toDeg(rad: number) {
-    return rad * (180 / Math.PI)
+    return rad * (180 / Math.PI);
 }
 
 function toRad(deg: number) {
     return deg * (Math.PI / 180);
 }
 
-function getNormal(props: FrustumProps) {
-    const angle = getSlopeAngle(props);
-    return [0, Math.cos(angle), Math.sin(angle)]
+export function getNormal(frustum: ManifoldFrustum) {
+    const angle = getSlopeAngle(frustum);
+    return [0, Math.cos(angle), Math.sin(angle)];
 }
 
-function makeSlot(width: number, length: number, height: number) {
-    return Manifold.cube([width, length, height], true)
-}
-
-function makeFrustum(frustumProps: FrustumProps, slot: Dimensions) {
-    const { length, width, lengthPadding, widthPadding, height } = frustumProps;
+export function makeFrustum(
+    frustum: ManifoldFrustum,
+    nameSlot: ManifoldSlot,
+    yearSlot: ManifoldSlot
+) {
+    const { length, width, lengthPadding, widthPadding, height } = frustum;
 
     const baseLength = length + lengthPadding;
     const baseWidth = width + widthPadding;
     const topLengthScale = length / baseLength;
     const topWidthScale = width / baseWidth;
 
-    console.log(`Top Dimensions: ${topWidthScale} x ${topLengthScale}`)
+    const angle = toDeg(getSlopeAngle(frustum));
+    const normal = getNormal(frustum);
 
-    const angle = toDeg(getSlopeAngle(frustumProps));
-    const normal = getNormal(frustumProps);
-    console.log(angle);
-    console.log(normal);
+    const TRANSLATION = -(nameSlot.length / 2) + 0.001;
 
-    const TRANSLATION = -(slot.length / 2) + 0.001;
+    const nameSlotOffset = nameSlot.offset ?? 0;
+    const yearSlotOffset = yearSlot.offset ?? 0;
 
-    const slotPosition = [
-        baseWidth / 2 - 4 + (TRANSLATION * normal[0]),
+    const nameSlotPosition = [
+        baseWidth / 2 - (nameSlot.width / 2) - (nameSlotOffset + widthPadding / 2) + (TRANSLATION * normal[0]),
         (length / 2) + (lengthPadding / 4) + (TRANSLATION * normal[1]),
         (TRANSLATION * normal[2])
     ] as const;
 
-    const cube = Manifold
-        .cube([slot.width, slot.length + 0.002, slot.height], true)
+    const yearSlotPosition = [
+        (-baseWidth / 2) + (yearSlot.width / 2) + (yearSlotOffset - lengthPadding / 2) + (TRANSLATION * normal[0]),
+        (length / 2) + (lengthPadding / 4) + (TRANSLATION * normal[1]),
+        (TRANSLATION * normal[2])
+    ] as const;
+
+    const nameSlotCube = Manifold
+        .cube([nameSlot.width, nameSlot.length + 0.002, nameSlot.height], true)
         .rotate([angle, 0, 0])
-        .translate(slotPosition);
+        .translate(nameSlotPosition);
+
+    const yearSlotCube = Manifold
+        .cube([yearSlot.width, yearSlot.length + 0.002, yearSlot.height], true)
+        .rotate([angle, 0, 0])
+        .translate(yearSlotPosition);
 
     return CrossSection
         .square([baseWidth, baseLength], true)
         .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
-        .subtract(cube);
+        .subtract(nameSlotCube)
+        .subtract(yearSlotCube);
 }
 
-const frustumProps: FrustumProps = {
+const frustumProps: ManifoldFrustum = {
     width: 30,
     length: 10,
-    widthPadding: 0,
-    lengthPadding: 0,
+    widthPadding: 1,
+    lengthPadding: 2,
     height: 2
 }
 
-const slotProps: Dimensions = {
+export const nameSlotProps: ManifoldSlot = {
     width: 5,
     length: 0.25,
     height: 1
 }
 
-const frustum = makeFrustum(frustumProps, slotProps);
+export const yearSlotProps: ManifoldSlot = {
+    width: 3,
+    length: 0.25,
+    height: 1
+}
 
-const result = frustum
+export const _frustum = makeFrustum(frustumProps, nameSlotProps, yearSlotProps);
+
+const result = _frustum

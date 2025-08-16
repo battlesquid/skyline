@@ -7,8 +7,8 @@ export const getInsetTextSvg = (text: string, font: opentype.Font | null, fontSi
         return;
     }
 
-    const textPath = font.getPath(text, 0, fontSize, fontSize).toSVG(5);
-    const svg = `<svg>${textPath}</svg>`
+    const textPath = font.getPath(text, 0, fontSize, fontSize);
+    const svg = `<svg>${textPath.toSVG(5)}</svg>`
     const project = new paper.Project([100, 100]);
     const bb = getSvgBoundingBox(svg);
     const textSvg = project.importSVG(svg);

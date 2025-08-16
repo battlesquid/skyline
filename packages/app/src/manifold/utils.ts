@@ -1,7 +1,8 @@
-import { BufferGeometry, BufferAttribute } from "three";
-import { Mesh } from "manifold-3d";
+import type { Mesh } from "manifold-3d";
+import { BufferAttribute, BufferGeometry } from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
 
-function mesh2geometry(mesh: Mesh) {
+export function mesh2geometry(mesh: Mesh) {
     const geometry = new BufferGeometry();
     // Assign buffers
     geometry.setAttribute(
@@ -25,5 +26,8 @@ function mesh2geometry(mesh: Mesh) {
             start = end;
         }
     }
+    geometry.center();
+    geometry.rotateX(degToRad(-90));
+    geometry.rotateY(degToRad(180))
     return geometry;
 }

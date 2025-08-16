@@ -1,7 +1,7 @@
 import { type MutableRefObject, useEffect, useState } from "react";
-import { Box3, BufferGeometry, ExtrudeGeometry, type Group, Mesh, type MeshStandardMaterial, Object3D, Vector3 } from "three";
+import { type Box3, type BufferGeometry, ExtrudeGeometry, Mesh, type MeshStandardMaterial, type Object3D, Vector3 } from "three";
 import { SVGLoader } from "three-stdlib";
-import { getBoundingBoxVolume, type Dimensions } from "../three/utils";
+import { type Dimensions, getBoundingBoxVolume } from "../three/utils";
 import { getSvgBoundingBox, isNullish } from "../utils";
 import { useBoundingBox } from "./useBoundingBox";
 
@@ -11,13 +11,11 @@ export interface UseExtrudedSvgOptions {
     depth?: number;
     castShadow?: boolean;
     receiveShadow?: boolean;
-    object?: MutableRefObject<Object3D | null>;
+    ref?: MutableRefObject<Object3D | null>;
     onObjectReady?: (group: Object3D) => void;
 }
 
 const loader = new SVGLoader();
-
-export type UseExtrudedSvgResult = [Mesh[], Dimensions, Vector3]
 
 export interface GeometryBB {
     boundingBox: Box3;
@@ -30,9 +28,9 @@ export const useExtrudedSvg = ({
     depth = 3,
     castShadow = true,
     receiveShadow = false,
-    object: group,
+    ref,
     onObjectReady: onGroupReady
-}: UseExtrudedSvgOptions): UseExtrudedSvgResult => {
+}: UseExtrudedSvgOptions) => {
     const [meshes, setMeshes] = useState<Mesh[]>([]);
     const [svgBoundingBox, setSvgBoundingBox] = useState<Dimensions>({ width: 0, height: 0 });
 
@@ -80,14 +78,14 @@ export const useExtrudedSvg = ({
     }, [svg, depth, castShadow, receiveShadow]);
 
     useEffect(() => {
-        if (!isNullish(group) && !isNullish(group.current) && !isNullish(onGroupReady)) {
-            group.current.clear();
+        if (!isNullish(ref) && !isNullish(ref.current) && !isNullish(onGroupReady)) {
+            ref.current.clear();
             for (const mesh of meshes) {
-                group.current.add(mesh);
+                ref.current.add(mesh);
             }
-            onGroupReady(group.current);
+            onGroupReady(ref.current);
         }
-    }, [meshes, group, onGroupReady]);
+    }, [meshes, ref, onGroupReady]);
 
     useEffect(() => {
         for (const mesh of meshes) {
@@ -96,8 +94,8 @@ export const useExtrudedSvg = ({
     }, [meshes, material]);
 
     const { size: threeBoundingBox } = useBoundingBox({
-        obj: group
+        obj: ref
     }, [meshes]);
 
-    return [meshes, svgBoundingBox, threeBoundingBox];
+    return { meshes, svgBoundingBox, threeBoundingBox };
 };

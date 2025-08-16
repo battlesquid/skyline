@@ -1,10 +1,7 @@
-import { Base, CSGGeometryRef, Geometry, Subtraction } from "@react-three/csg";
-import { Helper, Text3D } from "@react-three/drei";
 import opentype from "opentype.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-    BoxGeometry,
-    BoxHelper,
+    BufferGeometry,
     type Group,
     type Mesh,
     MeshStandardMaterial
@@ -14,12 +11,11 @@ import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
 import { LOGOS } from "../logos";
+import { ManifoldDimensions, type ManifoldFrustum, ManifoldSlot, makeFrustum, yearSlotProps, } from "../manifold/frustum";
+import { mesh2geometry } from "../manifold/utils";
 import { useParametersContext } from "../stores/parameters";
 import { getInsetTextSvg } from "./inset_text";
-import { RectangularFrustumGeometry } from "./rectangular_frustum_geometry";
 import { SkylineBaseShape } from "./types";
-import { useSceneStore } from "../stores/scene";
-import { VertexNormalsHelper } from "three-stdlib";
 
 export interface SkylineBaseProps {
     color: string;
@@ -32,7 +28,6 @@ export function SkylineBase({
 }: SkylineBaseProps) {
     const inputs = useParametersContext((state) => state.inputs);
     const computed = useParametersContext((state) => state.computed);
-    const setBaseRef = useSceneStore((state) => state.setBaseRef);
 
     const yearRef = useRef<Mesh | null>(null);
     const nameRef = useRef<Mesh | null>(null);
@@ -45,21 +40,6 @@ export function SkylineBase({
         obj: nameRef
     }, [computed.resolvedName, inputs.font]);
 
-    const [geometry, setGeometry] = useState<RectangularFrustumGeometry>(
-        new RectangularFrustumGeometry(0, 0, 0),
-    );
-    const [rot, setRot] = useState(0);
-
-    useEffect(() => {
-        const width = computed.modelLength + computed.paddingWidth;
-        const length = computed.modelWidth * years.length + computed.paddingWidth;
-        const height = computed.platformHeight;
-        const geom = inputs.shape === SkylineBaseShape.Frustum
-            ? new RectangularFrustumGeometry(width, length, height, 5, 7)
-            : new RectangularFrustumGeometry(width, length, height);
-        setGeometry(geom);
-        setRot(geom.calculateSlopeAngle());
-    }, [inputs.shape, inputs.insetText, years, computed]);
 
     const material = useMemo(
         () =>
@@ -83,51 +63,69 @@ export function SkylineBase({
         loadFont();
     }, []);
 
-    const logo = useRef<Group | null>(null);
-    const [, logoSvgBoundingBox, logoThreeBB] = useExtrudedSvg({
+    const logoRef = useRef<Group | null>(null);
+    const logo = useExtrudedSvg({
         svg: LOGOS.Circle,
-        object: logo,
+        ref: logoRef,
         material,
         onObjectReady(group) {
             const wantedHeight = 0.65 * computed.platformHeight;
-            const scale = wantedHeight / logoSvgBoundingBox.height;
+            const scale = wantedHeight / logo.svgBoundingBox.height;
             group.scale.set(scale, -scale, scale);
         },
     });
 
-    const insetName = useRef<Group | null>(null);
-    const [, insetNameSvgBB, insetNameThreeBB] = useExtrudedSvg({
+    const insetNameRef = useRef<Group | null>(null);
+    const nameExtrusion = useExtrudedSvg({
         svg: getInsetTextSvg(computed.resolvedName, fontRef.current, computed.textSize * 9),
-        object: insetName,
+        ref: insetNameRef,
         material,
-        depth: inputs.insetDepth - 0.1,
+        depth: inputs.insetDepth,
         onObjectReady(group) {
             const wantedHeight = 0.65 * computed.platformHeight;
-            const scale = wantedHeight / insetNameSvgBB.height;
+            const scale = wantedHeight / nameExtrusion.svgBoundingBox.height;
             group.scale.set(scale, -scale, 1);
         },
     });
 
-    const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
+    const frustumProps: ManifoldFrustum = useMemo(() => {
+        const width = computed.modelLength + computed.paddingWidth;
+        const length = computed.modelWidth * years.length + computed.paddingWidth;
+        const height = computed.platformHeight;
 
-    const baseNormal = useMemo(() => {
-        return geometry.getNormal();
-    }, [geometry]);
-
-    const NORMAL_TRANSLATION = {
-        LOGO: -logoThreeBB.z / 2,
-        NAME: insetNameThreeBB.z / 2
-    }
-
-    const csgRef = useRef<CSGGeometryRef | null>(null);
-    useEffect(() => {
-        if (csgRef.current !== null) {
-            setBaseRef(csgRef.current);
+        return {
+            width,
+            length,
+            height,
+            lengthPadding: 7 * +(inputs.shape === SkylineBaseShape.Frustum),
+            widthPadding: 5 * +(inputs.shape === SkylineBaseShape.Frustum)
         }
-    }, [csgRef, inputs.insetText])
+    }, [computed, inputs.shape]);
+
+    const [geometry, setGeometry] = useState(new BufferGeometry());
+    const [rot, setRot] = useState(0);
+
+    useEffect(() => {
+        const nameSlotProps: ManifoldSlot = {
+            width: nameExtrusion.threeBoundingBox.x,
+            length: nameExtrusion.threeBoundingBox.z,
+            height: nameExtrusion.threeBoundingBox.y,
+            offset: 15
+        }
+        const geom = mesh2geometry(makeFrustum(frustumProps, nameSlotProps, yearSlotProps).getMesh())
+        setGeometry(geom);
+    }, [inputs.insetText, years, nameExtrusion.threeBoundingBox]);
+
+    const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
 
     return (
         <>
+            <mesh
+                geometry={geometry}
+                position={[0, -computed.platformMidpoint, 0]}
+            >
+                <meshStandardMaterial flatShading color={color} />
+            </mesh>
             {/* <Text3D
                 visible={false}
                 ref={nameRef}
@@ -150,26 +148,27 @@ export function SkylineBase({
             </Text3D> */}
 
             <object3D
-                ref={logo}
+                ref={logoRef}
                 rotation={[rot, 0, 0]}
-                position={[
-                    -computed.xMidpointOffset + 8 - (baseNormal.x * NORMAL_TRANSLATION.LOGO),
-                    -computed.platformMidpoint + (baseNormal.y * NORMAL_TRANSLATION.LOGO),
-                    (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * NORMAL_TRANSLATION.LOGO)
-                ]}
+            // position={[
+            //     -computed.xMidpointOffset + 8 - (baseNormal.x * NORMAL_TRANSLATION.LOGO),
+            //     -computed.platformMidpoint + (baseNormal.y * NORMAL_TRANSLATION.LOGO),
+            //     (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * NORMAL_TRANSLATION.LOGO)
+            // ]}
             />
             <object3D
                 visible={true}
-                ref={insetName}
+                ref={insetNameRef}
                 rotation={[rot, 0, 0]}
-                position={[
-                    -computed.xMidpointOffset + 12 - (baseNormal.x * NORMAL_TRANSLATION.NAME) + insetNameThreeBB.x / 2,
-                    -computed.platformMidpoint + (baseNormal.y * NORMAL_TRANSLATION.NAME),
-                    (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * NORMAL_TRANSLATION.NAME)
-                ]}
+            // position={[
+            //     -computed.xMidpointOffset + nameExtrusion.threeBoundingBox.x / 2,
+            //     -computed.platformMidpoint,
+            //     (computed.modelWidth * years.length / 2) + inputs.padding
+            // ]}
             />
 
-            <mesh
+            {/* <mesh
+                visible={false}
                 name="csg_mesh"
                 onPointerEnter={(e) => e.stopPropagation()}
                 position={[0, -computed.platformMidpoint, 0]}
@@ -178,7 +177,7 @@ export function SkylineBase({
                 <meshStandardMaterial flatShading wireframe color={color} />
                 <Geometry ref={csgRef}>
                     <Base geometry={geometry}>
-                <Helper type={VertexNormalsHelper} args={[1]}/>
+                        <Helper type={VertexNormalsHelper} args={[1]} />
 
                     </Base>
                     <Subtraction
@@ -207,8 +206,8 @@ export function SkylineBase({
                         >
                             {}
                         </Text3D> */}
-                    </Subtraction>
-                    {/* <Subtraction position={[
+            {/* </Subtraction> */}
+            {/* <Subtraction position={[
                         computed.xMidpointOffset - yearBoundingBox.x / 2 - 5,
                         -computed.platformMidpoint - 0.5,
                         (computed.modelWidth * years.length) / 2 +
@@ -228,8 +227,8 @@ export function SkylineBase({
                             {formatYearText(inputs.startYear, inputs.endYear)}
                         </Text3D>
                     </Subtraction> */}
-                </Geometry>
-            </mesh>
+            {/* </Geometry>
+            </mesh> */}
         </>
     );
 }

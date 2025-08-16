@@ -1,6 +1,5 @@
-import { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
+import type { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
 import { SceneUtils, STLExporter } from "three-stdlib";
-import { useSceneStore } from "../stores/scene";
 
 export interface Dimensions {
 	width: number;
@@ -43,11 +42,6 @@ export const exportScene = (
 
 	// TODO: make this more bulletproof
 	exportGroup?.add(meshes);
-	if (extraMeshes) {
-		extraMeshes.forEach(mesh => exportGroup?.add(mesh))
-	}
-	clone.getObjectByName("csg_mesh")?.removeFromParent()
-	// exportGroup?.add(clone.getObjectByName("name_inset")!)
 
 	const instancesGroup = clone.getObjectByName("instances_group");
 	if (instancesGroup !== undefined) {

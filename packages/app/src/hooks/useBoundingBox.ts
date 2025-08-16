@@ -4,7 +4,7 @@ import {
     useEffect,
     useState,
 } from "react";
-import { Box3, Mesh, Object3D, Vector3 } from "three";
+import { Box3, Mesh, type Object3D, Vector3 } from "three";
 import { isNullish } from "../utils";
 
 export interface BoundingBoxProps {
