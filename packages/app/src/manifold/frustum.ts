@@ -4,16 +4,18 @@ const wasm = await Module();
 wasm.setup();
 
 const { Manifold, CrossSection } = wasm;
-
-interface FrustumProps {
-    length: number;
+interface Dimensions {
     width: number;
-    lengthPadding: number;
-    widthPadding: number;
+    length: number;
     height: number;
 }
 
-function getSlopeAngle({ length, width, lengthPadding, widthPadding, height }: FrustumProps) {
+interface FrustumProps extends Dimensions {
+    lengthPadding: number;
+    widthPadding: number;
+}
+
+function getSlopeAngle({ width, length, widthPadding, lengthPadding, height }: FrustumProps) {
     const baseWidth =
         width + widthPadding;
     const baseLength =
@@ -22,8 +24,8 @@ function getSlopeAngle({ length, width, lengthPadding, widthPadding, height }: F
     // Calculate the horizontal distance from center to edge at the base vs top
     // const baseDimension = side === "width" ? baseWidth : baseLength;
     // const topDimension = side === "width" ? this.width : this.length;
-    const baseDimension = baseWidth;
-    const topDimension = width;
+    const baseDimension = baseLength;
+    const topDimension = length;
 
     // The horizontal difference between base and top edge
     const horizontalDifference = (baseDimension - topDimension) / 2;
@@ -47,8 +49,13 @@ function getNormal(props: FrustumProps) {
     return [0, Math.cos(angle), Math.sin(angle)]
 }
 
-function makeFrustum(props: FrustumProps) {
-    const { length, width, lengthPadding, widthPadding, height } = props;
+function makeSlot(width: number, length: number, height: number) {
+    return Manifold.cube([width, length, height], true)
+}
+
+function makeFrustum(frustumProps: FrustumProps, slot: Dimensions) {
+    const { length, width, lengthPadding, widthPadding, height } = frustumProps;
+
     const baseLength = length + lengthPadding;
     const baseWidth = width + widthPadding;
     const topLengthScale = length / baseLength;
@@ -56,40 +63,44 @@ function makeFrustum(props: FrustumProps) {
 
     console.log(`Top Dimensions: ${topWidthScale} x ${topLengthScale}`)
 
-    const angle = toDeg(getSlopeAngle(props));
-    const normal = getNormal(props);
+    const angle = toDeg(getSlopeAngle(frustumProps));
+    const normal = getNormal(frustumProps);
     console.log(angle);
     console.log(normal);
 
-    const TRANSLATION = 0.5;
+    const TRANSLATION = -(slot.length / 2) + 0.001;
 
     const slotPosition = [
-        baseLength / 2 - 4 + (TRANSLATION * normal[0]),
-        (width / 2) + (widthPadding / 4) + (TRANSLATION * normal[1]),
+        baseWidth / 2 - 4 + (TRANSLATION * normal[0]),
+        (length / 2) + (lengthPadding / 4) + (TRANSLATION * normal[1]),
         (TRANSLATION * normal[2])
     ] as const;
-    // const slotPosition = [0, 0, height - 0.5] as const;
 
     const cube = Manifold
-        .cube(1, true)
+        .cube([slot.width, slot.length + 0.002, slot.height], true)
         .rotate([angle, 0, 0])
         .translate(slotPosition);
 
-    // return cube.add(Manifold.cube(1, true).translate(0, 0, 3));
     return CrossSection
-        .square([baseLength, baseWidth], true)
-        .extrude(height, 0, 0, [topLengthScale, topWidthScale], true)
-        .add(cube);
-
-
+        .square([baseWidth, baseLength], true)
+        .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
+        .subtract(cube);
 }
 
-const props: FrustumProps = {
-    length: 30,
-    width: 10,
+const frustumProps: FrustumProps = {
+    width: 30,
+    length: 10,
+    widthPadding: 0,
     lengthPadding: 0,
-    widthPadding: 2,
     height: 2
 }
 
-const result = makeFrustum(props)
+const slotProps: Dimensions = {
+    width: 5,
+    length: 0.25,
+    height: 1
+}
+
+const frustum = makeFrustum(frustumProps, slotProps);
+
+const result = frustum
