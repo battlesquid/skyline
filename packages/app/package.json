@@ -35,7 +35,6 @@
 	"devDependencies": {
 		"@octokit/graphql-schema": "^15.25.0",
 		"@rsbuild/core": "^1.3.22",
-		"@rsbuild/plugin-node-polyfill": "^1.4.1",
 		"@rsbuild/plugin-react": "^1.3.2",
 		"@tanstack/router-plugin": "^1.129.8",
 		"@types/opentype.js": "^1.3.8",
