@@ -96,6 +96,8 @@ export function SkylineBase({
                 geometry={frustum.geometry}
                 position={[0, -computed.halfPlatformHeight, TEXT_EXTRUSION_OFFSET]}
                 material={material}
+                castShadow
+                receiveShadow
             />
             <object3D
                 ref={logoRef}

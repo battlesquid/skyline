@@ -3,8 +3,6 @@ import { useShallow } from "zustand/shallow";
 import { useParametersContext } from "../../stores/parameters";
 import { useSceneStore } from "../../stores/scene";
 import { exportScene, getDimensionsText } from "../../three/utils";
-import { useMemo } from "react";
-import { Mesh } from "three";
 
 export function ExportButton() {
 	const filename = useParametersContext((state) => state.inputs.filename);
@@ -16,17 +14,6 @@ export function ExportButton() {
 	const scene = useSceneStore((state) => state.scene);
 	const dirty = useSceneStore((state) => state.dirty);
 	const size = useSceneStore(useShallow((state) => state.size));
-	const base = useSceneStore(state => state.base);
-	const computed = useParametersContext(state => state.computed);
-	const meshes = useMemo(() => {
-		if (base?.geometry) {
-			console.log("base geom exists!")
-			const baseMesh = new Mesh(base.geometry);
-			baseMesh.position.set(0, -computed.halfPlatformHeight, 0)
-			return [baseMesh]
-		}
-		return [];
-	}, [base])
 
 	return (
 		<Button
@@ -38,7 +25,6 @@ export function ExportButton() {
 					scene,
 					filename.trim() === "" ? defaultFilename : filename,
 					scale,
-					meshes
 				)
 			}
 		>

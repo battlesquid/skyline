@@ -17,6 +17,9 @@ importers:
 
   packages/app:
     dependencies:
+      '@manifold-studio/typeface':
+        specifier: ^0.3.7
+        version: 0.3.7(@manifold-studio/wrapper@0.3.7(tweakpane@4.0.5))
       '@mantine/core':
         specifier: ^8.2.1
         version: 8.2.1(@mantine/hooks@8.2.1(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -62,12 +65,18 @@ importers:
       paper:
         specifier: ^0.12.18
         version: 0.12.18
+      points-on-path:
+        specifier: ^0.2.1
+        version: 0.2.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      suspend-react:
+        specifier: ^0.1.3
+        version: 0.1.3(react@18.3.1)
       three:
         specifier: ^0.169.0
         version: 0.169.0
@@ -709,6 +718,9 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
+  '@gltf-transform/core@4.2.1':
+    resolution: {integrity: sha512-qKhrQ29KJ9K6sz7xGoGRllqPBlROjPJMQPvCLBOfgMPH3S/Ph5E0e6fD5WmwTY5QPyBsDMRqKd1Vl0ncThTXGw==}
+
   '@gql.tada/cli-utils@1.6.3':
     resolution: {integrity: sha512-jFFSY8OxYeBxdKi58UzeMXG1tdm4FVjXa8WHIi66Gzu9JWtCE6mqom3a8xkmSw+mVaybFW5EN2WXf1WztJVNyQ==}
     peerDependencies:
@@ -849,6 +861,19 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@jscadui/3mf-export@0.5.0':
+    resolution: {integrity: sha512-y5vZktqCjyi7wA38zqNlLIdZUIRZoOO9vCjLzwmL4bR0hk7B/Zm1IeffzJPFe1vFc0C1IEv3hm8caDv3doRk9g==}
+
+  '@manifold-studio/typeface@0.3.7':
+    resolution: {integrity: sha512-obj0MtcaOyhVCnYkQ7nyXpjTNw5rUOJmuWyiNPx5OlOcO1tRUk/vFdrKDQLsZbdnC43LF286+qAcNkulza36ag==}
+    peerDependencies:
+      '@manifold-studio/wrapper': ^0.3.7
+
+  '@manifold-studio/wrapper@0.3.7':
+    resolution: {integrity: sha512-ixDwE0J7Q473qyGq6bEo3SRFJrDD5e+zXMM3sWP92uXNLOn0/Jrvihmc1ax09xLmwpVCGhP1fFjaXnPbw0oeOQ==}
+    peerDependencies:
+      tweakpane: ^4.0.0
 
   '@mantine/core@8.2.1':
     resolution: {integrity: sha512-KxvydotyFRdrRbqULUX2G35/GddPFju9XQUv/vdDWu1ytIWZViTguc+WSj1aBd0DtfRrSaofU5ezZISEXVrPBA==}
@@ -1634,6 +1659,9 @@ packages:
     resolution: {integrity: sha512-ZSLIEejQTJZuYHhSSqAf4jXOnii0kPhCJGAnYAANtdS72aNwXJ9cP95tZHgq1tnNpvEwgQhggy+4OarviqTCGw==}
     engines: {node: '>=8.0.0'}
 
+  path-data-parser@0.1.0:
+    resolution: {integrity: sha512-NOnmBpt5Y2RWbuv0LMzsayp3lVylAHLPUTut412ZA3l+C4uw4ZVkQbjShYCQ8TCpUMdPapr4YjUqLYD6v68j+w==}
+
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
@@ -1654,6 +1682,12 @@ packages:
   picomatch@4.0.3:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
+
+  points-on-curve@0.2.0:
+    resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
+
+  points-on-path@0.2.1:
+    resolution: {integrity: sha512-25ClnWWuw7JbWZcgqY/gJ4FQWadKxGWk+3kR/7kD0tCaDtPPMj7oHu2ToLaVhfpnHrZzYby2w6tUA0eOIuUg8g==}
 
   postcss-js@4.0.1:
     resolution: {integrity: sha512-dDLF8pEO191hJMtlHFPRa8xsizHaM82MLfNkUHdUtVEV3tgTp5oj+8qbEqYM57SLfc74KSbw//4SeJma2LRVIw==}
@@ -1713,6 +1747,9 @@ packages:
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
+
+  property-graph@3.0.0:
+    resolution: {integrity: sha512-TnzxUsttmGtw+OiU0LDw+0FlMbJ8vV8pOjyDI7+Kdni4Tj0hW5BFh7TatQu7Y68hcvvFmiFOHilKShsA4R82fA==}
 
   react-composer@5.0.3:
     resolution: {integrity: sha512-1uWd07EME6XZvMfapwZmc7NgCZqDemcvicRi3wMJzXsQLvZ3L7fTHVyPy1bZdnWXM4iPjYuNE+uJ41MLKeTtnA==}
@@ -1977,6 +2014,9 @@ packages:
 
   tunnel-rat@0.1.2:
     resolution: {integrity: sha512-lR5VHmkPhzdhrM092lI2nACsLO4QubF0/yoOhzX7c+wIpbN1GjHNzCc91QlpxBi+cnx8vVJ+Ur6vL5cEoQPFpQ==}
+
+  tweakpane@4.0.5:
+    resolution: {integrity: sha512-rxEXdSI+ArlG1RyO6FghC4ZUX8JkEfz8F3v1JuteXSV0pEtHJzyo07fcDG+NsJfN5L39kSbCYbB9cBGHyuI/tQ==}
 
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
@@ -2630,6 +2670,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@gltf-transform/core@4.2.1':
+    dependencies:
+      property-graph: 3.0.0
+
   '@gql.tada/cli-utils@1.6.3(@0no-co/graphqlsp@1.12.16(graphql@16.11.0)(typescript@5.8.3))(graphql@16.11.0)(typescript@5.8.3)':
     dependencies:
       '@0no-co/graphqlsp': 1.12.16(graphql@16.11.0)(typescript@5.8.3)
@@ -2736,6 +2780,21 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@jscadui/3mf-export@0.5.0': {}
+
+  '@manifold-studio/typeface@0.3.7(@manifold-studio/wrapper@0.3.7(tweakpane@4.0.5))':
+    dependencies:
+      '@manifold-studio/wrapper': 0.3.7(tweakpane@4.0.5)
+      opentype.js: 1.3.4
+
+  '@manifold-studio/wrapper@0.3.7(tweakpane@4.0.5)':
+    dependencies:
+      '@gltf-transform/core': 4.2.1
+      '@jscadui/3mf-export': 0.5.0
+      fflate: 0.8.2
+      manifold-3d: 3.2.1
+      tweakpane: 4.0.5
 
   '@mantine/core@8.2.1(@mantine/hooks@8.2.1(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -3576,6 +3635,8 @@ snapshots:
 
   paper@0.12.18: {}
 
+  path-data-parser@0.1.0: {}
+
   path-key@3.1.1: {}
 
   path-to-regexp@6.3.0: {}
@@ -3587,6 +3648,13 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.3: {}
+
+  points-on-curve@0.2.0: {}
+
+  points-on-path@0.2.1:
+    dependencies:
+      path-data-parser: 0.1.0
+      points-on-curve: 0.2.0
 
   postcss-js@4.0.1(postcss@8.5.3):
     dependencies:
@@ -3647,6 +3715,8 @@ snapshots:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+
+  property-graph@3.0.0: {}
 
   react-composer@5.0.3(react@18.3.1):
     dependencies:
@@ -3919,6 +3989,8 @@ snapshots:
       - '@types/react'
       - immer
       - react
+
+  tweakpane@4.0.5: {}
 
   type-fest@4.41.0: {}
 
