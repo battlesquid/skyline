@@ -97,10 +97,6 @@ export function SkylineModel(props: SkylineModelProps) {
 	const tempColor = new Color();
 	const multColor = new Color();
 
-	const renderColor = inputs.showContributionColor
-		? getDefaultParameters().inputs.color
-		: inputs.color;
-
 	const contributionColors = useMemo(() => {
 		if (years.length === 0) {
 			return { raw: [], instanced: Float32Array.from([]) };
@@ -160,14 +156,14 @@ export function SkylineModel(props: SkylineModelProps) {
 				day={day}
 				x={
 					weekIdx * inputs.towerSize -
-					computed.xMidpointOffset +
+					computed.halfModelLength +
 					computed.towerSizeOffset
 				}
 				y={
 					centerOffset +
 					YEAR_OFFSET +
 					((dayIdx + weekOffset) * inputs.towerSize -
-						computed.yMidpointOffset +
+						computed.halfModelWidth +
 						computed.towerSizeOffset)
 				}
 				size={getDefaultParameters().inputs.towerSize}
@@ -241,7 +237,7 @@ export function SkylineModel(props: SkylineModelProps) {
 					</Instances>
 				</group>
 			)}
-			<SkylineBase color={renderColor} years={years} />
+			<SkylineBase years={years} />
 		</group>
 	);
 }

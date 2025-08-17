@@ -36,6 +36,6 @@ export const useBoundingBox = (
         } else {
             setSize(bb);
         }
-    }, [obj, ...deps]);
+    }, [obj, obj?.current, ...deps]);
     return { size };
 };

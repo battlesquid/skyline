@@ -25,7 +25,7 @@ export interface GeometryBB {
 export const useExtrudedSvg = ({
     svg,
     material,
-    depth = 3,
+    depth = 0.5,
     castShadow = true,
     receiveShadow = false,
     ref,
@@ -85,7 +85,7 @@ export const useExtrudedSvg = ({
             }
             onGroupReady(ref.current);
         }
-    }, [meshes, ref, onGroupReady]);
+    }, [meshes, ref, ref?.current, onGroupReady]);
 
     useEffect(() => {
         for (const mesh of meshes) {

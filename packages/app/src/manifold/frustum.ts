@@ -1,6 +1,6 @@
-import Module from 'manifold-3d';
-import { mesh2geometry } from './utils';
-import { Vector3 } from 'three';
+import Module, { type Manifold as ManifoldType, type Vec3 } from "manifold-3d";
+import { type BufferGeometry, Vector3 } from "three";
+import { mesh2geometry } from "./utils";
 
 const wasm = await Module();
 wasm.setup();
@@ -13,7 +13,7 @@ export interface ManifoldDimensions {
     height: number;
 }
 
-export interface ManifoldFrustum extends ManifoldDimensions {
+export interface ManifoldFrustumArgs extends ManifoldDimensions {
     lengthPadding: number;
     widthPadding: number;
 }
@@ -22,17 +22,17 @@ export interface ManifoldSlot extends ManifoldDimensions {
     offset?: number;
 }
 
-export function getSlopeAngle(frustum: ManifoldFrustum) {
+export type ManifoldFrustumSide = "length" | "width";
+
+export const getSlopeAngle = (frustum: ManifoldFrustumArgs, side: ManifoldFrustumSide = "length"): number => {
     const { width, length, widthPadding, lengthPadding, height } = frustum;
 
     const baseWidth = width + widthPadding;
     const baseLength = length + lengthPadding;
 
     // Calculate the horizontal distance from center to edge at the base vs top
-    // const baseDimension = side === "width" ? baseWidth : baseLength;
-    // const topDimension = side === "width" ? this.width : this.length;
-    const baseDimension = baseLength;
-    const topDimension = length;
+    const baseDimension = side === "width" ? baseWidth : baseLength;
+    const topDimension = side === "width" ? width : length;
 
     // The horizontal difference between base and top edge
     const horizontalDifference = (baseDimension - topDimension) / 2;
@@ -43,29 +43,39 @@ export function getSlopeAngle(frustum: ManifoldFrustum) {
     return slopeAngle;
 }
 
-function toDeg(rad: number) {
+const toDeg = (rad: number): number => {
     return rad * (180 / Math.PI);
 }
 
-function toRad(deg: number) {
-    return deg * (Math.PI / 180);
-}
-
-export function getNormal(frustum: ManifoldFrustum) {
+export const getNormal = (frustum: ManifoldFrustumArgs): Vec3 => {
     const angle = getSlopeAngle(frustum);
     return [0, Math.cos(angle), Math.sin(angle)];
 }
 
-export function getThreeNormal(frustum: ManifoldFrustum) {
+export const getThreeNormal = (frustum: ManifoldFrustumArgs): Vector3 => {
     const normal = getNormal(frustum);
     return new Vector3(normal[0], normal[2], normal[1]);
 }
 
-export function makeFrustum(
-    frustum: ManifoldFrustum,
+export interface BaseFrustum {
+    angle: number;
+}
+
+export interface ManifoldFrustum extends BaseFrustum {
+    manifold: ManifoldType;
+    normal: Vec3;
+}
+
+export interface ThreeFrustum extends BaseFrustum {
+    geometry: BufferGeometry;
+    normal: Vector3;
+}
+
+export const makeManifoldFrustum = (
+    frustum: ManifoldFrustumArgs,
     nameSlot: ManifoldSlot,
     yearSlot: ManifoldSlot
-) {
+): ManifoldFrustum => {
     const { length, width, lengthPadding, widthPadding, height } = frustum;
 
     const baseLength = length + lengthPadding;
@@ -73,10 +83,16 @@ export function makeFrustum(
     const topLengthScale = length / baseLength;
     const topWidthScale = width / baseWidth;
 
-    const angle = toDeg(getSlopeAngle(frustum));
+    const angle = getSlopeAngle(frustum);
     const normal = getNormal(frustum);
 
-    const TRANSLATION = -(nameSlot.length / 2) + 0.001;
+    /**
+     * Although it causes no functional bugs, placing the slot perfectly against the frustum surface causes visual artifacts.
+     * Simply adding a very small amount of padding width to the slot fixes this
+     */
+    const SLOT_VISIBILITY_PADDING = 0.002;
+
+    const TRANSLATION = -(nameSlot.length / 2) + SLOT_VISIBILITY_PADDING / 2;
 
     const nameSlotOffset = nameSlot.offset ?? 0;
     const yearSlotOffset = yearSlot.offset ?? 0;
@@ -94,46 +110,47 @@ export function makeFrustum(
     ] as const;
 
     const nameSlotCube = Manifold
-        .cube([nameSlot.width, nameSlot.length + 0.002, nameSlot.height], true)
-        .rotate([angle, 0, 0])
+        .cube([nameSlot.width, nameSlot.length + SLOT_VISIBILITY_PADDING, nameSlot.height], true)
+        .rotate([toDeg(angle), 0, 0])
         .translate(nameSlotPosition);
 
     const yearSlotCube = Manifold
-        .cube([yearSlot.width, yearSlot.length + 0.002, yearSlot.height], true)
-        .rotate([angle, 0, 0])
+        .cube([yearSlot.width, yearSlot.length + SLOT_VISIBILITY_PADDING, yearSlot.height], true)
+        .rotate([toDeg(angle), 0, 0])
         .translate(yearSlotPosition);
 
-    return CrossSection
+    const manifold = CrossSection
         .square([baseWidth, baseLength], true)
         .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
         .subtract(nameSlotCube)
         .subtract(yearSlotCube);
+
+    return { manifold, angle, normal };
 }
 
-export function getFrustumGeometry(...args: Parameters<typeof makeFrustum>) {
-    return mesh2geometry(makeFrustum(...args).getMesh())
+export const makeThreeFrustum = (...args: Parameters<typeof makeManifoldFrustum>): ThreeFrustum => {
+    const { manifold, angle } = makeManifoldFrustum(...args);
+    const normal = getThreeNormal(args[0]);
+    const geometry = mesh2geometry(manifold.getMesh());
+    return { angle: -angle, geometry, normal };
 }
 
-const frustumProps: ManifoldFrustum = {
-    width: 30,
-    length: 10,
-    widthPadding: 1,
-    lengthPadding: 2,
-    height: 2
-}
-
-export const nameSlotProps: ManifoldSlot = {
-    width: 5,
-    length: 0.25,
-    height: 1
-}
-
-export const yearSlotProps: ManifoldSlot = {
-    width: 3,
-    length: 0.25,
-    height: 1
-}
-
-export const _frustum = makeFrustum(frustumProps, nameSlotProps, yearSlotProps);
-
-const result = _frustum
+export const emptyThreeFrustum = (): ThreeFrustum => makeThreeFrustum(
+    {
+        width: 0,
+        length: 0,
+        height: 0,
+        widthPadding: 0,
+        lengthPadding: 0,
+    },
+    {
+        width: 0,
+        length: 0,
+        height: 0
+    },
+    {
+        width: 0,
+        length: 0,
+        height: 0
+    }
+);

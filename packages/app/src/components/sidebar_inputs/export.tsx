@@ -22,7 +22,7 @@ export function ExportButton() {
 		if (base?.geometry) {
 			console.log("base geom exists!")
 			const baseMesh = new Mesh(base.geometry);
-			baseMesh.position.set(0, -computed.platformMidpoint, 0)
+			baseMesh.position.set(0, -computed.halfPlatformHeight, 0)
 			return [baseMesh]
 		}
 		return [];
