@@ -25,7 +25,6 @@ export const exportScene = (
 	scene: Scene | null,
 	name: string,
 	scale: number,
-	extraMeshes?: Mesh[]
 ) => {
 	if (scene === null) {
 		console.warn("Scene is null, skipping export");

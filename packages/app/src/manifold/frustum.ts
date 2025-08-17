@@ -1,9 +1,8 @@
-import Module, { type Manifold as ManifoldType, type Vec3 } from "manifold-3d";
+import type { Manifold as ManifoldType, Vec3 } from "manifold-3d";
 import { type BufferGeometry, Vector3 } from "three";
-import { mesh2geometry } from "./utils";
-
-const wasm = await Module();
-wasm.setup();
+import { getDefaultParameters } from "../defaults";
+import { wasm } from "./module";
+import { boundingBoxDimensions, mesh2geometry } from "./utils";
 
 const { Manifold, CrossSection } = wasm;
 
@@ -18,7 +17,8 @@ export interface ManifoldFrustumArgs extends ManifoldDimensions {
     widthPadding: number;
 }
 
-export interface ManifoldSlot extends ManifoldDimensions {
+export interface ManifoldFrustumText {
+    text: ManifoldType;
     offset?: number;
 }
 
@@ -71,10 +71,17 @@ export interface ThreeFrustum extends BaseFrustum {
     normal: Vector3;
 }
 
+/**
+ * Although it causes no functional bugs, placing the slot perfectly against the frustum surface causes visual artifacts.
+ * Simply adding a very small amount of padding width to the slot fixes this
+ */
+export const SUBTRACT_VISIBILITY_PADDING = 0.0002;
+
 export const makeManifoldFrustum = (
     frustum: ManifoldFrustumArgs,
-    nameSlot: ManifoldSlot,
-    yearSlot: ManifoldSlot
+    name: ManifoldFrustumText,
+    year: ManifoldFrustumText,
+    inset: boolean
 ): ManifoldFrustum => {
     const { length, width, lengthPadding, widthPadding, height } = frustum;
 
@@ -86,44 +93,42 @@ export const makeManifoldFrustum = (
     const angle = getSlopeAngle(frustum);
     const normal = getNormal(frustum);
 
-    /**
-     * Although it causes no functional bugs, placing the slot perfectly against the frustum surface causes visual artifacts.
-     * Simply adding a very small amount of padding width to the slot fixes this
-     */
-    const SLOT_VISIBILITY_PADDING = 0.002;
+    const nameDimensions = boundingBoxDimensions(name.text.boundingBox());
+    const yearDimensions = boundingBoxDimensions(year.text.boundingBox());
 
-    const TRANSLATION = -(nameSlot.length / 2) + SLOT_VISIBILITY_PADDING / 2;
+    const TRANSLATE_DIR = inset ? -1 : 1;
+    const TRANSLATE_LEN = TRANSLATE_DIR * (nameDimensions.length / 2) + (SUBTRACT_VISIBILITY_PADDING);
 
-    const nameSlotOffset = nameSlot.offset ?? 0;
-    const yearSlotOffset = yearSlot.offset ?? 0;
+    const nameSlotOffset = name.offset ?? 0;
+    const yearSlotOffset = year.offset ?? 0;
 
     const nameSlotPosition = [
-        baseWidth / 2 - (nameSlot.width / 2) - (nameSlotOffset + widthPadding / 2) + (TRANSLATION * normal[0]),
-        (length / 2) + (lengthPadding / 4) + (TRANSLATION * normal[1]),
-        (TRANSLATION * normal[2])
+        baseWidth / 2 - (nameDimensions.width / 2) - (nameSlotOffset + widthPadding / 2) + (TRANSLATE_LEN * normal[0]),
+        (length / 2) + (lengthPadding / 4) + (TRANSLATE_LEN * normal[1]),
+        (TRANSLATE_LEN * normal[2])
     ] as const;
 
     const yearSlotPosition = [
-        (-baseWidth / 2) + (yearSlot.width / 2) + (yearSlotOffset + widthPadding / 2) + (TRANSLATION * normal[0]),
-        (length / 2) + (lengthPadding / 4) + (TRANSLATION * normal[1]),
-        (TRANSLATION * normal[2])
+        (-baseWidth / 2) + (yearDimensions.width / 2) + (yearSlotOffset + widthPadding / 2) + (TRANSLATE_LEN * normal[0]),
+        (length / 2) + (lengthPadding / 4) + (TRANSLATE_LEN * normal[1]),
+        (TRANSLATE_LEN * normal[2])
     ] as const;
 
-    const nameSlotCube = Manifold
-        .cube([nameSlot.width, nameSlot.length + SLOT_VISIBILITY_PADDING, nameSlot.height], true)
+    const nameManifold = name.text
         .rotate([toDeg(angle), 0, 0])
         .translate(nameSlotPosition);
 
-    const yearSlotCube = Manifold
-        .cube([yearSlot.width, yearSlot.length + SLOT_VISIBILITY_PADDING, yearSlot.height], true)
+    const yearManifold = year.text
         .rotate([toDeg(angle), 0, 0])
         .translate(yearSlotPosition);
+
+    const operation = inset ? "subtract" : "add";
 
     const manifold = CrossSection
         .square([baseWidth, baseLength], true)
         .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
-        .subtract(nameSlotCube)
-        .subtract(yearSlotCube);
+    [operation](nameManifold)
+    [operation](yearManifold);
 
     return { manifold, angle, normal };
 }
@@ -144,13 +149,10 @@ export const emptyThreeFrustum = (): ThreeFrustum => makeThreeFrustum(
         lengthPadding: 0,
     },
     {
-        width: 0,
-        length: 0,
-        height: 0
+        text: Manifold.cube(),
     },
     {
-        width: 0,
-        length: 0,
-        height: 0
-    }
+        text: Manifold.cube(),
+    },
+    getDefaultParameters().inputs.insetText
 );

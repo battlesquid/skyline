@@ -11,7 +11,6 @@ export interface SkylineModelInputParameters {
     name: string;
     nameOverride: string;
     insetText: boolean;
-    insetDepth: number;
     startYear: number;
     endYear: number;
     towerSize: number;

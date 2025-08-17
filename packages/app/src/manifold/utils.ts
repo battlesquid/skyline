@@ -1,8 +1,49 @@
-import type { Mesh } from "manifold-3d";
+import type { Box, Mesh as MeshType } from "manifold-3d";
 import { BufferAttribute, BufferGeometry } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
+import type { TextGeometry } from "three-stdlib";
+import type { ManifoldDimensions } from "./frustum";
+import { wasm } from "./module";
 
-export function mesh2geometry(mesh: Mesh) {
+const { Mesh, Manifold } = wasm;
+
+export function geometry2mesh(geometry: BufferGeometry): MeshType {
+    geometry.rotateX(degToRad(90));
+    geometry.rotateZ(degToRad(180));
+    geometry.center();
+    // Only uses position attribute. You can interleave other attributes (UV, normals, etc.) if needed.
+    const vertProperties = geometry.attributes.position.array as Float32Array;
+
+    // Ensure geometry is indexed. If no index, create a sequential index array.
+    const triVerts = geometry.index != null
+        ? geometry.index.array as Uint32Array
+        : new Uint32Array(vertProperties.length / 3).map((_, idx) => idx);
+
+    // Set up group runs for each material (draw call).
+    const starts = geometry.groups.map(g => g.start);
+    const originalIDs = geometry.groups.map(g => g.materialIndex ?? 0);
+
+    // Sort runs in sequence by start index.
+    const indices = Array.from(starts.keys());
+    indices.sort((a, b) => starts[a] - starts[b]);
+    const runIndex = new Uint32Array(indices.map(i => starts[i]));
+    const runOriginalID = new Uint32Array(indices.map(i => originalIDs[i]));
+
+    // Create the MeshGL for I/O with Manifold library.
+    const mesh = new Mesh({
+        numProp: 3,
+        vertProperties,
+        triVerts,
+        runIndex,
+        runOriginalID,
+    });
+
+    // Merge duplicate vertices with nearly identical positions.
+    mesh.merge();
+    return mesh;
+}
+
+export function mesh2geometry(mesh: MeshType) {
     const geometry = new BufferGeometry();
     // Assign buffers
     geometry.setAttribute(
@@ -28,6 +69,18 @@ export function mesh2geometry(mesh: Mesh) {
     }
     geometry.center();
     geometry.rotateX(degToRad(-90));
-    geometry.rotateY(degToRad(180))
+    geometry.rotateY(degToRad(180));
     return geometry;
+}
+
+export const makeTextManifold = (geometry: TextGeometry) => {
+    return new Manifold(geometry2mesh(geometry));
+}
+
+export const boundingBoxDimensions = (box: Box): ManifoldDimensions => {
+    return {
+        width: box.max[0] - box.min[0],
+        length: box.max[1] - box.min[1],
+        height: box.max[2] - box.min[2],
+    }
 }
