@@ -24,6 +24,8 @@ export interface SkylineModelInputParameters {
 	showContributionColor: boolean;
 	filename: string;
 	scale: number;
+    nameOffset: number;
+    yearOffset: number;
 }
 
 export interface SkylineModelComputedParameters {
@@ -36,6 +38,7 @@ export interface SkylineModelComputedParameters {
 	xMidpointOffset: number;
 	yMidpointOffset: number;
 	paddingWidth: number;
+    formattedYear: string;
 	defaultFilename: string;
 	resolvedName: string;
 }
@@ -75,7 +78,8 @@ export const createParametersStore = (props?: Partial<SkylineModelInputParameter
 			const xMidpointOffset = modelLength / 2;
 			const yMidpointOffset = modelWidth / 2;
 			const paddingWidth = inputs.padding * 2;
-			const defaultFilename = `${inputs.name}_${formatYearText(inputs.startYear, inputs.endYear)}_skyline`;
+            const formattedYear = formatYearText(inputs.startYear, inputs.endYear);
+			const defaultFilename = `${inputs.name}_${formattedYear}_skyline`;
 			const resolvedName = safeString(inputs.nameOverride, inputs.name);
 
 			const computed: SkylineModelComputedParameters = {
@@ -89,6 +93,7 @@ export const createParametersStore = (props?: Partial<SkylineModelInputParameter
 				yMidpointOffset,
 				paddingWidth,
 				defaultFilename,
+                formattedYear,
 				resolvedName,
 			};
 

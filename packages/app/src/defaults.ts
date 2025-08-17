@@ -38,6 +38,8 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		shape: SkylineBaseShape.Prism,
 		filename: "",
 		scale: 1,
+        nameOffset: 15,
+        yearOffset: 10
 	};
 
 	const modelLength = WEEKS_IN_YEAR * inputs.towerSize;
@@ -49,7 +51,8 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 	const xMidpointOffset = modelLength / 2;
 	const yMidpointOffset = modelWidth / 2;
 	const paddingWidth = inputs.padding * 2;
-	const defaultFilename = `${inputs.name}_${formatYearText(inputs.startYear, inputs.endYear)}_skyline`;
+    const formattedYear = formatYearText(inputs.startYear, inputs.endYear);
+	const defaultFilename = `${inputs.name}_${formattedYear}_skyline`;
 	const resolvedName = inputs.name;
 
 	const computed: SkylineModelComputedParameters = {
@@ -63,6 +66,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		yMidpointOffset,
 		paddingWidth,
 		defaultFilename,
+        formattedYear,
 		resolvedName,
 	};
 

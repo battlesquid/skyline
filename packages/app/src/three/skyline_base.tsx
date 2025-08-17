@@ -11,8 +11,7 @@ import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
 import { LOGOS } from "../logos";
-import { ManifoldDimensions, type ManifoldFrustum, ManifoldSlot, makeFrustum, yearSlotProps, } from "../manifold/frustum";
-import { mesh2geometry } from "../manifold/utils";
+import { getFrustumGeometry, getSlopeAngle, getThreeNormal, type ManifoldFrustum, type ManifoldSlot } from "../manifold/frustum";
 import { useParametersContext } from "../stores/parameters";
 import { getInsetTextSvg } from "./inset_text";
 import { SkylineBaseShape } from "./types";
@@ -88,6 +87,19 @@ export function SkylineBase({
         },
     });
 
+    const insetYearRef = useRef<Group | null>(null);
+    const yearExtrusion = useExtrudedSvg({
+        svg: getInsetTextSvg(computed.formattedYear, fontRef.current, computed.textSize * 9),
+        ref: insetYearRef,
+        material,
+        depth: inputs.insetDepth,
+        onObjectReady(group) {
+            const wantedHeight = 0.65 * computed.platformHeight;
+            const scale = wantedHeight / yearExtrusion.svgBoundingBox.height;
+            group.scale.set(scale, -scale, 1);
+        },
+    });
+
     const frustumProps: ManifoldFrustum = useMemo(() => {
         const width = computed.modelLength + computed.paddingWidth;
         const length = computed.modelWidth * years.length + computed.paddingWidth;
@@ -100,23 +112,35 @@ export function SkylineBase({
             lengthPadding: 7 * +(inputs.shape === SkylineBaseShape.Frustum),
             widthPadding: 5 * +(inputs.shape === SkylineBaseShape.Frustum)
         }
-    }, [computed, inputs.shape]);
+    }, [computed, years, inputs.shape]);
 
+    const normal = useMemo(() => getThreeNormal(frustumProps), [frustumProps]);
+    const angle = useMemo(() => getSlopeAngle(frustumProps), [frustumProps, inputs.shape]);
+    
+    const NORMAL_TRANSLATION = {
+        LOGO: logo.threeBoundingBox.z / 2,
+        NAME: -nameExtrusion.threeBoundingBox.z / 2,
+        YEAR: -yearExtrusion.threeBoundingBox.z / 2
+    }
+    
     const [geometry, setGeometry] = useState(new BufferGeometry());
-    const [rot, setRot] = useState(0);
-
     useEffect(() => {
         const nameSlotProps: ManifoldSlot = {
             width: nameExtrusion.threeBoundingBox.x,
             length: nameExtrusion.threeBoundingBox.z,
             height: nameExtrusion.threeBoundingBox.y,
-            offset: 15
+            offset: inputs.nameOffset
         }
-        const geom = mesh2geometry(makeFrustum(frustumProps, nameSlotProps, yearSlotProps).getMesh())
-        setGeometry(geom);
-    }, [inputs.insetText, years, nameExtrusion.threeBoundingBox]);
 
-    const TEXT_DEPTH_OFFSET = inputs.shape === "frustum" ? 0.5 : -0.1;
+        const yearSlotProps: ManifoldSlot = {
+            width: yearExtrusion.threeBoundingBox.x,
+            length: yearExtrusion.threeBoundingBox.z,
+            height: yearExtrusion.threeBoundingBox.y,
+            offset: inputs.yearOffset
+        }
+        const geom = getFrustumGeometry(frustumProps, nameSlotProps, yearSlotProps)
+        setGeometry(geom);
+    }, [inputs.nameOffset, inputs.yearOffset, frustumProps, nameExtrusion.threeBoundingBox, yearExtrusion.threeBoundingBox]);
 
     return (
         <>
@@ -126,45 +150,34 @@ export function SkylineBase({
             >
                 <meshStandardMaterial flatShading color={color} />
             </mesh>
-            {/* <Text3D
-                visible={false}
-                ref={nameRef}
-                font={inputs.font}
-                rotation={[rot, 0, 0]}
-                receiveShadow
-                castShadow
-                position={[
-                    -computed.xMidpointOffset + nameBoundingBox.x / 2 + 12,
-                    -computed.platformMidpoint - 0.5,
-                    (computed.modelWidth * years.length) / 2 +
-                    inputs.padding +
-                    TEXT_DEPTH_OFFSET,
-                ]}
-                height={inputs.textDepth}
-                size={computed.textSize}
-            >
-                {computed.resolvedName}
-                <meshStandardMaterial color={color} />
-            </Text3D> */}
-
             <object3D
                 ref={logoRef}
-                rotation={[rot, 0, 0]}
-            // position={[
-            //     -computed.xMidpointOffset + 8 - (baseNormal.x * NORMAL_TRANSLATION.LOGO),
-            //     -computed.platformMidpoint + (baseNormal.y * NORMAL_TRANSLATION.LOGO),
-            //     (computed.modelWidth * years.length / 2) + inputs.padding + geometry.calculateMidpointSegmentLength() - (baseNormal.z * NORMAL_TRANSLATION.LOGO)
-            // ]}
+                rotation={[-angle, 0, 0]}
+                position={[
+                    -computed.xMidpointOffset - inputs.padding + 10 - (normal.x * NORMAL_TRANSLATION.LOGO),
+                    -computed.platformMidpoint + (normal.y * NORMAL_TRANSLATION.LOGO),
+                    (computed.modelWidth * years.length / 2) + inputs.padding + (normal.z * NORMAL_TRANSLATION.LOGO) + (frustumProps.lengthPadding / 4)
+                ]}
             />
             <object3D
                 visible={true}
                 ref={insetNameRef}
-                rotation={[rot, 0, 0]}
-            // position={[
-            //     -computed.xMidpointOffset + nameExtrusion.threeBoundingBox.x / 2,
-            //     -computed.platformMidpoint,
-            //     (computed.modelWidth * years.length / 2) + inputs.padding
-            // ]}
+                rotation={[-angle, 0, 0]}
+                position={[
+                    -computed.xMidpointOffset - inputs.padding + inputs.nameOffset - (normal.x * NORMAL_TRANSLATION.NAME) + nameExtrusion.threeBoundingBox.x / 2,
+                    -computed.platformMidpoint + (normal.y * NORMAL_TRANSLATION.NAME),
+                    (computed.modelWidth * years.length / 2) + inputs.padding + (normal.z * NORMAL_TRANSLATION.NAME) + (frustumProps.lengthPadding / 4)
+                ]}
+            />
+            <object3D
+                visible={true}
+                ref={insetYearRef}
+                rotation={[-angle, 0, 0]}
+                position={[
+                    computed.xMidpointOffset + inputs.padding - (yearExtrusion.threeBoundingBox.x / 2) - inputs.yearOffset,
+                    -computed.platformMidpoint + (normal.y * NORMAL_TRANSLATION.YEAR),
+                    (computed.modelWidth * years.length / 2) + inputs.padding + (normal.z * NORMAL_TRANSLATION.YEAR) + (frustumProps.lengthPadding / 4)
+                ]}
             />
 
             {/* <mesh

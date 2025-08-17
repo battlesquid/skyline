@@ -1,4 +1,6 @@
 import Module from 'manifold-3d';
+import { mesh2geometry } from './utils';
+import { Vector3 } from 'three';
 
 const wasm = await Module();
 wasm.setup();
@@ -20,7 +22,7 @@ export interface ManifoldSlot extends ManifoldDimensions {
     offset?: number;
 }
 
-function getSlopeAngle(frustum: ManifoldFrustum) {
+export function getSlopeAngle(frustum: ManifoldFrustum) {
     const { width, length, widthPadding, lengthPadding, height } = frustum;
 
     const baseWidth = width + widthPadding;
@@ -54,6 +56,11 @@ export function getNormal(frustum: ManifoldFrustum) {
     return [0, Math.cos(angle), Math.sin(angle)];
 }
 
+export function getThreeNormal(frustum: ManifoldFrustum) {
+    const normal = getNormal(frustum);
+    return new Vector3(normal[0], normal[2], normal[1]);
+}
+
 export function makeFrustum(
     frustum: ManifoldFrustum,
     nameSlot: ManifoldSlot,
@@ -81,7 +88,7 @@ export function makeFrustum(
     ] as const;
 
     const yearSlotPosition = [
-        (-baseWidth / 2) + (yearSlot.width / 2) + (yearSlotOffset - lengthPadding / 2) + (TRANSLATION * normal[0]),
+        (-baseWidth / 2) + (yearSlot.width / 2) + (yearSlotOffset + widthPadding / 2) + (TRANSLATION * normal[0]),
         (length / 2) + (lengthPadding / 4) + (TRANSLATION * normal[1]),
         (TRANSLATION * normal[2])
     ] as const;
@@ -101,6 +108,10 @@ export function makeFrustum(
         .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
         .subtract(nameSlotCube)
         .subtract(yearSlotCube);
+}
+
+export function getFrustumGeometry(...args: Parameters<typeof makeFrustum>) {
+    return mesh2geometry(makeFrustum(...args).getMesh())
 }
 
 const frustumProps: ManifoldFrustum = {
