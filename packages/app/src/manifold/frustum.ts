@@ -1,8 +1,9 @@
-import type { Manifold as ManifoldType, Vec3 } from "manifold-3d";
+import type { Manifold as ManifoldType, Vec2, Vec3 } from "manifold-3d";
 import { type BufferGeometry, Vector3 } from "three";
 import { getDefaultParameters } from "../defaults";
 import { wasm } from "./module";
 import { boundingBoxDimensions, mesh2geometry } from "./utils";
+import { Point } from "points-on-path";
 
 const { Manifold, CrossSection } = wasm;
 
@@ -19,6 +20,7 @@ export interface ManifoldFrustumArgs extends ManifoldDimensions {
 
 export interface ManifoldFrustumText {
     text: ManifoldType;
+    points: Vec2[][]
     offset?: number;
 }
 
@@ -93,7 +95,11 @@ export const makeManifoldFrustum = (
     const angle = getSlopeAngle(frustum);
     const normal = getNormal(frustum);
 
-    const nameDimensions = boundingBoxDimensions(name.text.boundingBox());
+    const nameExtrusion = new CrossSection(name.points, "Positive")
+        .extrude(1)
+        .rotate([-90, 0, 180])
+    const nameDimensions = boundingBoxDimensions(nameExtrusion.boundingBox());
+    console.log(nameDimensions);
     const yearDimensions = boundingBoxDimensions(year.text.boundingBox());
 
     const TRANSLATE_DIR = inset ? -1 : 1;
@@ -124,11 +130,20 @@ export const makeManifoldFrustum = (
 
     const operation = inset ? "subtract" : "add";
 
+    console.log(angle)
+    const wantedHeight = 0.65 * height;
+    const scale = wantedHeight / nameDimensions.length;
     const manifold = CrossSection
         .square([baseWidth, baseLength], true)
         .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
-    [operation](nameManifold)
-    [operation](yearManifold);
+    [operation](yearManifold)
+    [operation](nameExtrusion
+ 
+        .translate([-nameDimensions.width / 2, nameDimensions.length / 2, nameDimensions.height / 2])
+        .scale([scale, 1, scale])
+        .rotate([toDeg(angle), 0, 0])
+        .translate(nameSlotPosition)
+    )
 
     return { manifold, angle, normal };
 }
@@ -150,9 +165,11 @@ export const emptyThreeFrustum = (): ThreeFrustum => makeThreeFrustum(
     },
     {
         text: Manifold.cube(),
+        points: []
     },
     {
         text: Manifold.cube(),
+        points: []
     },
     getDefaultParameters().inputs.insetText
 );

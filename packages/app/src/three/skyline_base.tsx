@@ -12,6 +12,9 @@ import { type ManifoldFrustumArgs, type ManifoldFrustumText, makeThreeFrustum } 
 import { makeTextManifold } from "../manifold/utils";
 import { useParametersContext } from "../stores/parameters";
 import { SkylineBaseShape } from "./types";
+import { useTTFLoader } from "../hooks/useTTFLoader";
+import { pointsOnPath } from "points-on-path"
+import { Vec2 } from "manifold-3d";
 
 export interface SkylineBaseProps {
     years: ContributionWeeks[];
@@ -58,6 +61,15 @@ export function SkylineBase({
         },
     });
 
+
+    const ttfFont = useTTFLoader("/fonts/ttf/PressStart2P_Regular.ttf");
+    const paths = ttfFont.getPaths("0", 0, 1, 1);
+    const svgs = paths.map(path => path.toPathData(5));
+    const points = svgs.flatMap(s => {
+        const result = pointsOnPath(s, 0.001, 0.001);
+        return result.map(point => point.map(p => [p[0], p[1]] as Vec2))
+    });
+
     const frustumProps: ManifoldFrustumArgs = useMemo(() => ({
         width: computed.modelLength + computed.paddingWidth,
         length: computed.modelWidth * years.length + computed.paddingWidth,
@@ -68,11 +80,13 @@ export function SkylineBase({
 
     const nameManifoldProps: ManifoldFrustumText = useMemo(() => ({
         text: makeTextManifold(nameGeometry),
+        points: points,
         offset: inputs.nameOffset
     }), [nameGeometry, inputs.nameOffset]);
 
     const yearManifoldProps: ManifoldFrustumText = useMemo(() => ({
         text: makeTextManifold(yearGeometry),
+        points: [],
         offset: inputs.yearOffset
     }), [yearGeometry, inputs.yearOffset]);
 
@@ -82,6 +96,7 @@ export function SkylineBase({
         yearManifoldProps,
         inputs.insetText
     );
+
 
     // TODO: if text depth becomes a configurable parameter, this check probably won't suffice
     // we'll instead need to subtract the bounding box of the base w/ text minus the base
@@ -96,6 +111,7 @@ export function SkylineBase({
                 geometry={frustum.geometry}
                 position={[0, -computed.halfPlatformHeight, TEXT_EXTRUSION_OFFSET]}
                 material={material}
+                onPointerOver={(e) => e.stopPropagation()}
                 castShadow
                 receiveShadow
             />
