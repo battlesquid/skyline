@@ -7,14 +7,12 @@ import {
 import { TextGeometry } from "three-stdlib";
 import type { ContributionWeeks } from "../api/types";
 import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
+import { toPolygons, useTTFLoader } from "../hooks/useTTFLoader";
 import { LOGOS } from "../logos";
 import { type ManifoldFrustumArgs, type ManifoldFrustumText, makeThreeFrustum } from "../manifold/frustum";
 import { makeTextManifold } from "../manifold/utils";
 import { useParametersContext } from "../stores/parameters";
 import { SkylineBaseShape } from "./types";
-import { useTTFLoader } from "../hooks/useTTFLoader";
-import { pointsOnPath } from "points-on-path"
-import { Vec2 } from "manifold-3d";
 
 export interface SkylineBaseProps {
     years: ContributionWeeks[];
@@ -61,14 +59,7 @@ export function SkylineBase({
         },
     });
 
-
-    const ttfFont = useTTFLoader("/fonts/ttf/PressStart2P_Regular.ttf");
-    const paths = ttfFont.getPaths("0", 0, 1, 1);
-    const svgs = paths.map(path => path.toPathData(5));
-    const points = svgs.flatMap(s => {
-        const result = pointsOnPath(s, 0.001, 0.001);
-        return result.map(point => point.map(p => [p[0], p[1]] as Vec2))
-    });
+    const ttfFont = useTTFLoader("/fonts/ttf/Inter_Bold.ttf");
 
     const frustumProps: ManifoldFrustumArgs = useMemo(() => ({
         width: computed.modelLength + computed.paddingWidth,
@@ -80,13 +71,13 @@ export function SkylineBase({
 
     const nameManifoldProps: ManifoldFrustumText = useMemo(() => ({
         text: makeTextManifold(nameGeometry),
-        points: points,
+        points: toPolygons(ttfFont, computed.resolvedName),
         offset: inputs.nameOffset
     }), [nameGeometry, inputs.nameOffset]);
 
     const yearManifoldProps: ManifoldFrustumText = useMemo(() => ({
         text: makeTextManifold(yearGeometry),
-        points: [],
+        points: toPolygons(ttfFont, computed.formattedYear),
         offset: inputs.yearOffset
     }), [yearGeometry, inputs.yearOffset]);
 
