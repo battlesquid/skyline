@@ -1,7 +1,7 @@
 import type { Box, Manifold as ManifoldType, Mesh as MeshType, Rect } from "manifold-3d";
 import { BufferAttribute, BufferGeometry } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import type { TextGeometry } from "three-stdlib";
+import { GeometryUtils, type TextGeometry } from "three-stdlib";
 import type { ManifoldDimensions } from "./frustum";
 import { wasm } from "./module";
 
@@ -70,6 +70,8 @@ export function mesh2geometry(mesh: MeshType) {
     geometry.center();
     geometry.rotateX(degToRad(-90));
     geometry.rotateY(degToRad(180));
+    geometry.computeVertexNormals();
+    geometry.normalizeNormals();
     return geometry;
 }
 

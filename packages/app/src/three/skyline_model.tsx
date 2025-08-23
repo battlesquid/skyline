@@ -74,7 +74,8 @@ export function SkylineModel(props: SkylineModelProps) {
 		inputs.endYear,
 		inputs.padding,
 		inputs.font,
-		// inputs.shape,
+		inputs.shape,
+        inputs.insetText,
 	]);
 
 	useEffect(() => {
@@ -232,7 +233,7 @@ export function SkylineModel(props: SkylineModelProps) {
 								]}
 							/>
 						</boxGeometry>
-						<meshStandardMaterial toneMapped={false} vertexColors={true} />
+						<meshStandardMaterial  vertexColors={true} />
 						{render()}
 					</Instances>
 				</group>

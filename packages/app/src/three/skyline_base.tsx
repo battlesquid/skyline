@@ -26,7 +26,8 @@ export function SkylineBase({
         () =>
             new MeshStandardMaterial({
                 color: computed.renderColor,
-                flatShading: true
+                flatShading: true,
+                roughness: 1,
             }),
         [computed.renderColor],
     );
@@ -37,6 +38,8 @@ export function SkylineBase({
         ref: logoRef,
         depth: inputs.textDepth,
         material,
+        castShadow: true,
+        receiveShadow: true,
         onObjectReady(group) {
             const wantedHeight = 0.65 * computed.platformHeight;
             const scale = wantedHeight / logo.svgBoundingBox.height;
@@ -55,12 +58,12 @@ export function SkylineBase({
     }), [computed, years, inputs.shape]);
 
     const nameManifoldProps = useMemo((): ManifoldFrustumText => ({
-        points: toPolygons(ttfFont, computed.resolvedName, computed.platformHeight / 2),
+        points: toPolygons(ttfFont, computed.resolvedName, computed.platformHeight / 1.75),
         offset: inputs.nameOffset
     }), [ttfFont, computed.resolvedName, inputs.nameOffset]);
 
     const yearManifoldProps = useMemo((): ManifoldFrustumText => ({
-        points: toPolygons(ttfFont, computed.formattedYear, computed.platformHeight / 2),
+        points: toPolygons(ttfFont, computed.formattedYear, computed.platformHeight / 1.75),
         offset: inputs.yearOffset
     }), [ttfFont, inputs.yearOffset]);
 
@@ -97,6 +100,8 @@ export function SkylineBase({
                     -computed.halfPlatformHeight + (frustum.normal.y * (logo.threeBoundingBox.z / 2)),
                     (computed.modelWidth * years.length / 2) + inputs.padding + (frustum.normal.z * (logo.threeBoundingBox.z / 2)) + (frustumProps.lengthPadding / 4)
                 ]}
+                castShadow
+                receiveShadow
             />
         </>
     );
