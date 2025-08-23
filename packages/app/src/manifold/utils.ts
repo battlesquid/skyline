@@ -1,4 +1,4 @@
-import type { Box, Mesh as MeshType, Rect } from "manifold-3d";
+import type { Box, Mesh as MeshType, Rect, Manifold } from "manifold-3d";
 import { BufferAttribute, BufferGeometry } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 import type { TextGeometry } from "three-stdlib";
@@ -90,4 +90,14 @@ export const boundingRectDimensions = (rect: Rect) => {
         width: rect.max[0] - rect.min[0],
         length: rect.max[1] - rect.min[1]
     }
+}
+
+export const centerManifold = (manifold: Manifold) => {
+    const bounds = manifold.boundingBox();
+    const center = [
+        -(bounds.min[0] + bounds.max[0]) / 2,
+        -(bounds.min[1] + bounds.max[1]) / 2,
+        -(bounds.min[2] + bounds.max[2]) / 2
+    ] as const;
+    return manifold.translate(center);
 }

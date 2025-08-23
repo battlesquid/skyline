@@ -2,6 +2,7 @@ import { type FontData, useFont } from "@react-three/drei";
 import { Font } from "three-stdlib";
 import { create } from "zustand";
 import { getDefaultFonts } from "../defaults";
+import { useTTFLoader } from "../hooks/useTTFLoader";
 
 const FONT_KEY = "fonts";
 
@@ -13,7 +14,7 @@ interface FontStore {
 }
 
 export const preloadDefaultFonts = () => {
-	Object.values(getDefaultFonts()).forEach(useFont.preload);
+	Object.values(getDefaultFonts()).forEach(useTTFLoader.preload);
 };
 
 export const getFontsLocal = (): FontMap => {

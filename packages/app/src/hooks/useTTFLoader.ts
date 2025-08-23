@@ -1,12 +1,12 @@
 import { Vec2 } from "manifold-3d";
 import opentype from "opentype.js";
 import { pointsOnPath } from "points-on-path";
-import { suspend } from "suspend-react";
+import { preload, suspend } from "suspend-react";
 
 const FONT_CACHE = new Map<string, opentype.Font>();
 
-export const toPolygons = (font: opentype.Font, text: string) => {
-    const paths = font.getPaths(text, 0, 1, 1);
+export const toPolygons = (font: opentype.Font, text: string, fontSize: number = 1) => {
+    const paths = font.getPaths(text, 0, fontSize, fontSize);
     const svgs = paths.map(path => path.toPathData(5));
     return svgs.flatMap(s => {
         const result = pointsOnPath(s, 0.0001, 0.0001);
@@ -26,6 +26,9 @@ const loader = async (url: string) => {
     return font;
 }
 
-export const useTTFLoader = (url: string) => {
+export function useTTFLoader(url: string) {
     return suspend(loader, [url]);
 }
+
+useTTFLoader.preload = (url: string) => preload(loader, [url]);
+

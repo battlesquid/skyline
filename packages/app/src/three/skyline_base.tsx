@@ -1,16 +1,13 @@
-import { useFont } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import {
     type Group,
     MeshStandardMaterial
 } from "three";
-import { TextGeometry } from "three-stdlib";
 import type { ContributionWeeks } from "../api/types";
 import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
 import { toPolygons, useTTFLoader } from "../hooks/useTTFLoader";
 import { LOGOS } from "../logos";
 import { type ManifoldFrustumArgs, type ManifoldFrustumText, makeThreeFrustum } from "../manifold/frustum";
-import { makeTextManifold } from "../manifold/utils";
 import { useParametersContext } from "../stores/parameters";
 import { SkylineBaseShape } from "./types";
 
@@ -23,18 +20,6 @@ export function SkylineBase({
 }: SkylineBaseProps) {
     const inputs = useParametersContext((state) => state.inputs);
     const computed = useParametersContext((state) => state.computed);
-    const font = useFont(inputs.font)
-
-    const nameGeometry = new TextGeometry(computed.resolvedName, {
-        font,
-        height: inputs.textDepth,
-        size: computed.textSize
-    });
-    const yearGeometry = new TextGeometry(computed.formattedYear, {
-        font,
-        height: inputs.textDepth,
-        size: computed.textSize
-    });
 
     // TODO: dont memoize this, maybe make a hook to just update props
     const material = useMemo(
@@ -59,7 +44,7 @@ export function SkylineBase({
         },
     });
 
-    const ttfFont = useTTFLoader("/fonts/ttf/Inter_Bold.ttf");
+    const ttfFont = useTTFLoader(inputs.font);
 
     const frustumProps: ManifoldFrustumArgs = useMemo(() => ({
         width: computed.modelLength + computed.paddingWidth,
@@ -69,17 +54,15 @@ export function SkylineBase({
         widthPadding: 5 * +(inputs.shape === SkylineBaseShape.Frustum)
     }), [computed, years, inputs.shape]);
 
-    const nameManifoldProps: ManifoldFrustumText = useMemo(() => ({
-        text: makeTextManifold(nameGeometry),
-        points: toPolygons(ttfFont, computed.resolvedName),
+    const nameManifoldProps = useMemo((): ManifoldFrustumText => ({
+        points: toPolygons(ttfFont, computed.resolvedName, computed.platformHeight / 2),
         offset: inputs.nameOffset
-    }), [nameGeometry, inputs.nameOffset]);
+    }), [ttfFont, computed.resolvedName, inputs.nameOffset]);
 
-    const yearManifoldProps: ManifoldFrustumText = useMemo(() => ({
-        text: makeTextManifold(yearGeometry),
-        points: toPolygons(ttfFont, computed.formattedYear),
+    const yearManifoldProps = useMemo((): ManifoldFrustumText => ({
+        points: toPolygons(ttfFont, computed.formattedYear, computed.platformHeight / 2),
         offset: inputs.yearOffset
-    }), [yearGeometry, inputs.yearOffset]);
+    }), [ttfFont, inputs.yearOffset]);
 
     const frustum = makeThreeFrustum(
         frustumProps,

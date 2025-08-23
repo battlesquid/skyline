@@ -1,4 +1,3 @@
-import type { FontData } from "@react-three/drei";
 import { createContext, useContext } from "react";
 import { createStore, useStore } from "zustand";
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "../api/constants";
@@ -15,7 +14,7 @@ export interface SkylineModelInputParameters {
     endYear: number;
     towerSize: number;
     dampening: number;
-    font: string | FontData;
+    font: string;
     shape: SkylineBaseShape;
     padding: number;
     textDepth: number;

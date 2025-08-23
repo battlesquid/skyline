@@ -9,12 +9,12 @@ import { SkylineBaseShape } from "./three/types";
 import { safeString } from "./utils";
 
 export const getDefaultFonts = () => ({
-    Inter: "/fonts/facetype/Inter_Regular.json",
-    "Inter Bold": "/fonts/facetype/Inter_Bold.json",
-    "Press Start": "/fonts/facetype/PressStart2P_Regular.json",
-    "Arvo Bold": "/fonts/facetype/Arvo_Bold.json",
-    "Bebas Neue": "/fonts/facetype/BebasNeue_Regular.json",
-    Quicksilver: "/fonts/facetype/Quicksilver_Regular.json",
+    Inter: "/fonts/ttf/Inter_Regular.ttf",
+    "Inter Bold": "/fonts/ttf/Inter_Bold.ttf",
+    "Press Start": "/fonts/ttf/PressStart2P_Regular.ttf",
+    "Arvo Bold": "/fonts/ttf/Arvo_Bold.ttf",
+    "Bebas Neue": "/fonts/ttf/BebasNeue_Regular.ttf",
+    Quicksilver: "/fonts/ttf/Quicksilver_Regular.ttf",
 });
 
 export const DEFAULT_FONT_SELECTION = "Inter Bold";
