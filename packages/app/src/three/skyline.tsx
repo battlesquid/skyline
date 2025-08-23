@@ -49,7 +49,7 @@ export function Skyline(props: SkylineProps) {
 					intensity={Math.PI}
 				/>
 				<directionalLight color="#fff" position={[0, 10, -50]} />
-				<Environment preset="forest" />
+				<Environment files="/three/wildflower_field_4k.jpg" />
 				<Grid
 					name="grid"
 					position={[0, -computed.platformHeight, 0]}

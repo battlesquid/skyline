@@ -1,4 +1,4 @@
-import { Vec2 } from "manifold-3d";
+import type { Vec2 } from "manifold-3d";
 import opentype from "opentype.js";
 import { pointsOnPath } from "points-on-path";
 import { preload, suspend } from "suspend-react";

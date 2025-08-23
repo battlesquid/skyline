@@ -4,7 +4,7 @@ import { getDefaultParameters } from "../defaults";
 import { wasm } from "./module";
 import { boundingBoxDimensions, centerManifold, mesh2geometry } from "./utils";
 
-const { Manifold, CrossSection } = wasm;
+const { CrossSection } = wasm;
 
 export interface ManifoldDimensions {
     width: number;

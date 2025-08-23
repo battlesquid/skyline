@@ -1,25 +1,18 @@
 import {
-	ActionIcon,
-	Anchor,
-	FileButton,
-	Group,
-	HoverCard,
-	Select,
-	Stack,
-	Text,
-	ThemeIcon,
+    Group,
+    Select
 } from "@mantine/core";
-import { IconFolder, IconHelp } from "@tabler/icons-react";
 import { useState } from "react";
 import { DEFAULT_FONT_SELECTION } from "../../defaults";
 import { useFontStore } from "../../stores/fonts";
 import { useParametersContext } from "../../stores/parameters";
 
+// TODO: re-implement font loading using ttf format
+
 export function FontInput() {
 	const setInputs = useParametersContext((state) => state.setInputs);
-	const [fontLoadFailed, setFontLoadFailed] = useState(false);
+	const [fontLoadFailed] = useState(false);
 	const fonts = useFontStore((state) => state.fonts);
-	const addFont = useFontStore((state) => state.addFont);
 
 	return (
 		<div style={{ display: "flex", columnGap: "0.5rem" }}>
@@ -28,7 +21,7 @@ export function FontInput() {
 				label={
 					<Group gap={5}>
 						Font
-						<HoverCard>
+						{/* <HoverCard>
 							<HoverCard.Target>
 								<ThemeIcon size={16} radius={"lg"} variant="light">
 									<IconHelp stroke={1} size={16} />
@@ -46,7 +39,7 @@ export function FontInput() {
 									font.
 								</Text>
 							</HoverCard.Dropdown>
-						</HoverCard>
+						</HoverCard> */}
 					</Group>
 				}
 				data={Object.keys(fonts)}
@@ -60,7 +53,7 @@ export function FontInput() {
 				}}
 				error={fontLoadFailed ? "Unable to load font" : ""}
 			/>
-			<Stack gap={0}>
+			{/* <Stack gap={0}>
 				<wbr />
 				<FileButton
 					onChange={async (file) => {
@@ -84,7 +77,7 @@ export function FontInput() {
 						</ActionIcon>
 					)}
 				</FileButton>
-			</Stack>
+			</Stack> */}
 		</div>
 	);
 }
