@@ -17,9 +17,6 @@ importers:
 
   packages/app:
     dependencies:
-      '@manifold-studio/typeface':
-        specifier: ^0.3.7
-        version: 0.3.7(@manifold-studio/wrapper@0.3.7(tweakpane@4.0.5))
       '@mantine/core':
         specifier: ^8.2.1
         version: 8.2.1(@mantine/hooks@8.2.1(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -29,9 +26,6 @@ importers:
       '@octokit/graphql':
         specifier: ^9.0.1
         version: 9.0.1
-      '@react-three/csg':
-        specifier: ^4.0.0
-        version: 4.0.0(three@0.169.0)
       '@react-three/drei':
         specifier: ^9.122.0
         version: 9.122.0(@react-three/fiber@8.18.0(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.169.0))(@types/react@18.3.23)(@types/three@0.169.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.169.0)(use-sync-external-store@1.5.0(react@18.3.1))
@@ -62,9 +56,6 @@ importers:
       opentype.js:
         specifier: ^1.3.4
         version: 1.3.4
-      paper:
-        specifier: ^0.12.18
-        version: 0.12.18
       points-on-path:
         specifier: ^0.2.1
         version: 0.2.1
@@ -718,9 +709,6 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@gltf-transform/core@4.2.1':
-    resolution: {integrity: sha512-qKhrQ29KJ9K6sz7xGoGRllqPBlROjPJMQPvCLBOfgMPH3S/Ph5E0e6fD5WmwTY5QPyBsDMRqKd1Vl0ncThTXGw==}
-
   '@gql.tada/cli-utils@1.6.3':
     resolution: {integrity: sha512-jFFSY8OxYeBxdKi58UzeMXG1tdm4FVjXa8WHIi66Gzu9JWtCE6mqom3a8xkmSw+mVaybFW5EN2WXf1WztJVNyQ==}
     peerDependencies:
@@ -862,19 +850,6 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@jscadui/3mf-export@0.5.0':
-    resolution: {integrity: sha512-y5vZktqCjyi7wA38zqNlLIdZUIRZoOO9vCjLzwmL4bR0hk7B/Zm1IeffzJPFe1vFc0C1IEv3hm8caDv3doRk9g==}
-
-  '@manifold-studio/typeface@0.3.7':
-    resolution: {integrity: sha512-obj0MtcaOyhVCnYkQ7nyXpjTNw5rUOJmuWyiNPx5OlOcO1tRUk/vFdrKDQLsZbdnC43LF286+qAcNkulza36ag==}
-    peerDependencies:
-      '@manifold-studio/wrapper': ^0.3.7
-
-  '@manifold-studio/wrapper@0.3.7':
-    resolution: {integrity: sha512-ixDwE0J7Q473qyGq6bEo3SRFJrDD5e+zXMM3sWP92uXNLOn0/Jrvihmc1ax09xLmwpVCGhP1fFjaXnPbw0oeOQ==}
-    peerDependencies:
-      tweakpane: ^4.0.0
-
   '@mantine/core@8.2.1':
     resolution: {integrity: sha512-KxvydotyFRdrRbqULUX2G35/GddPFju9XQUv/vdDWu1ytIWZViTguc+WSj1aBd0DtfRrSaofU5ezZISEXVrPBA==}
     peerDependencies:
@@ -965,9 +940,6 @@ packages:
 
   '@react-spring/types@9.7.5':
     resolution: {integrity: sha512-HVj7LrZ4ReHWBimBvu2SKND3cDVUPWKLqRTmWe/fNY6o1owGOX0cAHbdPDTMelgBlVbrTKrre6lFkhqGZErK/g==}
-
-  '@react-three/csg@4.0.0':
-    resolution: {integrity: sha512-IMLKGINdyQEUfyg3CE1gYoH9lK5RDR90vhXG21vHyo2kVAuslTnsH9GTVat69YglvNqHoEIMExTGLdhzm5/ygQ==}
 
   '@react-three/drei@9.122.0':
     resolution: {integrity: sha512-SEO/F/rBCTjlLez7WAlpys+iGe9hty4rNgjZvgkQeXFSiwqD4Hbk/wNHMAbdd8vprO2Aj81mihv4dF5bC7D0CA==}
@@ -1655,10 +1627,6 @@ packages:
     engines: {node: '>= 8.0.0'}
     hasBin: true
 
-  paper@0.12.18:
-    resolution: {integrity: sha512-ZSLIEejQTJZuYHhSSqAf4jXOnii0kPhCJGAnYAANtdS72aNwXJ9cP95tZHgq1tnNpvEwgQhggy+4OarviqTCGw==}
-    engines: {node: '>=8.0.0'}
-
   path-data-parser@0.1.0:
     resolution: {integrity: sha512-NOnmBpt5Y2RWbuv0LMzsayp3lVylAHLPUTut412ZA3l+C4uw4ZVkQbjShYCQ8TCpUMdPapr4YjUqLYD6v68j+w==}
 
@@ -1747,9 +1715,6 @@ packages:
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
-
-  property-graph@3.0.0:
-    resolution: {integrity: sha512-TnzxUsttmGtw+OiU0LDw+0FlMbJ8vV8pOjyDI7+Kdni4Tj0hW5BFh7TatQu7Y68hcvvFmiFOHilKShsA4R82fA==}
 
   react-composer@5.0.3:
     resolution: {integrity: sha512-1uWd07EME6XZvMfapwZmc7NgCZqDemcvicRi3wMJzXsQLvZ3L7fTHVyPy1bZdnWXM4iPjYuNE+uJ41MLKeTtnA==}
@@ -1949,17 +1914,6 @@ packages:
   tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
-  three-bvh-csg@0.0.16:
-    resolution: {integrity: sha512-RgC5dY0hAKdfd1bmD3o2CDfmK9GTkvsA1ECzoqTMhSkjSc2zp1z4Wpa5+emLi/EosF5P6+aK2veTxTLZA9+Mhw==}
-    peerDependencies:
-      three: '>=0.151.0'
-      three-mesh-bvh: '>=0.6.6'
-
-  three-mesh-bvh@0.6.8:
-    resolution: {integrity: sha512-EGebF9DZx1S8+7OZYNNTT80GXJZVf+UYXD/HyTg/e2kR/ApofIFfUS4ZzIHNnUVIadpnLSzM4n96wX+l7GMbnQ==}
-    peerDependencies:
-      three: '>= 0.151.0'
-
   three-mesh-bvh@0.7.8:
     resolution: {integrity: sha512-BGEZTOIC14U0XIRw3tO4jY7IjP7n7v24nv9JXS1CyeVRWOCkcOMhRnmENUjuV39gktAw4Ofhr0OvIAiTspQrrw==}
     deprecated: Deprecated due to three.js version incompatibility. Please use v0.8.0, instead.
@@ -2014,9 +1968,6 @@ packages:
 
   tunnel-rat@0.1.2:
     resolution: {integrity: sha512-lR5VHmkPhzdhrM092lI2nACsLO4QubF0/yoOhzX7c+wIpbN1GjHNzCc91QlpxBi+cnx8vVJ+Ur6vL5cEoQPFpQ==}
-
-  tweakpane@4.0.5:
-    resolution: {integrity: sha512-rxEXdSI+ArlG1RyO6FghC4ZUX8JkEfz8F3v1JuteXSV0pEtHJzyo07fcDG+NsJfN5L39kSbCYbB9cBGHyuI/tQ==}
 
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
@@ -2670,10 +2621,6 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@gltf-transform/core@4.2.1':
-    dependencies:
-      property-graph: 3.0.0
-
   '@gql.tada/cli-utils@1.6.3(@0no-co/graphqlsp@1.12.16(graphql@16.11.0)(typescript@5.8.3))(graphql@16.11.0)(typescript@5.8.3)':
     dependencies:
       '@0no-co/graphqlsp': 1.12.16(graphql@16.11.0)(typescript@5.8.3)
@@ -2780,21 +2727,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
-
-  '@jscadui/3mf-export@0.5.0': {}
-
-  '@manifold-studio/typeface@0.3.7(@manifold-studio/wrapper@0.3.7(tweakpane@4.0.5))':
-    dependencies:
-      '@manifold-studio/wrapper': 0.3.7(tweakpane@4.0.5)
-      opentype.js: 1.3.4
-
-  '@manifold-studio/wrapper@0.3.7(tweakpane@4.0.5)':
-    dependencies:
-      '@gltf-transform/core': 4.2.1
-      '@jscadui/3mf-export': 0.5.0
-      fflate: 0.8.2
-      manifold-3d: 3.2.1
-      tweakpane: 4.0.5
 
   '@mantine/core@8.2.1(@mantine/hooks@8.2.1(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -2912,13 +2844,6 @@ snapshots:
       three: 0.169.0
 
   '@react-spring/types@9.7.5': {}
-
-  '@react-three/csg@4.0.0(three@0.169.0)':
-    dependencies:
-      three-bvh-csg: 0.0.16(three-mesh-bvh@0.6.8(three@0.169.0))(three@0.169.0)
-      three-mesh-bvh: 0.6.8(three@0.169.0)
-    transitivePeerDependencies:
-      - three
 
   '@react-three/drei@9.122.0(@react-three/fiber@8.18.0(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.169.0))(@types/react@18.3.23)(@types/three@0.169.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.169.0)(use-sync-external-store@1.5.0(react@18.3.1))':
     dependencies:
@@ -3633,8 +3558,6 @@ snapshots:
       string.prototype.codepointat: 0.2.1
       tiny-inflate: 1.0.3
 
-  paper@0.12.18: {}
-
   path-data-parser@0.1.0: {}
 
   path-key@3.1.1: {}
@@ -3715,8 +3638,6 @@ snapshots:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-
-  property-graph@3.0.0: {}
 
   react-composer@5.0.3(react@18.3.1):
     dependencies:
@@ -3919,15 +3840,6 @@ snapshots:
 
   tabbable@6.2.0: {}
 
-  three-bvh-csg@0.0.16(three-mesh-bvh@0.6.8(three@0.169.0))(three@0.169.0):
-    dependencies:
-      three: 0.169.0
-      three-mesh-bvh: 0.6.8(three@0.169.0)
-
-  three-mesh-bvh@0.6.8(three@0.169.0):
-    dependencies:
-      three: 0.169.0
-
   three-mesh-bvh@0.7.8(three@0.169.0):
     dependencies:
       three: 0.169.0
@@ -3989,8 +3901,6 @@ snapshots:
       - '@types/react'
       - immer
       - react
-
-  tweakpane@4.0.5: {}
 
   type-fest@4.41.0: {}
 
