@@ -1,4 +1,4 @@
-import { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
+import type { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
 import { SceneUtils, STLExporter } from "three-stdlib";
 
 export interface Dimensions {
@@ -75,4 +75,4 @@ export const getBoundingBoxVolume = (bb: Box3) => {
 	const y = bb.max.y - bb.min.y;
 	const z = bb.max.z - bb.min.z;
 	return x * y * z;
-}
+};

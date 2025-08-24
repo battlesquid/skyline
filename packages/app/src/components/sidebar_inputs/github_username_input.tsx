@@ -12,10 +12,10 @@ import {
 	useCombobox,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
+import { IconLoader, IconSearch } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { client } from "../../api/client";
 import { SearchUsersQuery } from "../../api/query";
-import { IconLoader, IconSearch } from "@tabler/icons-react";
 
 export type GitHubUser = {
 	login: string;
@@ -35,7 +35,9 @@ async function fetchGitHubUsers(query: string): Promise<GitHubUser[]> {
 		return [];
 	}
 	const nodes = result.data.search.nodes ?? [];
-	return nodes.filter((node): node is GitHubUser => !!node && node.__typename === "User");
+	return nodes.filter(
+		(node): node is GitHubUser => !!node && node.__typename === "User",
+	);
 }
 
 interface GitHubUsernameInputProps

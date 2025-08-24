@@ -1,7 +1,4 @@
-import {
-    Group,
-    Select
-} from "@mantine/core";
+import { Group, Select } from "@mantine/core";
 import { useState } from "react";
 import { DEFAULT_FONT_SELECTION } from "../../defaults";
 import { useFontStore } from "../../stores/fonts";

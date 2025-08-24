@@ -24,14 +24,14 @@ export const fetchProfile = async (): Promise<UserProfile | null> => {
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 
 export const setToken = (token: string) => {
-    console.trace("Setting Token")
+	console.trace("Setting Token");
 	localStorage.setItem(TOKEN_KEY, token);
-}
+};
 
 export const deleteToken = () => {
-    console.trace("Deleting Token")
-    localStorage.removeItem(TOKEN_KEY);
-}
+	console.trace("Deleting Token");
+	localStorage.removeItem(TOKEN_KEY);
+};
 
 export const isAuthenticated = () => localStorage.getItem(TOKEN_KEY) !== null;
 

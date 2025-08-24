@@ -7,68 +7,71 @@ import { boundingBoxDimensions, centerManifold, mesh2geometry } from "./utils";
 const { CrossSection } = wasm;
 
 export interface ManifoldDimensions {
-    width: number;
-    length: number;
-    height: number;
+	width: number;
+	length: number;
+	height: number;
 }
 
 export interface ManifoldFrustumArgs extends ManifoldDimensions {
-    lengthPadding: number;
-    widthPadding: number;
+	lengthPadding: number;
+	widthPadding: number;
 }
 
 export interface ManifoldFrustumText {
-    points: Vec2[][]
-    offset?: number;
+	points: Vec2[][];
+	offset?: number;
 }
 
 export type ManifoldFrustumSide = "length" | "width";
 
-export const getSlopeAngle = (frustum: ManifoldFrustumArgs, side: ManifoldFrustumSide = "length"): number => {
-    const { width, length, widthPadding, lengthPadding, height } = frustum;
+export const getSlopeAngle = (
+	frustum: ManifoldFrustumArgs,
+	side: ManifoldFrustumSide = "length",
+): number => {
+	const { width, length, widthPadding, lengthPadding, height } = frustum;
 
-    const baseWidth = width + widthPadding;
-    const baseLength = length + lengthPadding;
+	const baseWidth = width + widthPadding;
+	const baseLength = length + lengthPadding;
 
-    // Calculate the horizontal distance from center to edge at the base vs top
-    const baseDimension = side === "width" ? baseWidth : baseLength;
-    const topDimension = side === "width" ? width : length;
+	// Calculate the horizontal distance from center to edge at the base vs top
+	const baseDimension = side === "width" ? baseWidth : baseLength;
+	const topDimension = side === "width" ? width : length;
 
-    // The horizontal difference between base and top edge
-    const horizontalDifference = (baseDimension - topDimension) / 2;
+	// The horizontal difference between base and top edge
+	const horizontalDifference = (baseDimension - topDimension) / 2;
 
-    // Calculate the slope angle using arctangent
-    const slopeAngle = Math.atan(horizontalDifference / height);
+	// Calculate the slope angle using arctangent
+	const slopeAngle = Math.atan(horizontalDifference / height);
 
-    return slopeAngle;
-}
+	return slopeAngle;
+};
 
 const toDeg = (rad: number): number => {
-    return rad * (180 / Math.PI);
-}
+	return rad * (180 / Math.PI);
+};
 
 export const getNormal = (frustum: ManifoldFrustumArgs): Vec3 => {
-    const angle = getSlopeAngle(frustum);
-    return [0, Math.cos(angle), Math.sin(angle)];
-}
+	const angle = getSlopeAngle(frustum);
+	return [0, Math.cos(angle), Math.sin(angle)];
+};
 
 export const getThreeNormal = (frustum: ManifoldFrustumArgs): Vector3 => {
-    const normal = getNormal(frustum);
-    return new Vector3(normal[0], normal[2], normal[1]);
-}
+	const normal = getNormal(frustum);
+	return new Vector3(normal[0], normal[2], normal[1]);
+};
 
 export interface BaseFrustum {
-    angle: number;
+	angle: number;
 }
 
 export interface ManifoldFrustum extends BaseFrustum {
-    manifold: ManifoldType;
-    normal: Vec3;
+	manifold: ManifoldType;
+	normal: Vec3;
 }
 
 export interface ThreeFrustum extends BaseFrustum {
-    geometry: BufferGeometry;
-    normal: Vector3;
+	geometry: BufferGeometry;
+	normal: Vector3;
 }
 
 /**
@@ -78,87 +81,96 @@ export interface ThreeFrustum extends BaseFrustum {
 export const SUBTRACT_VISIBILITY_PADDING = 0.0002;
 
 export const makeManifoldFrustum = (
-    frustum: ManifoldFrustumArgs,
-    name: ManifoldFrustumText,
-    year: ManifoldFrustumText,
-    inset: boolean
+	frustum: ManifoldFrustumArgs,
+	name: ManifoldFrustumText,
+	year: ManifoldFrustumText,
+	inset: boolean,
 ): ManifoldFrustum => {
-    const { length, width, lengthPadding, widthPadding, height } = frustum;
+	const { length, width, lengthPadding, widthPadding, height } = frustum;
 
-    const baseLength = length + lengthPadding;
-    const baseWidth = width + widthPadding;
-    const topLengthScale = length / baseLength;
-    const topWidthScale = width / baseWidth;
+	const baseLength = length + lengthPadding;
+	const baseWidth = width + widthPadding;
+	const topLengthScale = length / baseLength;
+	const topWidthScale = width / baseWidth;
 
-    const nameSlotOffset = name.offset ?? 0;
-    const yearSlotOffset = year.offset ?? 0;
+	const nameSlotOffset = name.offset ?? 0;
+	const yearSlotOffset = year.offset ?? 0;
 
-    const angle = -getSlopeAngle(frustum);
-    const normal = getNormal(frustum);
+	const angle = -getSlopeAngle(frustum);
+	const normal = getNormal(frustum);
 
-    const operation = inset ? "subtract" : "add";
+	const operation = inset ? "subtract" : "add";
 
-    const EXTRUSION_LEN = 1;
-    const TRANSLATE_DIR = inset ? -1 : 1;
-    const TRANSLATE_LEN = TRANSLATE_DIR * (EXTRUSION_LEN / 2) + (SUBTRACT_VISIBILITY_PADDING);
+	const EXTRUSION_LEN = 1;
+	const TRANSLATE_DIR = inset ? -1 : 1;
+	const TRANSLATE_LEN =
+		TRANSLATE_DIR * (EXTRUSION_LEN / 2) + SUBTRACT_VISIBILITY_PADDING;
 
-    const nameExtrusion = centerManifold(
-        new CrossSection(name.points)
-            .extrude(EXTRUSION_LEN)
-            .rotate([toDeg(angle) - 90, 0, 180])
-    );
-    const yearExtrusion = centerManifold(
-        new CrossSection(year.points)
-            .extrude(EXTRUSION_LEN)
-            .rotate([toDeg(angle) - 90, 0, 180])
-    );
+	const nameExtrusion = centerManifold(
+		new CrossSection(name.points)
+			.extrude(EXTRUSION_LEN)
+			.rotate([toDeg(angle) - 90, 0, 180]),
+	);
+	const yearExtrusion = centerManifold(
+		new CrossSection(year.points)
+			.extrude(EXTRUSION_LEN)
+			.rotate([toDeg(angle) - 90, 0, 180]),
+	);
 
-    const nameDimensions = boundingBoxDimensions(nameExtrusion.boundingBox());
-    const yearDimensions = boundingBoxDimensions(yearExtrusion.boundingBox());
+	const nameDimensions = boundingBoxDimensions(nameExtrusion.boundingBox());
+	const yearDimensions = boundingBoxDimensions(yearExtrusion.boundingBox());
 
-    const nameSlotPosition = [
-        (baseWidth / 2) - (nameDimensions.width / 2) - (nameSlotOffset + widthPadding / 2) + (TRANSLATE_LEN * normal[0]),
-        (length / 2) + (lengthPadding / 4) + (TRANSLATE_LEN * normal[1]),
-        (TRANSLATE_LEN * normal[2])
-    ] as const;
+	const nameSlotPosition = [
+		baseWidth / 2 -
+			nameDimensions.width / 2 -
+			(nameSlotOffset + widthPadding / 2) +
+			TRANSLATE_LEN * normal[0],
+		length / 2 + lengthPadding / 4 + TRANSLATE_LEN * normal[1],
+		TRANSLATE_LEN * normal[2],
+	] as const;
 
-    // right-side anchored
-    const yearSlotPosition = [
-        (-baseWidth / 2) + (yearDimensions.width / 2) + (yearSlotOffset + widthPadding / 2) + (TRANSLATE_LEN * normal[0]),
-        (length / 2) + (lengthPadding / 4) + (TRANSLATE_LEN * normal[1]),
-        (TRANSLATE_LEN * normal[2])
-    ] as const;
+	// right-side anchored
+	const yearSlotPosition = [
+		-baseWidth / 2 +
+			yearDimensions.width / 2 +
+			(yearSlotOffset + widthPadding / 2) +
+			TRANSLATE_LEN * normal[0],
+		length / 2 + lengthPadding / 4 + TRANSLATE_LEN * normal[1],
+		TRANSLATE_LEN * normal[2],
+	] as const;
 
-    const manifold = CrossSection
-        .square([baseWidth, baseLength], true)
-        .extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
-    [operation](nameExtrusion.translate(nameSlotPosition))
-    [operation](yearExtrusion.translate(yearSlotPosition));
+	const manifold = CrossSection.square([baseWidth, baseLength], true)
+		.extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
+		[operation](nameExtrusion.translate(nameSlotPosition))
+		[operation](yearExtrusion.translate(yearSlotPosition));
 
-    return { manifold, angle, normal };
-}
+	return { manifold, angle, normal };
+};
 
-export const makeThreeFrustum = (...args: Parameters<typeof makeManifoldFrustum>): ThreeFrustum => {
-    console.log("making frustum")
-    const { manifold, angle } = makeManifoldFrustum(...args);
-    const normal = getThreeNormal(args[0]);
-    const geometry = mesh2geometry(manifold.getMesh());
-    return { angle, geometry, normal };
-}
+export const makeThreeFrustum = (
+	...args: Parameters<typeof makeManifoldFrustum>
+): ThreeFrustum => {
+	console.log("making frustum");
+	const { manifold, angle } = makeManifoldFrustum(...args);
+	const normal = getThreeNormal(args[0]);
+	const geometry = mesh2geometry(manifold.getMesh());
+	return { angle, geometry, normal };
+};
 
-export const emptyThreeFrustum = (): ThreeFrustum => makeThreeFrustum(
-    {
-        width: 0,
-        length: 0,
-        height: 0,
-        widthPadding: 0,
-        lengthPadding: 0,
-    },
-    {
-        points: []
-    },
-    {
-        points: []
-    },
-    getDefaultParameters().inputs.insetText
-);
+export const emptyThreeFrustum = (): ThreeFrustum =>
+	makeThreeFrustum(
+		{
+			width: 0,
+			length: 0,
+			height: 0,
+			widthPadding: 0,
+			lengthPadding: 0,
+		},
+		{
+			points: [],
+		},
+		{
+			points: [],
+		},
+		getDefaultParameters().inputs.insetText,
+	);
