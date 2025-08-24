@@ -10,6 +10,7 @@ import { LOGOS } from "../logos";
 import { type ManifoldFrustumArgs, type ManifoldFrustumText, makeThreeFrustum } from "../manifold/frustum";
 import { useParametersContext } from "../stores/parameters";
 import { SkylineBaseShape } from "./types";
+import { useShallow } from "zustand/shallow";
 
 export interface SkylineBaseProps {
     years: ContributionWeeks[];
@@ -18,8 +19,8 @@ export interface SkylineBaseProps {
 export function SkylineBase({
     years
 }: SkylineBaseProps) {
-    const inputs = useParametersContext((state) => state.inputs);
-    const computed = useParametersContext((state) => state.computed);
+    const inputs = useParametersContext(useShallow((state) => state.inputs));
+    const computed = useParametersContext(useShallow((state) => state.computed));
 
     // TODO: dont memoize this, maybe make a hook to just update props
     const material = useMemo(
@@ -55,7 +56,7 @@ export function SkylineBase({
         height: computed.platformHeight,
         lengthPadding: 7 * +(inputs.shape === SkylineBaseShape.Frustum),
         widthPadding: 5 * +(inputs.shape === SkylineBaseShape.Frustum)
-    }), [computed, years, inputs.shape]);
+    }), [computed.modelLength, computed.paddingWidth, computed.platformHeight, inputs.shape, years]);
 
     const nameManifoldProps = useMemo((): ManifoldFrustumText => ({
         points: toPolygons(ttfFont, computed.resolvedName, computed.platformHeight / 1.75),
@@ -67,11 +68,14 @@ export function SkylineBase({
         offset: inputs.yearOffset
     }), [ttfFont, inputs.yearOffset]);
 
-    const frustum = makeThreeFrustum(
-        frustumProps,
-        nameManifoldProps,
-        yearManifoldProps,
-        inputs.insetText
+    const frustum = useMemo(() =>
+        makeThreeFrustum(
+            frustumProps,
+            nameManifoldProps,
+            yearManifoldProps,
+            inputs.insetText
+        ),
+        [frustumProps, nameManifoldProps, yearManifoldProps, inputs.insetText]
     );
 
 

@@ -1,4 +1,4 @@
-import { Bounds, Environment, Grid } from "@react-three/drei";
+import { Bounds, Environment, Grid, SoftShadows } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo, useRef } from "react";
 import { DoubleSide, type Group } from "three";
@@ -33,7 +33,7 @@ export function Skyline(props: SkylineProps) {
                 <Bounds fit={ready} clip={ready} observe={ready} margin={1}>
                     <SkylineModel group={group} years={years} />
                 </Bounds>
-                <ambientLight intensity={Math.PI / 2} />
+                <ambientLight intensity={Math.PI / 3} />
                 <spotLight
                     castShadow
                     position={[0, 20, 200]}
@@ -41,15 +41,22 @@ export function Skyline(props: SkylineProps) {
                     penumbra={0.1}
                     decay={0.4}
                     intensity={Math.PI}
+                    color="#6f6f6f"
                 />
                 <pointLight
                     castShadow
                     position={[0, 40, 50]}
                     decay={0}
                     intensity={Math.PI}
+                    color="#c7c7c7"
+
                 />
-                <directionalLight color="#fff" position={[0, 10, -50]} />
-                <Environment files="/three/wildflower_field_4k.jpg" />
+                <directionalLight color="#a8a8a8" intensity={Math.PI} position={[0, 10, -50]} />
+                <Environment
+                    files="/three/wildflower_field_4k.jpg"
+                    environmentIntensity={0.6}
+                />
+                <SoftShadows size={80} samples={10} />
                 <Grid
                     name="grid"
                     position={[0, -computed.platformHeight, 0]}

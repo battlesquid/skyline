@@ -1,7 +1,7 @@
 import type { Box, Manifold as ManifoldType, Mesh as MeshType, Rect } from "manifold-3d";
 import { BufferAttribute, BufferGeometry } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { GeometryUtils, type TextGeometry } from "three-stdlib";
+import type { TextGeometry } from "three-stdlib";
 import type { ManifoldDimensions } from "./frustum";
 import { wasm } from "./module";
 
