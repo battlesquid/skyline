@@ -86,7 +86,7 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 			),
 			offset: inputs.yearOffset,
 		}),
-		[ttfFont, inputs.yearOffset],
+		[ttfFont, inputs.yearOffset, computed.formattedYear],
 	);
 
 	const frustum = useMemo(

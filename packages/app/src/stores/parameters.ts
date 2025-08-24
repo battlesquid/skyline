@@ -5,6 +5,7 @@ import { formatYearText } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import type { SkylineBaseShape } from "../three/types";
 import { safeString } from "../utils";
+import type { ExportFormat } from "../three/export";
 
 export interface SkylineModelInputParameters {
 	name: string;
@@ -22,6 +23,7 @@ export interface SkylineModelInputParameters {
 	showContributionColor: boolean;
 	filename: string;
 	scale: number;
+    exportFormat: ExportFormat;
 	logoOffset: number;
 	nameOffset: number;
 	yearOffset: number;
@@ -38,7 +40,7 @@ export interface SkylineModelComputedParameters {
 	halfModelWidth: number;
 	paddingWidth: number;
 	formattedYear: string;
-	defaultFilename: string;
+	resolvedFilename: string;
 	resolvedName: string;
 	renderColor: string;
 }
@@ -81,7 +83,7 @@ export const createParametersStore = (
 			const halfModelWidth = modelWidth / 2;
 			const paddingWidth = inputs.padding * 2;
 			const formattedYear = formatYearText(inputs.startYear, inputs.endYear);
-			const defaultFilename = `${inputs.name}_${formattedYear}_skyline`;
+			const resolvedFilename = `${inputs.name}_${formattedYear}_skyline`;
 			const resolvedName = safeString(inputs.nameOverride, inputs.name);
 			const renderColor = inputs.showContributionColor
 				? getDefaultParameters().inputs.color
@@ -97,7 +99,7 @@ export const createParametersStore = (
 				halfModelLength,
 				halfModelWidth,
 				paddingWidth,
-				defaultFilename,
+				resolvedFilename,
 				formattedYear,
 				resolvedName,
 				renderColor,

@@ -1,27 +1,26 @@
 import { Instances, useBounds } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
 import {
-	type MutableRefObject,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
+    type MutableRefObject,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
 } from "react";
 import { Color, type Group as ThreeGroup } from "three";
 import type {
-	ContributionDay,
-	ContributionWeek,
-	ContributionWeeks,
+    ContributionDay,
+    ContributionWeek,
+    ContributionWeeks,
 } from "../api/types";
 import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
+import { useModelStore } from "../stores/model";
 import { useParametersContext } from "../stores/parameters";
-import { useSceneStore } from "../stores/scene";
 import { ContributionTower } from "./contribution_tower";
-import { SkylineBase } from "./skyline_base";
 import type { SkylineProps } from "./skyline";
+import { SkylineBase } from "./skyline_base";
 import { SkylineObjectNames } from "./utils";
 
 export interface SkylineModelProps extends SkylineProps {
@@ -34,10 +33,9 @@ export function SkylineModel(props: SkylineModelProps) {
 	const computed = useParametersContext((state) => state.computed);
 	const inputs = useParametersContext((state) => state.inputs);
 
-	const scene = useThree((state) => state.scene);
-	const setDirty = useSceneStore((state) => state.setDirty);
-	const setSize = useSceneStore((state) => state.setSize);
-	const setScene = useSceneStore((state) => state.setScene);
+	const setDirty = useModelStore((state) => state.setDirty);
+	const setSize = useModelStore((state) => state.setSize);
+	const setModel = useModelStore((state) => state.setModel);
 
 	const reset = useControlsStore((state) => state.reset);
 	const clearReset = useControlsStore((state) => state.clearReset);
@@ -63,7 +61,7 @@ export function SkylineModel(props: SkylineModelProps) {
 			} else {
 				setInitialized(true);
 			}
-			setScene(scene.clone());
+			setModel(group.current.clone());
 		}, 1500);
 
 		return clearBoundsTimeout;

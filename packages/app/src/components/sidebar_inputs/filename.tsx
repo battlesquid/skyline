@@ -4,7 +4,7 @@ import { useParametersContext } from "../../stores/parameters";
 export function FilenameInput() {
 	const filename = useParametersContext((state) => state.inputs.filename);
 	const defaultFilename = useParametersContext(
-		(state) => state.computed.defaultFilename,
+		(state) => state.computed.resolvedFilename,
 	);
 	const setInputs = useParametersContext((state) => state.setInputs);
 

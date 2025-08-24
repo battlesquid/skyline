@@ -21,6 +21,7 @@ import { Profile } from "./profile";
 import { BasePaddingInput } from "./sidebar_inputs/base_padding";
 import { BaseShapeInput } from "./sidebar_inputs/base_shape";
 import { ExportButton } from "./sidebar_inputs/export";
+import { ExportFormatInput } from "./sidebar_inputs/export_format";
 import { FilenameInput } from "./sidebar_inputs/filename";
 import { FontInput } from "./sidebar_inputs/font_input";
 import { GenerateSection } from "./sidebar_inputs/generate_section";
@@ -100,6 +101,7 @@ export function Sidebar(props: SidebarProps) {
 									<Stack gap={10}>
 										<ScaleInput />
 										<FilenameInput />
+                                        <ExportFormatInput />
 									</Stack>
 								</Accordion.Panel>
 							</Accordion.Item>

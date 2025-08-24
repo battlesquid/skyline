@@ -1,39 +1,38 @@
 import { Button, Text } from "@mantine/core";
+import { Suspense } from "react";
 import { useShallow } from "zustand/shallow";
+import { useModelStore } from "../../stores/model";
 import { useParametersContext } from "../../stores/parameters";
-import { useSceneStore } from "../../stores/scene";
-import { exportScene, getDimensionsText } from "../../three/utils";
+import { useExportedModel } from "../../three/export";
+import { getDimensionsText } from "../../three/utils";
 
 export function ExportButton() {
-	const filename = useParametersContext((state) => state.inputs.filename);
-	const scale = useParametersContext((state) => state.inputs.scale);
-	const defaultFilename = useParametersContext(
-		(state) => state.computed.defaultFilename,
-	);
+    const filename = useParametersContext((state) => state.computed.resolvedFilename);
+    const format = useParametersContext((state) => state.inputs.exportFormat)
+    const scale = useParametersContext((state) => state.inputs.scale);
 
-	const scene = useSceneStore((state) => state.scene);
-	const dirty = useSceneStore((state) => state.dirty);
-	const size = useSceneStore(useShallow((state) => state.size));
+    const model = useModelStore((state) => state.model);
+    const dirty = useModelStore((state) => state.dirty);
+    const size = useModelStore(useShallow((state) => state.size));
+    const { downloadLink, exporting } = useExportedModel(model, scale, format);
 
-	return (
-		<Button
-			fullWidth
-			loading={scene === null || dirty}
-			disabled={scene === null || dirty}
-			onClick={() =>
-				exportScene(
-					scene,
-					filename.trim() === "" ? defaultFilename : filename,
-					scale,
-				)
-			}
-		>
-			<div>
-				<Text fw={900} size="sm">
-					Export
-				</Text>
-				<Text size="xs">{getDimensionsText(scale, size)}</Text>
-			</div>
-		</Button>
-	);
+    return (
+        <Suspense>
+            <Button
+                fullWidth
+                loading={model === null || dirty || exporting}
+                disabled={model === null || dirty || exporting}
+                component="a"
+                href={downloadLink}
+                download={`${filename}.${format}`}
+            >
+                <div>
+                    <Text fw={900} size="sm">
+                        Export
+                    </Text>
+                    <Text size="xs">{getDimensionsText(scale, size)}</Text>
+                </div>
+            </Button>
+        </Suspense>
+    );
 }
