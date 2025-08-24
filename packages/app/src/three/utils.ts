@@ -1,4 +1,4 @@
-import type { InstancedMesh, Mesh, Scene, Vector3 } from "three";
+import type { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
 import { SceneUtils, STLExporter } from "three-stdlib";
 
 export interface Dimensions {
@@ -35,6 +35,7 @@ export const exportScene = (
 	const instances = clone.getObjectByName("instances") as InstancedMesh;
 
 	const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
+
 	meshes.position.set(0, meshes.position.y, 0);
 	meshes.updateMatrix();
 
@@ -46,6 +47,8 @@ export const exportScene = (
 		instancesGroup.removeFromParent();
 		instances.removeFromParent();
 	}
+
+	clone.getObjectByName("name_subtraction")?.removeFromParent();
 
 	const grid = clone.getObjectByName("grid");
 	if (grid !== undefined) {
@@ -65,4 +68,11 @@ export const exportScene = (
 
 export const getDimensionsText = (scale: number, size: Vector3) => {
 	return `${Math.round(size.x * scale)}mm × ${Math.round(size.y * scale)}mm × ${Math.round(size.z * scale)}mm`;
+};
+
+export const getBoundingBoxVolume = (bb: Box3) => {
+	const x = bb.max.x - bb.min.x;
+	const y = bb.max.y - bb.min.y;
+	const z = bb.max.z - bb.min.z;
+	return x * y * z;
 };

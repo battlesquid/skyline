@@ -1,7 +1,10 @@
 import { Button, Group, NumberInput } from "@mantine/core";
 import { useValidatedState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { getParametersStore, useParametersContext } from "../../stores/parameters";
+import {
+	getParametersStore,
+	useParametersContext,
+} from "../../stores/parameters";
 import { GitHubUsernameInput } from "./github_username_input";
 
 export interface GenerateSectionProps {

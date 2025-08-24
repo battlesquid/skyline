@@ -5,15 +5,15 @@ export const useProfile = () => {
 	const [profile, setProfile] = useState<UserProfile | null>(null);
 	const [loading, setLoading] = useState(false);
 
-    const fetchProfilePromise = useMemo(() => fetchProfile(), []);
+	const fetchProfilePromise = useMemo(() => fetchProfile(), []);
 	const [promise] = useState(fetchProfilePromise);
-    
+
 	useEffect(() => {
-        if (loading) {
-            console.log("exiting")
-            return;
-        } 
-        setLoading(true);
+		if (loading) {
+			console.log("exiting");
+			return;
+		}
+		setLoading(true);
 		fetchProfilePromise
 			.then(setProfile)
 			.catch(console.error)

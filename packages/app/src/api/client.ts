@@ -7,9 +7,9 @@ export const client = new Client({
 	exchanges: [
 		cacheExchange,
 		authExchange(async (utils) => {
-            return {
-                addAuthToOperation(operation) {
-                    const token = getToken();
+			return {
+				addAuthToOperation(operation) {
+					const token = getToken();
 					if (!token) {
 						return operation;
 					}

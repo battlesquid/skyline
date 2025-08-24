@@ -12,14 +12,19 @@ export default defineConfig({
 			index: "./src/index.tsx",
 		},
 	},
-    tools: {
-        rspack: {
-            plugins: [
-                tanstackRouter({
-                    target: "react",
-                    autoCodeSplitting: true
-                })
-            ]
-        }
-    }
+	tools: {
+		rspack: {
+			resolve: {
+				fallback: {
+					module: false,
+				},
+			},
+			plugins: [
+				tanstackRouter({
+					target: "react",
+					autoCodeSplitting: true,
+				}),
+			],
+		},
+	},
 });

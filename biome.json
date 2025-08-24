@@ -16,7 +16,8 @@
 			"!**/tsconfig*.json",
 			"!**/theme/style.css",
 			"!**/theme/theme.ts",
-			"!**/theme/css_variable_resolver.ts"
+			"!**/theme/css_variable_resolver.ts",
+			"!**/routeTree.gen.ts"
 		]
 	},
 	"formatter": {

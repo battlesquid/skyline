@@ -13,7 +13,7 @@ import type {
 	ContributionWeek,
 	ContributionWeeks,
 } from "../api/types";
-import { calculateFirstDayOffset, formatYearText } from "../api/utils";
+import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
@@ -69,12 +69,13 @@ export function SkylineModel(props: SkylineModelProps) {
 	}, [
 		inputs.dampening,
 		inputs.name,
-        inputs.nameOverride,
+		inputs.nameOverride,
 		inputs.startYear,
 		inputs.endYear,
 		inputs.padding,
 		inputs.font,
 		inputs.shape,
+		inputs.insetText,
 	]);
 
 	useEffect(() => {
@@ -96,10 +97,6 @@ export function SkylineModel(props: SkylineModelProps) {
 	const id = useRef<number>(0);
 	const tempColor = new Color();
 	const multColor = new Color();
-
-	const renderColor = inputs.showContributionColor
-		? getDefaultParameters().inputs.color
-		: inputs.color;
 
 	const contributionColors = useMemo(() => {
 		if (years.length === 0) {
@@ -160,14 +157,14 @@ export function SkylineModel(props: SkylineModelProps) {
 				day={day}
 				x={
 					weekIdx * inputs.towerSize -
-					computed.xMidpointOffset +
+					computed.halfModelLength +
 					computed.towerSizeOffset
 				}
 				y={
 					centerOffset +
 					YEAR_OFFSET +
 					((dayIdx + weekOffset) * inputs.towerSize -
-						computed.yMidpointOffset +
+						computed.halfModelWidth +
 						computed.towerSizeOffset)
 				}
 				size={getDefaultParameters().inputs.towerSize}
@@ -222,7 +219,7 @@ export function SkylineModel(props: SkylineModelProps) {
 						castShadow
 						receiveShadow
 						name="instances"
-						key={`${inputs.name}-${formatYearText(inputs.startYear, inputs.endYear)}-${inputs.showContributionColor}`}
+						key={`${inputs.name}-${computed.formattedYear}-${inputs.showContributionColor}`}
 						limit={contributionColors.instanced.length}
 					>
 						<boxGeometry>
@@ -236,12 +233,12 @@ export function SkylineModel(props: SkylineModelProps) {
 								]}
 							/>
 						</boxGeometry>
-						<meshStandardMaterial toneMapped={false} vertexColors={true} />
+						<meshStandardMaterial vertexColors={true} />
 						{render()}
 					</Instances>
 				</group>
 			)}
-			<SkylineBase color={renderColor} years={years} />
+			<SkylineBase years={years} />
 		</group>
 	);
 }

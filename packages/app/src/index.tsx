@@ -14,26 +14,26 @@ import { routeTree } from "./routeTree.gen";
 preloadDefaultFonts();
 
 const router = createRouter({ routeTree });
-declare module '@tanstack/react-router' {
-    interface Register {
-        router: typeof router
-    }
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: typeof router;
+	}
 }
 
 const rootEl = document.getElementById("root");
 if (rootEl) {
-    const root = ReactDOM.createRoot(rootEl);
-    root.render(
-        <React.StrictMode>
-            <MantineProvider
-                theme={shadcnTheme}
-                cssVariablesResolver={shadcnCssVariableResolver}
-                forceColorScheme="dark"
-            >
-                <Provider value={client}>
-                    <RouterProvider router={router} />
-                </Provider>
-            </MantineProvider>
-        </React.StrictMode>,
-    );
+	const root = ReactDOM.createRoot(rootEl);
+	root.render(
+		<React.StrictMode>
+			<MantineProvider
+				theme={shadcnTheme}
+				cssVariablesResolver={shadcnCssVariableResolver}
+				forceColorScheme="dark"
+			>
+				<Provider value={client}>
+					<RouterProvider router={router} />
+				</Provider>
+			</MantineProvider>
+		</React.StrictMode>,
+	);
 }

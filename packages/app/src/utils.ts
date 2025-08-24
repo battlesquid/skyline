@@ -30,3 +30,14 @@ export const safeInt = (value: string | number, min: number) => {
 	}
 	return Number.parseInt(`${value}`);
 };
+
+export const safeString = (value: string, fallback: string) => {
+	return value.trim() !== "" ? value : fallback;
+};
+
+export const isNullish = (value: unknown): value is null | undefined => {
+	if (value === null || value === undefined) {
+		return true;
+	}
+	return false;
+};
