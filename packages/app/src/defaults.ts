@@ -29,7 +29,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
         nameOverride: "",
         startYear: new Date().getFullYear(),
         endYear: new Date().getFullYear(),
-        color: "#919191",
+        color: "#787878",
         font: DEFAULT_FONT,
         insetText: false,
         showContributionColor: false,
