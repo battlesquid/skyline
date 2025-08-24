@@ -1,5 +1,13 @@
-import type { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
+import type { Box3, Group, InstancedMesh, Mesh, Vector3 } from "three";
 import { SceneUtils, STLExporter } from "three-stdlib";
+
+export const SkylineObjectNames = {
+    Root: "root",
+    Towers: "towers",
+    TowersParent: "towers-parent",
+    TowersExportGroup: "towers-export-group",
+    Base: "base"
+}
 
 export interface Dimensions {
 	width: number;
@@ -22,15 +30,15 @@ export const getDimensions = (mesh: Mesh | null): Dimensions => {
 };
 
 export const exportScene = (
-	scene: Scene | null,
+	group: Group | null,
 	name: string,
 	scale: number,
 ) => {
-	if (scene === null) {
+	if (group === null) {
 		console.warn("Scene is null, skipping export");
 		return;
 	}
-	const clone = scene.clone();
+	const clone = group.clone();
 	const exportGroup = clone.getObjectByName("export_group");
 	const instances = clone.getObjectByName("instances") as InstancedMesh;
 
@@ -47,8 +55,6 @@ export const exportScene = (
 		instancesGroup.removeFromParent();
 		instances.removeFromParent();
 	}
-
-	clone.getObjectByName("name_subtraction")?.removeFromParent();
 
 	const grid = clone.getObjectByName("grid");
 	if (grid !== undefined) {

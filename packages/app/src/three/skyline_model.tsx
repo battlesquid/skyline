@@ -21,10 +21,11 @@ import { useParametersContext } from "../stores/parameters";
 import { useSceneStore } from "../stores/scene";
 import { ContributionTower } from "./contribution_tower";
 import { SkylineBase } from "./skyline_base";
+import type { SkylineProps } from "./skyline";
+import { SkylineObjectNames } from "./utils";
 
-export interface SkylineModelProps {
+export interface SkylineModelProps extends SkylineProps {
 	group: MutableRefObject<ThreeGroup | null>;
-	years: ContributionWeeks[];
 }
 
 export function SkylineModel(props: SkylineModelProps) {
@@ -212,13 +213,13 @@ export function SkylineModel(props: SkylineModelProps) {
 
 	return (
 		<group ref={group}>
-			<group name="export_group" />
+			<group name={SkylineObjectNames.TowersExportGroup} />
 			{years.length > 0 && years[0].length > 0 && (
-				<group name="instances_group">
+				<group name={SkylineObjectNames.TowersParent}>
 					<Instances
 						castShadow
 						receiveShadow
-						name="instances"
+						name={SkylineObjectNames.Towers}
 						key={`${inputs.name}-${computed.formattedYear}-${inputs.showContributionColor}`}
 						limit={contributionColors.instanced.length}
 					>
