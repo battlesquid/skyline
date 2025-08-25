@@ -1,16 +1,15 @@
 import { Instances, useBounds } from "@react-three/drei";
 import {
-    type MutableRefObject,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
+	type MutableRefObject,
+	useEffect,
+	useRef,
+	useState
 } from "react";
-import { Color, type Group as ThreeGroup } from "three";
+import { Color, InstancedMesh, type Group as ThreeGroup } from "three";
 import type {
-    ContributionDay,
-    ContributionWeek,
-    ContributionWeeks,
+	ContributionDay,
+	ContributionWeek,
+	ContributionWeeks,
 } from "../api/types";
 import { calculateFirstDayOffset } from "../api/utils";
 import { getDefaultParameters } from "../defaults";
@@ -18,6 +17,7 @@ import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
 import { useModelStore } from "../stores/model";
 import { useParametersContext } from "../stores/parameters";
+import { isNullish } from "../utils";
 import { ContributionTower } from "./contribution_tower";
 import type { SkylineProps } from "./skyline";
 import { SkylineBase } from "./skyline_base";
@@ -27,8 +27,12 @@ export interface SkylineModelProps extends SkylineProps {
 	group: MutableRefObject<ThreeGroup | null>;
 }
 
-export function SkylineModel(props: SkylineModelProps) {
-	const { group, years } = props;
+const tempColor = new Color();
+
+export function SkylineModel({
+	group,
+	years
+}: SkylineModelProps) {
 	const [initialized, setInitialized] = useState(false);
 	const computed = useParametersContext((state) => state.computed);
 	const inputs = useParametersContext((state) => state.inputs);
@@ -75,6 +79,7 @@ export function SkylineModel(props: SkylineModelProps) {
 		inputs.font,
 		inputs.shape,
 		inputs.insetText,
+		inputs.showContributionColor,
 	]);
 
 	useEffect(() => {
@@ -93,39 +98,13 @@ export function SkylineModel(props: SkylineModelProps) {
 		[inputs, years],
 	);
 
-	const id = useRef<number>(0);
-	const tempColor = new Color();
-	const multColor = new Color();
+	const instancesRef = useRef<InstancedMesh | null>(null)
 
-	const contributionColors = useMemo(() => {
-		if (years.length === 0) {
-			return { raw: [], instanced: Float32Array.from([]) };
-		}
-		const raw = years.flatMap((weeks) => {
-			return weeks.flatMap((week) => {
-				return week.contributionDays
-					.filter((day) => day.contributionCount > 0)
-					.flatMap((day) => day.color);
-			});
+	const bufferlen = years.flatMap((weeks) => {
+		return weeks.flatMap((week) => {
+			return week.contributionDays.filter((day) => day.contributionCount > 0);
 		});
-		const instanced = Float32Array.from(
-			raw.flatMap((c) => tempColor.set(c).toArray()),
-		);
-		return { raw, instanced };
-	}, [years]);
-
-	const defaultColors = useMemo(() => {
-		if (contributionColors.raw.length === 0) {
-			return { raw: [], instanced: Float32Array.from([]) };
-		}
-		const raw = Array(contributionColors.raw.length)
-			.fill(0)
-			.flatMap((_) => tempColor.set(inputs.color));
-		const instanced = Float32Array.from(
-			raw.flatMap((_) => tempColor.set(inputs.color).toArray()),
-		);
-		return { raw, instanced };
-	}, [contributionColors.raw.length, inputs.color]);
+	}).length;
 
 	const renderDay = (
 		day: ContributionDay,
@@ -133,27 +112,19 @@ export function SkylineModel(props: SkylineModelProps) {
 		weekIdx: number,
 		weekOffset: number,
 		dayIdx: number,
-		id: MutableRefObject<number>,
 	) => {
 		if (day.contributionCount === 0) {
 			return null;
 		}
-		const idx = id.current;
-		id.current++;
 		const YEAR_OFFSET = computed.modelWidth * yearIdx;
 		const centerOffset =
 			years.length === 1 ? 0 : -(computed.modelWidth * (years.length - 1)) / 2;
-		const towerColors = inputs.showContributionColor
-			? contributionColors.instanced
-			: defaultColors.instanced;
-		const highlightBase = inputs.showContributionColor
-			? contributionColors.raw[idx]
-			: defaultColors.raw[idx].getHex();
-		const highlight = multColor.set(highlightBase).multiplyScalar(1.6).getHex();
+		const color = tempColor.set(inputs.showContributionColor ? day.color : inputs.color).clone()
 		return (
 			<ContributionTower
 				key={day.date.toString()}
 				day={day}
+				color={color}
 				x={
 					weekIdx * inputs.towerSize -
 					computed.halfModelLength +
@@ -168,12 +139,16 @@ export function SkylineModel(props: SkylineModelProps) {
 				}
 				size={getDefaultParameters().inputs.towerSize}
 				dampening={inputs.dampening}
-				onPointerEnter={() =>
-					tempColor.set(highlight).toArray(towerColors, idx * 3)
-				}
-				onPointerLeave={() =>
-					tempColor.set(highlightBase).toArray(towerColors, idx * 3)
-				}
+				onPointerEnter={() => {
+					if (isNullish(instancesRef.current)) {
+						return;
+					}
+				}}
+				onPointerLeave={() => {
+					if (isNullish(instancesRef.current)) {
+						return;
+					}
+				}}
 			/>
 		);
 	};
@@ -183,30 +158,26 @@ export function SkylineModel(props: SkylineModelProps) {
 		yearIdx: number,
 		weekIdx: number,
 		weekOffset: number,
-		id: MutableRefObject<number>,
 	) => {
 		return week.contributionDays.map((day, dayIdx) =>
-			renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx, id),
+			renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx),
 		);
 	};
 
 	const renderYear = (
 		weeks: ContributionWeeks,
 		yearIdx: number,
-		id: MutableRefObject<number>,
 	) => {
 		return weeks.map((week, weekIdx) => {
-			let weekOffset = 0;
-			if (weekIdx === 0) {
-				weekOffset = calculateFirstDayOffset(week, weekIdx);
-			}
-			return renderWeek(week, yearIdx, weekIdx, weekOffset, id);
+			const weekOffset = weekIdx === 0
+				? calculateFirstDayOffset(week, weekIdx)
+				: 0;
+			return renderWeek(week, yearIdx, weekIdx, weekOffset);
 		});
 	};
 
 	const render = () => {
-		id.current = 0;
-		return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx, id));
+		return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx));
 	};
 
 	return (
@@ -215,24 +186,15 @@ export function SkylineModel(props: SkylineModelProps) {
 			{years.length > 0 && years[0].length > 0 && (
 				<group name={SkylineObjectNames.TowersParent}>
 					<Instances
-						castShadow
-						receiveShadow
+						ref={instancesRef}
 						name={SkylineObjectNames.Towers}
 						key={`${inputs.name}-${computed.formattedYear}-${inputs.showContributionColor}`}
-						limit={contributionColors.instanced.length}
+						limit={bufferlen}
+						castShadow
+						receiveShadow
 					>
-						<boxGeometry>
-							<instancedBufferAttribute
-								attach="attributes-color"
-								args={[
-									inputs.showContributionColor
-										? contributionColors.instanced
-										: defaultColors.instanced,
-									3,
-								]}
-							/>
-						</boxGeometry>
-						<meshStandardMaterial vertexColors={true} />
+						<boxGeometry />
+						<meshStandardMaterial />
 						{render()}
 					</Instances>
 				</group>

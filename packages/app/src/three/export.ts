@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import type { Group, InstancedMesh } from "three";
 import { exportTo3MF } from "three-3mf-exporter";
-import { SceneUtils, STLExporter } from "three-stdlib";
-import { SkylineObjectNames } from "./utils";
+import { STLExporter } from "three-stdlib";
+import { createMeshesFromInstancedMesh, SkylineObjectNames } from "./utils";
 
 export enum ExportFormat {
     Stl = "stl",
     ThreeMF = "3mf"
 }
 
-export type Exporter = (group: Group) => Promise<string>;
+export type Exporter = (model: Group) => Promise<string>;
 
 const EXPORT_MAP: Record<ExportFormat, Exporter> = {
     [ExportFormat.Stl]: async (model) => {
@@ -23,28 +23,26 @@ const EXPORT_MAP: Record<ExportFormat, Exporter> = {
     }
 }
 
-const getModel = (model: Group, scale: number) => {
-    const prepareModel = model.clone();
-    const exportGroup = prepareModel.getObjectByName(SkylineObjectNames.TowersExportGroup) as Group;
-    const instances = prepareModel.getObjectByName(SkylineObjectNames.Towers) as InstancedMesh;
+const prepareModel = (model: Group, scale: number) => {
+    const preparedModel = model.clone();
+    const exportGroup = preparedModel.getObjectByName(SkylineObjectNames.TowersExportGroup) as Group;
+    const instances = preparedModel.getObjectByName(SkylineObjectNames.Towers) as InstancedMesh;
 
-    // TODO: make custom version of this that exports with buffer attribute materials
-    // Currently doesn't export individual tower colors
-    const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
+    const meshes = createMeshesFromInstancedMesh(instances);
 
     meshes.position.set(0, meshes.position.y, 0);
     meshes.updateMatrix();
 
     exportGroup.add(meshes);
 
-    const instancesGroup = prepareModel.getObjectByName(SkylineObjectNames.TowersParent) as Group;
+    const instancesGroup = preparedModel.getObjectByName(SkylineObjectNames.TowersParent) as Group;
     instancesGroup.removeFromParent();
     instances.removeFromParent();
 
-    prepareModel.rotation.set(Math.PI / 2, 0, 0);
-    prepareModel.scale.set(scale, scale, scale);
-    prepareModel.updateMatrixWorld();
-    return prepareModel;
+    preparedModel.rotation.set(Math.PI / 2, 0, 0);
+    preparedModel.scale.set(scale, scale, scale);
+    preparedModel.updateMatrixWorld();
+    return preparedModel;
 }
 
 const loader = async (
@@ -56,7 +54,7 @@ const loader = async (
         console.warn("Model is null, skipping export");
         return;
     }
-    const preparedModel = getModel(model, scale);
+    const preparedModel = prepareModel(model, scale);
     return EXPORT_MAP[format](preparedModel);
 };
 

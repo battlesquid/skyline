@@ -4,6 +4,7 @@ import { fetchProfile, isAuthenticated } from "../api/auth";
 import { EditorAppShell } from "../components/appshell";
 import { createParametersStore, ParametersContext } from "../stores/parameters";
 import "../styles/editor.css";
+import { preloadDefaultFonts } from "../stores/fonts";
 
 export const Route = createFileRoute("/")({
 	component: Editor,
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/")({
 		}
 	},
 	loader: async () => {
+		preloadDefaultFonts();
 		const profile = await fetchProfile();
 		return profile;
 	},
