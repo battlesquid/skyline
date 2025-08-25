@@ -1,21 +1,20 @@
 import { useMemo, useRef } from "react";
 import { type Group, MeshStandardMaterial } from "three";
 import { useShallow } from "zustand/shallow";
-import type { ContributionWeeks } from "../api/types";
 import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
 import { toPolygons, useTTFLoader } from "../hooks/useTTFLoader";
 import { LOGOS } from "../logos";
 import {
-	type ManifoldFrustumArgs,
-	type ManifoldFrustumText,
-	makeThreeFrustum,
+    type ManifoldFrustumArgs,
+    type ManifoldFrustumText,
+    makeThreeFrustum,
 } from "../manifold/frustum";
 import { useParametersContext } from "../stores/parameters";
+import type { SkylineProps } from "./skyline";
 import { SkylineBaseShape } from "./types";
+import { SkylineObjectNames } from "./utils";
 
-export interface SkylineBaseProps {
-	years: ContributionWeeks[];
-}
+export interface SkylineBaseProps extends SkylineProps {}
 
 export function SkylineBase({ years }: SkylineBaseProps) {
 	const inputs = useParametersContext(useShallow((state) => state.inputs));
@@ -87,7 +86,7 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 			),
 			offset: inputs.yearOffset,
 		}),
-		[ttfFont, inputs.yearOffset],
+		[ttfFont, inputs.yearOffset, computed.formattedYear],
 	);
 
 	const frustum = useMemo(
@@ -110,7 +109,7 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 			: inputs.textDepth / 2;
 
 	return (
-		<>
+		<group name={SkylineObjectNames.Base}>
 			<mesh
 				geometry={frustum.geometry}
 				position={[0, -computed.halfPlatformHeight, TEXT_EXTRUSION_OFFSET]}
@@ -137,6 +136,6 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 				castShadow
 				receiveShadow
 			/>
-		</>
+		</group>
 	);
 }

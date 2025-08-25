@@ -1,5 +1,12 @@
-import type { Box3, InstancedMesh, Mesh, Scene, Vector3 } from "three";
-import { SceneUtils, STLExporter } from "three-stdlib";
+import { Box3, Color, Group, InstancedMesh, Mesh, MeshStandardMaterial, Vector3 } from "three";
+
+export const SkylineObjectNames = {
+	Root: "root",
+	Towers: "towers",
+	TowersParent: "towers-parent",
+	TowersExportGroup: "towers-export-group",
+	Base: "base"
+}
 
 export interface Dimensions {
 	width: number;
@@ -21,51 +28,6 @@ export const getDimensions = (mesh: Mesh | null): Dimensions => {
 	};
 };
 
-export const exportScene = (
-	scene: Scene | null,
-	name: string,
-	scale: number,
-) => {
-	if (scene === null) {
-		console.warn("Scene is null, skipping export");
-		return;
-	}
-	const clone = scene.clone();
-	const exportGroup = clone.getObjectByName("export_group");
-	const instances = clone.getObjectByName("instances") as InstancedMesh;
-
-	const meshes = SceneUtils.createMeshesFromInstancedMesh(instances);
-
-	meshes.position.set(0, meshes.position.y, 0);
-	meshes.updateMatrix();
-
-	// TODO: make this more bulletproof
-	exportGroup?.add(meshes);
-
-	const instancesGroup = clone.getObjectByName("instances_group");
-	if (instancesGroup !== undefined) {
-		instancesGroup.removeFromParent();
-		instances.removeFromParent();
-	}
-
-	clone.getObjectByName("name_subtraction")?.removeFromParent();
-
-	const grid = clone.getObjectByName("grid");
-	if (grid !== undefined) {
-		grid.removeFromParent();
-	}
-
-	clone.rotation.set(Math.PI / 2, 0, 0);
-	clone.scale.set(scale, scale, scale);
-	clone.updateMatrixWorld();
-	const exporter = new STLExporter();
-	const data = exporter.parse(clone);
-	const link = document.createElement("a");
-	link.href = URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-	link.download = `${name}.stl`;
-	link.click();
-};
-
 export const getDimensionsText = (scale: number, size: Vector3) => {
 	return `${Math.round(size.x * scale)}mm × ${Math.round(size.y * scale)}mm × ${Math.round(size.z * scale)}mm`;
 };
@@ -76,3 +38,43 @@ export const getBoundingBoxVolume = (bb: Box3) => {
 	const z = bb.max.z - bb.min.z;
 	return x * y * z;
 };
+
+/**
+ * Adapted from the original SceneUtils.createMeshesFromInstancedMesh
+ * 
+ */
+export const createMeshesFromInstancedMesh = (instancedMesh: InstancedMesh) => {
+	const group = new Group();
+
+	const count = instancedMesh.count;
+	const geometry = instancedMesh.geometry;
+	const instancedMaterial = instancedMesh.material as MeshStandardMaterial;
+	const materialColorMap = new Map<string, MeshStandardMaterial>();
+	const instancedColor = new Color();
+
+	for (let i = 0; i < count; i++) {
+		instancedMesh.getColorAt(i, instancedColor);
+		const hexColor = instancedColor.getHexString();
+		const currentMaterial = materialColorMap.get(hexColor);
+
+		let mesh: Mesh;
+		if (currentMaterial !== undefined) {
+			mesh = new Mesh(geometry, currentMaterial);
+		} else {
+			const mat = new MeshStandardMaterial().copy(instancedMaterial);
+			mat.color.set(instancedColor);
+			materialColorMap.set(hexColor, mat);
+			mesh = new Mesh(geometry, mat);
+		}
+
+		instancedMesh.getMatrixAt(i, mesh.matrix);
+		mesh.matrix.decompose(mesh.position, mesh.quaternion, mesh.scale);
+		group.add(mesh);
+	}
+
+	group.copy(instancedMesh);
+	group.updateMatrixWorld(); // ensure correct world matrices of meshes
+
+	return group;
+
+}

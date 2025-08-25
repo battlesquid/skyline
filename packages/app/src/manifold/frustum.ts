@@ -150,7 +150,6 @@ export const makeManifoldFrustum = (
 export const makeThreeFrustum = (
 	...args: Parameters<typeof makeManifoldFrustum>
 ): ThreeFrustum => {
-	console.log("making frustum");
 	const { manifold, angle } = makeManifoldFrustum(...args);
 	const normal = getThreeNormal(args[0]);
 	const geometry = mesh2geometry(manifold.getMesh());

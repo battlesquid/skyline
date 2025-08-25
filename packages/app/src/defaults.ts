@@ -5,6 +5,7 @@ import type {
 	SkylineModelInputParameters,
 	SkylineModelParameters,
 } from "./stores/parameters";
+import { ExportFormat } from "./three/export";
 import { SkylineBaseShape } from "./three/types";
 import { safeString } from "./utils";
 
@@ -40,6 +41,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		shape: SkylineBaseShape.Prism,
 		filename: "",
 		scale: 1,
+        exportFormat: ExportFormat.ThreeMF,
 		logoOffset: 10,
 		nameOffset: 15,
 		yearOffset: 10,
@@ -55,7 +57,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 	const halfModelWidth = modelWidth / 2;
 	const paddingWidth = inputs.padding * 2;
 	const formattedYear = formatYearText(inputs.startYear, inputs.endYear);
-	const defaultFilename = `${inputs.name}_${formattedYear}_skyline`;
+	const resolvedFilename = `${inputs.name}_${formattedYear}_skyline`;
 	const resolvedName = safeString(inputs.nameOverride, inputs.name);
 	const renderColor = inputs.showContributionColor
 		? getDefaultParameters().inputs.color
@@ -71,7 +73,7 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		halfModelLength,
 		halfModelWidth,
 		paddingWidth,
-		defaultFilename,
+		resolvedFilename,
 		formattedYear,
 		resolvedName,
 		renderColor,

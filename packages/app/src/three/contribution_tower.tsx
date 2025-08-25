@@ -1,6 +1,6 @@
-import { Instance } from "@react-three/drei";
+import { Instance, PositionMesh } from "@react-three/drei";
 import { useRef } from "react";
-import type { InstancedMesh } from "three";
+import { Color } from "three";
 import type { ContributionDay } from "../api/types";
 import { useTowerStore } from "../stores/tower";
 
@@ -8,16 +8,27 @@ interface ContributionTowerProps {
 	x: number;
 	y: number;
 	day: ContributionDay;
+	color: Color;
 	dampening: number;
 	size: number;
 	onPointerEnter: () => void;
 	onPointerLeave: () => void;
 }
 
-export function ContributionTower(props: ContributionTowerProps) {
-	const { x, y, day, dampening, size } = props;
+const tempColor = new Color();
+
+export function ContributionTower({
+	x,
+	y,
+	day,
+	color,
+	dampening,
+	size,
+	onPointerEnter,
+	onPointerLeave
+}: ContributionTowerProps) {
 	const height = (day.contributionCount * size) / dampening;
-	const mesh = useRef<InstancedMesh | null>(null);
+	const mesh = useRef<PositionMesh | null>(null);
 	const setPosition = useTowerStore((state) => state.setPosition);
 	const setTarget = useTowerStore((state) => state.setTarget);
 	return (
@@ -25,14 +36,16 @@ export function ContributionTower(props: ContributionTowerProps) {
 			ref={mesh}
 			scale={[size, height, size]}
 			position={[x, height / 2, y]}
+			color={color}
 			onPointerEnter={(e) => {
 				if (mesh.current === null) {
 					return;
 				}
+				tempColor.copy(color);
+				mesh.current.color.set(tempColor.multiplyScalar(1.6));
 				e.stopPropagation();
-				props.onPointerEnter();
+				onPointerEnter();
 				setTarget(day);
-				mesh.current.geometry.attributes.color.needsUpdate = true;
 			}}
 			onPointerMove={(e) => {
 				setPosition({ x: e.clientX, y: e.clientY });
@@ -41,10 +54,10 @@ export function ContributionTower(props: ContributionTowerProps) {
 				if (mesh.current === null) {
 					return;
 				}
+				mesh.current.color.set(color);
 				e.stopPropagation();
-				props.onPointerLeave();
+				onPointerLeave();
 				setTarget(null);
-				mesh.current.geometry.attributes.color.needsUpdate = true;
 			}}
 		/>
 	);

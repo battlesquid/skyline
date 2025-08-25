@@ -4,14 +4,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "urql";
 import { client } from "./api/client";
-import { preloadDefaultFonts } from "./stores/fonts";
 import { shadcnCssVariableResolver } from "./theme/css_variable_resolver";
 import { shadcnTheme } from "./theme/theme";
 import "./theme/style.css";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-
-preloadDefaultFonts();
 
 const router = createRouter({ routeTree });
 declare module "@tanstack/react-router" {
