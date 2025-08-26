@@ -30,6 +30,7 @@ import { RenderColorInput } from "./sidebar_inputs/render_color";
 import { ScaleInput } from "./sidebar_inputs/scale";
 import { TowerDampeningInput } from "./sidebar_inputs/tower_dampening";
 import { UsernameOverrideInput } from "./sidebar_inputs/username_override";
+import { LogoInput } from "./sidebar_inputs/logo_input";
 
 interface SidebarProps {
 	profile: UserProfile | null;
@@ -80,6 +81,7 @@ export function Sidebar(props: SidebarProps) {
 										<TowerDampeningInput />
 										<BasePaddingInput />
 										<BaseShapeInput />
+										<LogoInput />
 									</Stack>
 								</Accordion.Panel>
 							</Accordion.Item>

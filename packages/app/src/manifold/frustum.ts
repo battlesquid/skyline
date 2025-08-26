@@ -2,7 +2,7 @@ import type { Manifold as ManifoldType, Vec2, Vec3 } from "manifold-3d";
 import { type BufferGeometry, Vector3 } from "three";
 import { getDefaultParameters } from "../defaults";
 import { wasm } from "./module";
-import { boundingBoxDimensions, centerManifold, mesh2geometry } from "./utils";
+import { boundingBoxDimensions, boundingRectDimensions, centerManifold, mesh2geometry } from "./utils";
 
 const { CrossSection } = wasm;
 
@@ -17,7 +17,7 @@ export interface ManifoldFrustumArgs extends ManifoldDimensions {
 	widthPadding: number;
 }
 
-export interface ManifoldFrustumText {
+export interface ManifoldFrustumShape {
 	points: Vec2[][];
 	offset?: number;
 }
@@ -82,8 +82,9 @@ export const SUBTRACT_VISIBILITY_PADDING = 0.0002;
 
 export const makeManifoldFrustum = (
 	frustum: ManifoldFrustumArgs,
-	name: ManifoldFrustumText,
-	year: ManifoldFrustumText,
+	logo: ManifoldFrustumShape,
+	name: ManifoldFrustumShape,
+	year: ManifoldFrustumShape,
 	inset: boolean,
 ): ManifoldFrustum => {
 	const { length, width, lengthPadding, widthPadding, height } = frustum;
@@ -93,6 +94,7 @@ export const makeManifoldFrustum = (
 	const topLengthScale = length / baseLength;
 	const topWidthScale = width / baseWidth;
 
+	const logoSlotOffset = logo.offset ?? 0;
 	const nameSlotOffset = name.offset ?? 0;
 	const yearSlotOffset = year.offset ?? 0;
 
@@ -106,6 +108,14 @@ export const makeManifoldFrustum = (
 	const TRANSLATE_LEN =
 		TRANSLATE_DIR * (EXTRUSION_LEN / 2) + SUBTRACT_VISIBILITY_PADDING;
 
+		console.log(logo.points);
+	const logoExtrusion = centerManifold(
+		new CrossSection(logo.points, "EvenOdd")
+			.extrude(EXTRUSION_LEN)
+			.rotate([toDeg(angle) - 90, 0, 180]),
+	)
+	console.log(logoExtrusion.boundingBox())
+
 	const nameExtrusion = centerManifold(
 		new CrossSection(name.points)
 			.extrude(EXTRUSION_LEN)
@@ -117,14 +127,25 @@ export const makeManifoldFrustum = (
 			.rotate([toDeg(angle) - 90, 0, 180]),
 	);
 
+	const logoDimensions = boundingBoxDimensions(logoExtrusion.boundingBox());
 	const nameDimensions = boundingBoxDimensions(nameExtrusion.boundingBox());
 	const yearDimensions = boundingBoxDimensions(yearExtrusion.boundingBox());
 
+	const logoSlotPosition = [
+		baseWidth / 2 -
+		logoDimensions.width / 2 -
+		(logoSlotOffset + widthPadding / 2) +
+		TRANSLATE_LEN * normal[0],
+		length / 2 + lengthPadding / 4 + TRANSLATE_LEN * normal[1],
+		TRANSLATE_LEN * normal[2],
+	] as const;
+	console.log(logoSlotPosition)
+
 	const nameSlotPosition = [
 		baseWidth / 2 -
-			nameDimensions.width / 2 -
-			(nameSlotOffset + widthPadding / 2) +
-			TRANSLATE_LEN * normal[0],
+		nameDimensions.width / 2 -
+		(nameSlotOffset + widthPadding / 2) +
+		TRANSLATE_LEN * normal[0],
 		length / 2 + lengthPadding / 4 + TRANSLATE_LEN * normal[1],
 		TRANSLATE_LEN * normal[2],
 	] as const;
@@ -132,17 +153,18 @@ export const makeManifoldFrustum = (
 	// right-side anchored
 	const yearSlotPosition = [
 		-baseWidth / 2 +
-			yearDimensions.width / 2 +
-			(yearSlotOffset + widthPadding / 2) +
-			TRANSLATE_LEN * normal[0],
+		yearDimensions.width / 2 +
+		(yearSlotOffset + widthPadding / 2) +
+		TRANSLATE_LEN * normal[0],
 		length / 2 + lengthPadding / 4 + TRANSLATE_LEN * normal[1],
 		TRANSLATE_LEN * normal[2],
 	] as const;
 
 	const manifold = CrossSection.square([baseWidth, baseLength], true)
 		.extrude(height, 0, 0, [topWidthScale, topLengthScale], true)
-		[operation](nameExtrusion.translate(nameSlotPosition))
-		[operation](yearExtrusion.translate(yearSlotPosition));
+	// [operation](logoExtrusion.translate(logoSlotPosition))
+	[operation](nameExtrusion.translate(nameSlotPosition))
+	[operation](yearExtrusion.translate(yearSlotPosition));
 
 	return { manifold, angle, normal };
 };
@@ -164,6 +186,9 @@ export const emptyThreeFrustum = (): ThreeFrustum =>
 			height: 0,
 			widthPadding: 0,
 			lengthPadding: 0,
+		},
+		{
+			points: [],
 		},
 		{
 			points: [],

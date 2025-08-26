@@ -2,19 +2,20 @@ import { useMemo, useRef } from "react";
 import { type Group, MeshStandardMaterial } from "three";
 import { useShallow } from "zustand/shallow";
 import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
-import { toPolygons, useTTFLoader } from "../hooks/useTTFLoader";
+import { textToPolygons, toPolygons, useTTFLoader } from "../hooks/useTTFLoader";
 import { LOGOS } from "../logos";
 import {
-    type ManifoldFrustumArgs,
-    type ManifoldFrustumText,
-    makeThreeFrustum,
+	type ManifoldFrustumArgs,
+	type ManifoldFrustumShape,
+	makeThreeFrustum,
 } from "../manifold/frustum";
 import { useParametersContext } from "../stores/parameters";
 import type { SkylineProps } from "./skyline";
 import { SkylineBaseShape } from "./types";
 import { SkylineObjectNames } from "./utils";
+import { extractSvgPaths } from "../utils";
 
-export interface SkylineBaseProps extends SkylineProps {}
+export interface SkylineBaseProps extends SkylineProps { }
 
 export function SkylineBase({ years }: SkylineBaseProps) {
 	const inputs = useParametersContext(useShallow((state) => state.inputs));
@@ -27,13 +28,15 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 				color: computed.renderColor,
 				flatShading: true,
 				roughness: 1,
+				polygonOffset: true,
+				polygonOffsetFactor: -0.1
 			}),
 		[computed.renderColor],
 	);
 
 	const logoRef = useRef<Group | null>(null);
 	const logo = useExtrudedSvg({
-		svg: LOGOS.Circle,
+		svg: inputs.logo,
 		ref: logoRef,
 		depth: inputs.textDepth,
 		material,
@@ -65,21 +68,27 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 		],
 	);
 
+	const paths = extractSvgPaths(inputs.logo).flatMap(toPolygons);
+	console.log(paths)
+	const logoManifoldProps = useMemo((): ManifoldFrustumShape => ({
+		points: paths.map(path => path.slice(1, -1))
+	}), [inputs.logo]);
+
 	const nameManifoldProps = useMemo(
-		(): ManifoldFrustumText => ({
-			points: toPolygons(
+		(): ManifoldFrustumShape => ({
+			points: textToPolygons(
 				ttfFont,
 				computed.resolvedName,
 				computed.platformHeight / 1.75,
 			),
-			offset: inputs.nameOffset,
+			offset: inputs.nameOffset + inputs.logoOffset + logo.threeBoundingBox.x,
 		}),
-		[ttfFont, computed.resolvedName, inputs.nameOffset],
+		[ttfFont, computed.resolvedName, inputs.nameOffset, logo.threeBoundingBox],
 	);
 
 	const yearManifoldProps = useMemo(
-		(): ManifoldFrustumText => ({
-			points: toPolygons(
+		(): ManifoldFrustumShape => ({
+			points: textToPolygons(
 				ttfFont,
 				computed.formattedYear,
 				computed.platformHeight / 1.75,
@@ -93,11 +102,12 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 		() =>
 			makeThreeFrustum(
 				frustumProps,
+				logoManifoldProps,
 				nameManifoldProps,
 				yearManifoldProps,
 				inputs.insetText,
 			),
-		[frustumProps, nameManifoldProps, yearManifoldProps, inputs.insetText],
+		[logoManifoldProps, frustumProps, nameManifoldProps, yearManifoldProps, inputs.insetText],
 	);
 
 	// TODO: if text depth becomes a configurable parameter, this check probably won't suffice
@@ -123,15 +133,16 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 				rotation={[frustum.angle, 0, 0]}
 				position={[
 					-computed.halfModelLength -
-						inputs.padding +
-						inputs.logoOffset -
-						frustum.normal.x * (logo.threeBoundingBox.z / 2),
+					inputs.padding +
+					logo.threeBoundingBox.x / 2 +
+					inputs.logoOffset -
+					frustum.normal.x * (logo.threeBoundingBox.z / 2),
 					-computed.halfPlatformHeight +
-						frustum.normal.y * (logo.threeBoundingBox.z / 2),
+					frustum.normal.y * (logo.threeBoundingBox.z / 2),
 					(computed.modelWidth * years.length) / 2 +
-						inputs.padding +
-						frustum.normal.z * (logo.threeBoundingBox.z / 2) +
-						frustumProps.lengthPadding / 4,
+					inputs.padding +
+					frustum.normal.z * (logo.threeBoundingBox.z / 2) +
+					frustumProps.lengthPadding / 4,
 				]}
 				castShadow
 				receiveShadow

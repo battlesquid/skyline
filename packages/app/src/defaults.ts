@@ -1,5 +1,6 @@
 import { DAYS_IN_WEEK, WEEKS_IN_YEAR } from "./api/constants";
 import { formatYearText } from "./api/utils";
+import { LOGOS } from "./logos";
 import type {
 	SkylineModelComputedParameters,
 	SkylineModelInputParameters,
@@ -42,8 +43,9 @@ export const getDefaultParameters = (): SkylineModelParameters => {
 		filename: "",
 		scale: 1,
         exportFormat: ExportFormat.ThreeMF,
-		logoOffset: 10,
-		nameOffset: 15,
+		logo: LOGOS.Circle,
+		logoOffset: 5,
+		nameOffset: 10,
 		yearOffset: 10,
 	};
 

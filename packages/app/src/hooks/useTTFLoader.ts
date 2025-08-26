@@ -5,17 +5,19 @@ import { preload, suspend } from "suspend-react";
 
 const FONT_CACHE = new Map<string, opentype.Font>();
 
-export const toPolygons = (
+export const toPolygons = (path: string) => {
+	const polygons = pointsOnPath(path);
+	return polygons.map((points) => points.map((p) => [p[0], p[1]] as Vec2));
+}
+
+export const textToPolygons = (
 	font: opentype.Font,
 	text: string,
 	fontSize: number = 1,
 ) => {
 	const paths = font.getPaths(text, 0, fontSize, fontSize);
 	const svgs = paths.map((path) => path.toPathData(5));
-	return svgs.flatMap((s) => {
-		const result = pointsOnPath(s, 0.0001, 0.0001);
-		return result.map((point) => point.map((p) => [p[0], p[1]] as Vec2));
-	});
+	return svgs.flatMap(toPolygons);
 };
 
 const loader = async (url: string) => {

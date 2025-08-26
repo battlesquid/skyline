@@ -53,7 +53,7 @@ export const useExtrudedSvg = ({
 		const data = loader.parse(svg);
 		const geometries: GeometryBB[] = [];
 		for (const path of data.paths) {
-			const shapes = path.toShapes(true);
+			const shapes = SVGLoader.createShapes(path);
 			for (const shape of shapes) {
 				const geometry = new ExtrudeGeometry(shape, {
 					depth,

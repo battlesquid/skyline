@@ -41,3 +41,12 @@ export const isNullish = (value: unknown): value is null | undefined => {
 	}
 	return false;
 };
+
+export const extractSvgPaths = (svg: string) => {
+	const PATH_REGEX = /\bd="(.+?)"/g;
+	const matches = [...svg.matchAll(PATH_REGEX)];
+	if (matches === null) {
+		return [];
+	}
+	return matches.map(match => match[1]);
+}

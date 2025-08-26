@@ -24,6 +24,7 @@ export interface SkylineModelInputParameters {
 	filename: string;
 	scale: number;
     exportFormat: ExportFormat;
+	logo: string;
 	logoOffset: number;
 	nameOffset: number;
 	yearOffset: number;
