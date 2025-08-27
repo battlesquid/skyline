@@ -15,10 +15,10 @@ const EXPORT_MAP: Record<ExportFormat, Exporter> = {
     [ExportFormat.Stl]: async (model) => {
         const exporter = new STLExporter();
         const data = exporter.parse(model, { binary: true });
-        return URL.createObjectURL(new Blob([data], { type: "application/octet-stream" }));
+        return URL.createObjectURL(new Blob([data.buffer as ArrayBuffer], { type: "application/octet-stream" }));
     },
     [ExportFormat.ThreeMF]: async (model) => {
-        const data = await exportTo3MF(model)
+        const data = await exportTo3MF(model);
         return URL.createObjectURL(new Blob([data], { type: "application/octet-stream" }));
     }
 }

@@ -5,18 +5,17 @@ import {
 	useRef,
 	useState
 } from "react";
-import { Color, InstancedMesh, type Group as ThreeGroup } from "three";
+import { Color, type InstancedMesh, type Group as ThreeGroup } from "three";
 import type {
 	ContributionDay,
 	ContributionWeek,
 	ContributionWeeks,
 } from "../api/types";
 import { calculateFirstDayOffset } from "../api/utils";
-import { getDefaultParameters } from "../defaults";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
 import { useModelStore } from "../stores/model";
-import { useParametersContext } from "../stores/parameters";
+import { DEFAULT_INPUT_PARAMETERS, useParametersContext } from "../stores/parameters";
 import { isNullish } from "../utils";
 import { ContributionTower } from "./contribution_tower";
 import type { SkylineProps } from "./skyline";
@@ -137,7 +136,7 @@ export function SkylineModel({
 						computed.halfModelWidth +
 						computed.towerSizeOffset)
 				}
-				size={getDefaultParameters().inputs.towerSize}
+				size={DEFAULT_INPUT_PARAMETERS.towerSize}
 				dampening={inputs.dampening}
 				onPointerEnter={() => {
 					if (isNullish(instancesRef.current)) {

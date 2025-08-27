@@ -1,4 +1,4 @@
-import { Box3, Color, Group, InstancedMesh, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { type Box3, Color, Group, type InstancedMesh, Mesh, MeshStandardMaterial, type Vector3 } from "three";
 
 export const SkylineObjectNames = {
 	Root: "root",

@@ -1,7 +1,6 @@
-import { Group, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
 import { useState } from "react";
-import { DEFAULT_FONT_SELECTION } from "../../defaults";
-import { useFontStore } from "../../stores/fonts";
+import { DEFAULT_FONT_SELECTION, useFontStore } from "../../stores/fonts";
 import { useParametersContext } from "../../stores/parameters";
 
 // TODO: re-implement font loading using ttf format
@@ -15,30 +14,7 @@ export function FontInput() {
 		<div style={{ display: "flex", columnGap: "0.5rem" }}>
 			<Select
 				style={{ flex: 1 }}
-				label={
-					<Group gap={5}>
-						Font
-						{/* <HoverCard>
-							<HoverCard.Target>
-								<ThemeIcon size={16} radius={"lg"} variant="light">
-									<IconHelp stroke={1} size={16} />
-								</ThemeIcon>
-							</HoverCard.Target>
-							<HoverCard.Dropdown>
-								<Text size="sm">
-									Must be a valid{" "}
-									<Anchor
-										href="https://gero3.github.io/facetype.js/"
-										target="_blank"
-									>
-										typeface.js
-									</Anchor>{" "}
-									font.
-								</Text>
-							</HoverCard.Dropdown>
-						</HoverCard> */}
-					</Group>
-				}
+				label="Font"
 				data={Object.keys(fonts)}
 				defaultValue={DEFAULT_FONT_SELECTION}
 				allowDeselect={false}
