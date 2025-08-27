@@ -1,6 +1,6 @@
 import type { ContributionWeek } from "./types";
 
-export const calculateFirstDayOffset = (
+export const getFirstDayOffset = (
 	week: ContributionWeek,
 	weekNo: number,
 ): number => {

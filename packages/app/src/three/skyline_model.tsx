@@ -1,38 +1,34 @@
 import { Instances, useBounds } from "@react-three/drei";
-import {
-	type MutableRefObject,
-	useEffect,
-	useRef,
-	useState
-} from "react";
-import { Color, InstancedMesh, type Group as ThreeGroup } from "three";
+import { type MutableRefObject, useEffect, useState } from "react";
+import { Color, type Group as ThreeGroup } from "three";
 import type {
 	ContributionDay,
 	ContributionWeek,
 	ContributionWeeks,
 } from "../api/types";
-import { calculateFirstDayOffset } from "../api/utils";
-import { getDefaultParameters } from "../defaults";
+import { getFirstDayOffset } from "../api/utils";
 import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
 import { useModelStore } from "../stores/model";
-import { useParametersContext } from "../stores/parameters";
-import { isNullish } from "../utils";
+import {
+	DEFAULT_INPUT_PARAMETERS,
+	useParametersContext,
+} from "../stores/parameters";
 import { ContributionTower } from "./contribution_tower";
 import type { SkylineProps } from "./skyline";
 import { SkylineBase } from "./skyline_base";
 import { SkylineObjectNames } from "./utils";
 
+interface TowersRender {
+	towers: (JSX.Element | null)[];
+	count: number;
+}
+
 export interface SkylineModelProps extends SkylineProps {
 	group: MutableRefObject<ThreeGroup | null>;
 }
 
-const tempColor = new Color();
-
-export function SkylineModel({
-	group,
-	years
-}: SkylineModelProps) {
+export function SkylineModel({ group, years }: SkylineModelProps) {
 	const [initialized, setInitialized] = useState(false);
 	const computed = useParametersContext((state) => state.computed);
 	const inputs = useParametersContext((state) => state.inputs);
@@ -98,14 +94,6 @@ export function SkylineModel({
 		[inputs, years],
 	);
 
-	const instancesRef = useRef<InstancedMesh | null>(null)
-
-	const bufferlen = years.flatMap((weeks) => {
-		return weeks.flatMap((week) => {
-			return week.contributionDays.filter((day) => day.contributionCount > 0);
-		});
-	}).length;
-
 	const renderDay = (
 		day: ContributionDay,
 		yearIdx: number,
@@ -119,7 +107,9 @@ export function SkylineModel({
 		const YEAR_OFFSET = computed.modelWidth * yearIdx;
 		const centerOffset =
 			years.length === 1 ? 0 : -(computed.modelWidth * (years.length - 1)) / 2;
-		const color = tempColor.set(inputs.showContributionColor ? day.color : inputs.color).clone()
+		const color = new Color(
+			inputs.showContributionColor ? day.color : inputs.color,
+		);
 		return (
 			<ContributionTower
 				key={day.date.toString()}
@@ -137,18 +127,8 @@ export function SkylineModel({
 						computed.halfModelWidth +
 						computed.towerSizeOffset)
 				}
-				size={getDefaultParameters().inputs.towerSize}
+				size={DEFAULT_INPUT_PARAMETERS.towerSize}
 				dampening={inputs.dampening}
-				onPointerEnter={() => {
-					if (isNullish(instancesRef.current)) {
-						return;
-					}
-				}}
-				onPointerLeave={() => {
-					if (isNullish(instancesRef.current)) {
-						return;
-					}
-				}}
 			/>
 		);
 	};
@@ -159,43 +139,65 @@ export function SkylineModel({
 		weekIdx: number,
 		weekOffset: number,
 	) => {
-		return week.contributionDays.map((day, dayIdx) =>
-			renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx),
+		return week.contributionDays.reduce<TowersRender>(
+			(prev, day, dayIdx) => {
+				const tower = renderDay(day, yearIdx, weekIdx, weekOffset, dayIdx);
+				const count = +(tower !== null);
+				return { towers: prev.towers.concat(tower), count: prev.count + count };
+			},
+			{ towers: [], count: 0 },
 		);
 	};
 
-	const renderYear = (
-		weeks: ContributionWeeks,
-		yearIdx: number,
-	) => {
-		return weeks.map((week, weekIdx) => {
-			const weekOffset = weekIdx === 0
-				? calculateFirstDayOffset(week, weekIdx)
-				: 0;
-			return renderWeek(week, yearIdx, weekIdx, weekOffset);
-		});
+	const renderYear = (weeks: ContributionWeeks, yearIdx: number) => {
+		return weeks.reduce<TowersRender>(
+			(prev, week, weekIdx) => {
+				const weekOffset = weekIdx === 0 ? getFirstDayOffset(week, weekIdx) : 0;
+				const { towers, count } = renderWeek(
+					week,
+					yearIdx,
+					weekIdx,
+					weekOffset,
+				);
+				return {
+					towers: prev.towers.concat(towers),
+					count: prev.count + count,
+				};
+			},
+			{ towers: [], count: 0 },
+		);
 	};
 
 	const render = () => {
-		return years.map((weeks, yearIdx) => renderYear(weeks, yearIdx));
+		return years.reduce<TowersRender>(
+			(prev, weeks, yearIdx) => {
+				const { towers, count } = renderYear(weeks, yearIdx);
+				return {
+					towers: prev.towers.concat(towers),
+					count: prev.count + count,
+				};
+			},
+			{ towers: [], count: 0 },
+		);
 	};
+
+	const { towers, count } = render();
 
 	return (
 		<group ref={group}>
 			<group name={SkylineObjectNames.TowersExportGroup} />
-			{years.length > 0 && years[0].length > 0 && (
+			{count > 0 && (
 				<group name={SkylineObjectNames.TowersParent}>
 					<Instances
-						ref={instancesRef}
 						name={SkylineObjectNames.Towers}
 						key={`${inputs.name}-${computed.formattedYear}-${inputs.showContributionColor}`}
-						limit={bufferlen}
+						limit={count}
 						castShadow
 						receiveShadow
 					>
 						<boxGeometry />
 						<meshStandardMaterial />
-						{render()}
+						{towers}
 					</Instances>
 				</group>
 			)}

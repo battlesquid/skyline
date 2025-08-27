@@ -1,12 +1,20 @@
-import { Box3, Color, Group, InstancedMesh, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import {
+	type Box3,
+	Color,
+	Group,
+	type InstancedMesh,
+	Mesh,
+	MeshStandardMaterial,
+	type Vector3,
+} from "three";
 
 export const SkylineObjectNames = {
 	Root: "root",
 	Towers: "towers",
 	TowersParent: "towers-parent",
 	TowersExportGroup: "towers-export-group",
-	Base: "base"
-}
+	Base: "base",
+};
 
 export interface Dimensions {
 	width: number;
@@ -41,7 +49,7 @@ export const getBoundingBoxVolume = (bb: Box3) => {
 
 /**
  * Adapted from the original SceneUtils.createMeshesFromInstancedMesh
- * 
+ *
  */
 export const createMeshesFromInstancedMesh = (instancedMesh: InstancedMesh) => {
 	const group = new Group();
@@ -76,5 +84,4 @@ export const createMeshesFromInstancedMesh = (instancedMesh: InstancedMesh) => {
 	group.updateMatrixWorld(); // ensure correct world matrices of meshes
 
 	return group;
-
-}
+};
