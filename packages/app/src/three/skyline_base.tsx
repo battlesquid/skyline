@@ -5,9 +5,9 @@ import { useExtrudedSvg } from "../hooks/useExtrudedSvg";
 import { toPolygons, useTTFLoader } from "../hooks/useTTFLoader";
 import { LOGOS } from "../logos";
 import {
-    type ManifoldFrustumArgs,
-    type ManifoldFrustumText,
-    makeThreeFrustum,
+	type ManifoldFrustumArgs,
+	type ManifoldFrustumText,
+	makeThreeFrustum,
 } from "../manifold/frustum";
 import { useParametersContext } from "../stores/parameters";
 import type { SkylineProps } from "./skyline";

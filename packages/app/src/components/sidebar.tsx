@@ -101,7 +101,7 @@ export function Sidebar(props: SidebarProps) {
 									<Stack gap={10}>
 										<ScaleInput />
 										<FilenameInput />
-                                        <ExportFormatInput />
+										<ExportFormatInput />
 									</Stack>
 								</Accordion.Panel>
 							</Accordion.Item>

@@ -1,8 +1,8 @@
 import type { Manifold as ManifoldType, Vec2, Vec3 } from "manifold-3d";
 import { type BufferGeometry, Vector3 } from "three";
+import { DEFAULT_INPUT_PARAMETERS } from "../stores/parameters";
 import { wasm } from "./module";
 import { boundingBoxDimensions, centerManifold, mesh2geometry } from "./utils";
-import { DEFAULT_INPUT_PARAMETERS } from "../stores/parameters";
 
 const { CrossSection } = wasm;
 

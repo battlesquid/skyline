@@ -25,7 +25,7 @@ export function ContributionTower({
 	dampening,
 	size,
 	onPointerEnter,
-	onPointerLeave
+	onPointerLeave,
 }: ContributionTowerProps) {
 	const height = (day.contributionCount * size) / dampening;
 	const mesh = useRef<PositionMesh | null>(null);
