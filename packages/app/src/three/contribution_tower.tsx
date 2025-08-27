@@ -1,4 +1,4 @@
-import { Instance, PositionMesh } from "@react-three/drei";
+import { Instance, type PositionMesh } from "@react-three/drei";
 import { useRef } from "react";
 import { Color } from "three";
 import type { ContributionDay } from "../api/types";
@@ -11,8 +11,8 @@ interface ContributionTowerProps {
 	color: Color;
 	dampening: number;
 	size: number;
-	onPointerEnter: () => void;
-	onPointerLeave: () => void;
+	onPointerEnter?: () => void;
+	onPointerLeave?: () => void;
 }
 
 const tempColor = new Color();
@@ -44,7 +44,7 @@ export function ContributionTower({
 				tempColor.copy(color);
 				mesh.current.color.set(tempColor.multiplyScalar(1.6));
 				e.stopPropagation();
-				onPointerEnter();
+				onPointerEnter?.();
 				setTarget(day);
 			}}
 			onPointerMove={(e) => {
@@ -56,7 +56,7 @@ export function ContributionTower({
 				}
 				mesh.current.color.set(color);
 				e.stopPropagation();
-				onPointerLeave();
+				onPointerLeave?.();
 				setTarget(null);
 			}}
 		/>

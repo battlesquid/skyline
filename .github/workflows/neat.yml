@@ -1,0 +1,23 @@
+name: Neat
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    branches:
+      - master
+
+jobs:
+  neat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "PACKAGE_JSON=$(jq -c . < package.json)" >> $GITHUB_ENV
+      - uses: pnpm/action-setup@v4
+        with:
+            version: ${{ fromJson(env.PACKAGE_JSON).volta.pnpm }}
+      - uses: actions/setup-node@v3
+        with:
+            node-version: ${{ fromJson(env.PACKAGE_JSON).volta.node }}
+            cache: "pnpm"
+      - run: pnpm i
+      - run: pnpm neat
