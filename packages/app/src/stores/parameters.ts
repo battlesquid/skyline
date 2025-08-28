@@ -100,7 +100,7 @@ export const DEFAULT_INPUT_PARAMETERS = Object.freeze({
 	color: "#787878",
 	font: DEFAULT_FONT,
 	insetText: false,
-	showContributionColor: false,
+	showContributionColor: true,
 	padding: 2,
 	textDepth: 1,
 	towerSize: 2.5,
