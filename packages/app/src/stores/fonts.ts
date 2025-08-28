@@ -11,17 +11,18 @@ interface FontStore {
 export type FontMap = Record<string, string>;
 
 export const DEFAULT_FONTS = Object.freeze({
-	"Inter Bold": "/fonts/ttf/Inter_Bold.ttf",
-	Quicksilver: "/fonts/ttf/Quicksilver_Regular.ttf",
-	Inter: "/fonts/ttf/Inter_Regular.ttf",
-	"Press Start": "/fonts/ttf/PressStart2P_Regular.ttf",
-	"Arvo Bold": "/fonts/ttf/Arvo_Bold.ttf",
-	"Space Mono": "/fonts/ttf/SpaceMono-Bold.ttf",
-	"Bebas Neue": "/fonts/ttf/BebasNeue_Regular.ttf",
-	"Noto Serif": "/fonts/ttf/NotoSerif.ttf",
+	"Mona Sans": "/fonts/MonaSansSemiExpanded-Bold.ttf",
+	"Inter Bold": "/fonts/Inter_Bold.ttf",
+	Quicksilver: "/fonts/Quicksilver_Regular.ttf",
+	Inter: "/fonts/Inter_Regular.ttf",
+	"Press Start": "/fonts/PressStart2P_Regular.ttf",
+	"Arvo Bold": "/fonts/Arvo_Bold.ttf",
+	"Space Mono": "/fonts/SpaceMono-Bold.ttf",
+	"Bebas Neue": "/fonts/BebasNeue_Regular.ttf",
+	"Noto Serif": "/fonts/NotoSerif.ttf",
 });
 
-export const DEFAULT_FONT_SELECTION = "Inter Bold";
+export const DEFAULT_FONT_SELECTION = "Mona Sans";
 
 export const DEFAULT_FONT = DEFAULT_FONTS[DEFAULT_FONT_SELECTION];
 

@@ -18,6 +18,9 @@ export function FontInput() {
 				data={Object.keys(fonts)}
 				defaultValue={DEFAULT_FONT_SELECTION}
 				allowDeselect={false}
+				scrollAreaProps={{
+					type: "always",
+				}}
 				onChange={(value) => {
 					if (value === null) {
 						return;
