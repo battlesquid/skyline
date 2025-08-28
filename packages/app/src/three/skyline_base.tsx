@@ -26,7 +26,8 @@ export function SkylineBase({ years }: SkylineBaseProps) {
 			new MeshStandardMaterial({
 				color: computed.renderColor,
 				flatShading: true,
-				roughness: 1,
+				roughness: 0.6,
+                metalness: 0.1
 			}),
 		[computed.renderColor],
 	);

@@ -17,6 +17,7 @@ import { ContributionTower } from "./contribution_tower";
 import type { SkylineProps } from "./skyline";
 import { SkylineBase } from "./skyline_base";
 import { SkylineObjectNames } from "./utils";
+import { darken } from "@mantine/core";
 
 interface TowersRender {
     towers: (JSX.Element | null)[];
@@ -98,8 +99,9 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
         const centerOffset =
             years.length === 1 ? 0 : -(computed.modelWidth * (years.length - 1)) / 2;
         const color = new Color(
-            inputs.showContributionColor ? day.color : inputs.color,
+            inputs.showContributionColor ? darken(day.color, 0.2) : inputs.color,
         );
+
         return (
             <ContributionTower
                 key={day.date.toString()}
@@ -186,7 +188,7 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
                         receiveShadow
                     >
                         <boxGeometry />
-                        <meshStandardMaterial />
+                        <meshStandardMaterial roughness={0.5} metalness={0.2} />
                         {towers}
                     </Instances>
                 </group>
