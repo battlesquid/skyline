@@ -36,7 +36,7 @@ export function Skyline(props: SkylineProps) {
 				<Bounds fit={ready} clip={ready} observe={ready} margin={1}>
 					<SkylineModel group={group} years={years} />
 				</Bounds>
-				<ambientLight intensity={Math.PI / 3} />
+				<ambientLight intensity={Math.PI / 2} />
 				<spotLight
 					castShadow
 					position={[0, 20, 200]}
@@ -68,7 +68,7 @@ export function Skyline(props: SkylineProps) {
 					position={[0, -computed.platformHeight, 0]}
 					side={DoubleSide}
 					cellSize={0}
-					sectionColor={"#5e747c"}
+					sectionColor={"#4e98b4"}
 					sectionSize={40}
 					fadeDistance={10000}
 					fadeStrength={10}

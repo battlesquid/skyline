@@ -69,7 +69,10 @@ export const getComputedParameters = (
 	const halfModelWidth = modelWidth / 2;
 	const paddingWidth = inputs.padding * 2;
 	const formattedYear = formatYearText(inputs.startYear, inputs.endYear);
-	const resolvedFilename = `${inputs.name}_${formattedYear}_skyline`;
+	const resolvedFilename = safeString(
+		inputs.filename,
+		`${inputs.name}_${formattedYear}_skyline`,
+	);
 	const resolvedName = safeString(inputs.nameOverride, inputs.name);
 	const renderColor = inputs.showContributionColor
 		? DEFAULT_INPUT_PARAMETERS.color

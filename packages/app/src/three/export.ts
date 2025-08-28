@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Group, InstancedMesh } from "three";
 import { exportTo3MF } from "three-3mf-exporter";
 import { STLExporter } from "three-stdlib";
+import { getThreeBoundingBox } from "../hooks/useBoundingBox";
 import { createMeshesFromInstancedMesh, SkylineObjectNames } from "./utils";
 
 export enum ExportFormat {
@@ -67,7 +68,10 @@ const loader = async (
 		return;
 	}
 	const preparedModel = prepareModel(model, scale);
-	return EXPORT_MAP[format](preparedModel);
+	const url = await EXPORT_MAP[format](preparedModel);
+	const vec = getThreeBoundingBox(preparedModel);
+	const size = `${Math.round(vec.x)}mm \u{00d7} ${Math.round(vec.y)}mm \u{00d7} ${Math.round(vec.z)}mm`;
+	return { url, size };
 };
 
 export function useExportedModel(
@@ -75,17 +79,30 @@ export function useExportedModel(
 	scale: number,
 	format: ExportFormat,
 ) {
-	const [downloadLink, setDownloadLink] = useState<string>("");
+	const [downloadUrl, setDownloadUrl] = useState<string>("");
 	const [exporting, setExporting] = useState(true);
+	const [size, setSize] = useState("0mm \u{00d7} 0mm \u{00d7} 0mm");
+	let exportTimeout: number | undefined;
+	const clearExportTimeout = () => {
+		if (exportTimeout !== undefined) {
+			clearTimeout(exportTimeout);
+		}
+	};
 	useEffect(() => {
 		setExporting(true);
 		loader(model, scale, format)
 			.then((result) => {
 				if (result !== undefined) {
-					setDownloadLink(result);
+					setDownloadUrl(result.url);
+					setSize(result.size);
 				}
 			})
-			.finally(() => setExporting(false));
+			.finally(() => {
+				exportTimeout = setTimeout(() => {
+					setExporting(false);
+				}, 500);
+			});
+		return clearExportTimeout;
 	}, [model, scale, format]);
-	return { downloadLink, exporting };
+	return { downloadUrl, exporting, size };
 }

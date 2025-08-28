@@ -1,3 +1,4 @@
+import { darken } from "@mantine/core";
 import { Instances, useBounds } from "@react-three/drei";
 import { type MutableRefObject, useEffect, useState } from "react";
 import { Color, type Group as ThreeGroup } from "three";
@@ -7,7 +8,6 @@ import type {
 	ContributionWeeks,
 } from "../api/types";
 import { getFirstDayOffset } from "../api/utils";
-import { useBoundingBox } from "../hooks/useBoundingBox";
 import { useControlsStore } from "../stores/controls";
 import { useModelStore } from "../stores/model";
 import {
@@ -34,7 +34,6 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
 	const inputs = useParametersContext((state) => state.inputs);
 
 	const setDirty = useModelStore((state) => state.setDirty);
-	const setSize = useModelStore((state) => state.setSize);
 	const setModel = useModelStore((state) => state.setModel);
 
 	const reset = useControlsStore((state) => state.reset);
@@ -62,7 +61,7 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
 				setInitialized(true);
 			}
 			setModel(group.current.clone());
-		}, 1500);
+		}, 1000);
 
 		return clearBoundsTimeout;
 	}, [
@@ -86,14 +85,6 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
 		clearReset();
 	}, [reset]);
 
-	useBoundingBox(
-		{
-			obj: group,
-			setter: setSize,
-		},
-		[inputs, years],
-	);
-
 	const renderDay = (
 		day: ContributionDay,
 		yearIdx: number,
@@ -108,8 +99,9 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
 		const centerOffset =
 			years.length === 1 ? 0 : -(computed.modelWidth * (years.length - 1)) / 2;
 		const color = new Color(
-			inputs.showContributionColor ? day.color : inputs.color,
+			inputs.showContributionColor ? darken(day.color, 0.2) : inputs.color,
 		);
+
 		return (
 			<ContributionTower
 				key={day.date.toString()}
@@ -196,7 +188,7 @@ export function SkylineModel({ group, years }: SkylineModelProps) {
 						receiveShadow
 					>
 						<boxGeometry />
-						<meshStandardMaterial />
+						<meshStandardMaterial roughness={0.5} metalness={0.2} />
 						{towers}
 					</Instances>
 				</group>

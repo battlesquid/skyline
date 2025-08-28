@@ -5,7 +5,6 @@ import {
 	type InstancedMesh,
 	Mesh,
 	MeshStandardMaterial,
-	type Vector3,
 } from "three";
 
 export const SkylineObjectNames = {
@@ -20,25 +19,6 @@ export interface Dimensions {
 	width: number;
 	height: number;
 }
-
-export const getDimensions = (mesh: Mesh | null): Dimensions => {
-	if (mesh === null) {
-		return { width: 0, height: 0 };
-	}
-	mesh.geometry.computeBoundingBox();
-	mesh.geometry.center();
-	if (mesh?.geometry.boundingBox === null) {
-		return { width: 0, height: 0 };
-	}
-	return {
-		width: mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x,
-		height: mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y,
-	};
-};
-
-export const getDimensionsText = (scale: number, size: Vector3) => {
-	return `${Math.round(size.x * scale)}mm × ${Math.round(size.y * scale)}mm × ${Math.round(size.z * scale)}mm`;
-};
 
 export const getBoundingBoxVolume = (bb: Box3) => {
 	const x = bb.max.x - bb.min.x;

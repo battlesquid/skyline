@@ -17,12 +17,13 @@ jobs:
     name: Deploy
     steps:
       - uses: actions/checkout@v4
+      - run: echo "PACKAGE_JSON=$(jq -c . < package.json)" >> $GITHUB_ENV
       - uses: pnpm/action-setup@v4
         with:
-            version: 10.15.0
+            version: ${{ fromJson(env.PACKAGE_JSON).volta.pnpm }}
       - uses: actions/setup-node@v3
         with:
-            node-version: 22.14.0
+            node-version: ${{ fromJson(env.PACKAGE_JSON).volta.node }}
             registry-url: https://registry.npmjs.org/
       - run: pnpm --filter=@skyline/worker install
       - name: Publish
