@@ -13,7 +13,11 @@ export function ExportButton() {
 
 	const model = useModelStore((state) => state.model);
 	const dirty = useModelStore((state) => state.dirty);
-	const { downloadUrl, exporting, size } = useExportedModel(model, scale, format);
+	const { downloadUrl, exporting, size } = useExportedModel(
+		model,
+		scale,
+		format,
+	);
 
 	return (
 		<Suspense>

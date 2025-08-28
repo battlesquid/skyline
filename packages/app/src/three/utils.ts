@@ -1,30 +1,30 @@
 import {
-    type Box3,
-    Color,
-    Group,
-    type InstancedMesh,
-    Mesh,
-    MeshStandardMaterial
+	type Box3,
+	Color,
+	Group,
+	type InstancedMesh,
+	Mesh,
+	MeshStandardMaterial,
 } from "three";
 
 export const SkylineObjectNames = {
-    Root: "root",
-    Towers: "towers",
-    TowersParent: "towers-parent",
-    TowersExportGroup: "towers-export-group",
-    Base: "base",
+	Root: "root",
+	Towers: "towers",
+	TowersParent: "towers-parent",
+	TowersExportGroup: "towers-export-group",
+	Base: "base",
 };
 
 export interface Dimensions {
-    width: number;
-    height: number;
+	width: number;
+	height: number;
 }
 
 export const getBoundingBoxVolume = (bb: Box3) => {
-    const x = bb.max.x - bb.min.x;
-    const y = bb.max.y - bb.min.y;
-    const z = bb.max.z - bb.min.z;
-    return x * y * z;
+	const x = bb.max.x - bb.min.x;
+	const y = bb.max.y - bb.min.y;
+	const z = bb.max.z - bb.min.z;
+	return x * y * z;
 };
 
 /**
@@ -32,36 +32,36 @@ export const getBoundingBoxVolume = (bb: Box3) => {
  *
  */
 export const createMeshesFromInstancedMesh = (instancedMesh: InstancedMesh) => {
-    const group = new Group();
+	const group = new Group();
 
-    const count = instancedMesh.count;
-    const geometry = instancedMesh.geometry;
-    const instancedMaterial = instancedMesh.material as MeshStandardMaterial;
-    const materialColorMap = new Map<string, MeshStandardMaterial>();
-    const instancedColor = new Color();
+	const count = instancedMesh.count;
+	const geometry = instancedMesh.geometry;
+	const instancedMaterial = instancedMesh.material as MeshStandardMaterial;
+	const materialColorMap = new Map<string, MeshStandardMaterial>();
+	const instancedColor = new Color();
 
-    for (let i = 0; i < count; i++) {
-        instancedMesh.getColorAt(i, instancedColor);
-        const hexColor = instancedColor.getHexString();
-        const currentMaterial = materialColorMap.get(hexColor);
+	for (let i = 0; i < count; i++) {
+		instancedMesh.getColorAt(i, instancedColor);
+		const hexColor = instancedColor.getHexString();
+		const currentMaterial = materialColorMap.get(hexColor);
 
-        let mesh: Mesh;
-        if (currentMaterial !== undefined) {
-            mesh = new Mesh(geometry, currentMaterial);
-        } else {
-            const mat = new MeshStandardMaterial().copy(instancedMaterial);
-            mat.color.set(instancedColor);
-            materialColorMap.set(hexColor, mat);
-            mesh = new Mesh(geometry, mat);
-        }
+		let mesh: Mesh;
+		if (currentMaterial !== undefined) {
+			mesh = new Mesh(geometry, currentMaterial);
+		} else {
+			const mat = new MeshStandardMaterial().copy(instancedMaterial);
+			mat.color.set(instancedColor);
+			materialColorMap.set(hexColor, mat);
+			mesh = new Mesh(geometry, mat);
+		}
 
-        instancedMesh.getMatrixAt(i, mesh.matrix);
-        mesh.matrix.decompose(mesh.position, mesh.quaternion, mesh.scale);
-        group.add(mesh);
-    }
+		instancedMesh.getMatrixAt(i, mesh.matrix);
+		mesh.matrix.decompose(mesh.position, mesh.quaternion, mesh.scale);
+		group.add(mesh);
+	}
 
-    group.copy(instancedMesh);
-    group.updateMatrixWorld(); // ensure correct world matrices of meshes
+	group.copy(instancedMesh);
+	group.updateMatrixWorld(); // ensure correct world matrices of meshes
 
-    return group;
+	return group;
 };
