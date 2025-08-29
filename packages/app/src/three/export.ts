@@ -37,20 +37,22 @@ const prepareModel = (model: Group, scale: number) => {
 	) as Group;
 	const instances = preparedModel.getObjectByName(
 		SkylineObjectNames.Towers,
-	) as InstancedMesh;
+	) as InstancedMesh | undefined;
 
-	const meshes = createMeshesFromInstancedMesh(instances);
-
-	meshes.position.set(0, meshes.position.y, 0);
-	meshes.updateMatrix();
-
-	exportGroup.add(meshes);
-
-	const instancesGroup = preparedModel.getObjectByName(
-		SkylineObjectNames.TowersParent,
-	) as Group;
-	instancesGroup.removeFromParent();
-	instances.removeFromParent();
+    if (instances !== undefined) {
+        const meshes = createMeshesFromInstancedMesh(instances);
+    
+        meshes.position.set(0, meshes.position.y, 0);
+        meshes.updateMatrix();
+    
+        exportGroup.add(meshes);
+    
+        const instancesGroup = preparedModel.getObjectByName(
+            SkylineObjectNames.TowersParent,
+        ) as Group;
+        instancesGroup.removeFromParent();
+        instances.removeFromParent();
+    }
 
 	preparedModel.rotation.set(Math.PI / 2, 0, 0);
 	preparedModel.scale.set(scale, scale, scale);
