@@ -1,15 +1,13 @@
 <div align="center">
     <a href="https://gh-skyline.pages.dev">
-        <img src="./assets/logo.png">
+        <img src="./assets/banner_nopadding.png" alt="Github Skyline: Your Contribution Story in 3D">
     </a>
-    <hr>
-    <p>Your Contribution Story in 3D
-    </p>
-    <a href="https://github.com/battlesquid/skyline/stargazers">
-        <img src="https://img.shields.io/github/stars/battlesquid/skyline?color=577BB5&labelColor=1A1B26&style=for-the-badge">
+    <hr />
+    <a href="https://github.com/battlesquid/gh-skyline/stargazers">
+        <img src="https://img.shields.io/github/stars/battlesquid/gh-skyline?color=577BB5&labelColor=1A1B26&style=for-the-badge">
     </a>
-    <a href="../LICENSE.md">
-        <img src="https://img.shields.io/github/license/battlesquid/skyline?color=C0CAF5&labelColor=1A1B26&style=for-the-badge">
+    <a href="../LICENSE">
+        <img src="https://img.shields.io/github/license/battlesquid/gh-skyline?color=C0CAF5&labelColor=1A1B26&style=for-the-badge">
     </a>
 </div>
 
@@ -30,7 +28,7 @@ And so here we are!
 
 ## Features
 
-- Highly customizable, parametric-based model editor with options to change
+- Highly customizable, parameter-based model editor with options to change
   username text, font, tower size, base shape, and more.
 - Ability to generate multi-year skylines
 - Performant, changes are applied in real-time
@@ -78,4 +76,4 @@ pnpm neat:fix
 This project is licensed under [GPL 3.0](../LICENSE), with the exception of the
 following components:
 
-- `@skyline/worker`: ISC
+- [`@skyline/worker`](../packages/worker/): ISC
