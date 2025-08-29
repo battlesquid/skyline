@@ -3,8 +3,9 @@ import { useRef } from "react";
 import { fetchProfile, isAuthenticated } from "../api/auth";
 import { EditorAppShell } from "../components/appshell";
 import { createParametersStore, ParametersContext } from "../stores/parameters";
-import "../styles/editor.css";
 import { preloadDefaultFonts } from "../stores/fonts";
+import "../styles/editor.css";
+import "../styles/page.css";
 
 export const Route = createFileRoute("/")({
 	component: Editor,

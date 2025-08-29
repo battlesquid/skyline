@@ -30,8 +30,8 @@ export function ExportButton() {
 				download={`${filename}.${format}`}
 			>
 				<div>
-					<Text fw={900} size="sm">
-						Export
+					<Text className="mona-sans-wide" style={{ marginBottom: "-5px" }} fw={900} size="sm">
+						EXPORT
 					</Text>
 					<Text size="xs">{size}</Text>
 				</div>

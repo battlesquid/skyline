@@ -42,7 +42,7 @@ export function Sidebar(props: SidebarProps) {
 	return (
 		<Stack h={"100%"} gap={10}>
 			<AppShell.Section px={6} py={4}>
-				<Title order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
+				<Title className="mona-sans-wide" tt="uppercase" order={5}>{import.meta.env.PUBLIC_APP_NAME}</Title>
 			</AppShell.Section>
 			<Card h="100%" p="md">
 				<AppShell.Section

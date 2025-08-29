@@ -2,20 +2,20 @@ import {
 	Affix,
 	Box,
 	Button,
-	Card,
 	Center,
-	Divider,
 	Flex,
 	LoadingOverlay,
-	Stack,
-	Title,
+	Stack
 } from "@mantine/core";
 import { IconBrandGithubFilled } from "@tabler/icons-react";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
+import { animate, createScope, createTimeline, Scope, stagger } from "animejs";
 import { useEffect, useRef } from "react";
 import { isAuthenticated, resolveToken } from "../api/auth";
 import ContributionBackground from "../components/contribution_background";
 import "../styles/login.css";
+import "../styles/page.css";
+
 
 type LoginSearchParams = {
 	code?: string;
@@ -46,6 +46,9 @@ function Login() {
 	const { code } = Route.useSearch();
 	const loading = useRef<boolean | null>(null);
 
+	const root = useRef(null);
+	const scope = useRef<Scope | null>(null);
+
 	useEffect(() => {
 		const handleRedirect = async (code: string) => {
 			await resolveToken(code);
@@ -57,15 +60,48 @@ function Login() {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (loading.current) {
+			return;
+		}
+		scope.current = createScope({ root }).add(() => {
+			const slideinfade = animate(".logo", {
+				ease: "outExpo",
+				opacity: 1,
+				gap: "1rem"
+			});
+
+			createTimeline()
+				.sync(slideinfade)
+				.add(".slide-up", {
+					ease: "outExpo",
+					y: stagger("-1.5rem"),
+					delay: stagger(100),
+					marginTop: "4.5rem"
+				})
+
+			createTimeline()
+				.sync(slideinfade)
+				.add(".slide-down", {
+					ease: "outExpo",
+					y: stagger("1.5rem",),
+					delay: stagger(100, {
+						reversed: true
+					}),
+					marginBottom: "4.5rem"
+				})
+				.add(".caption-item", {
+					opacity: 1,
+					delay: stagger(100)
+				})
+		});
+		return () => scope.current?.revert();
+	}, [])
+
 	const _3D = (
 		<span
 			style={{
-				fontWeight: 900,
 				color: "var(--mantine-color-pink-5)",
-				textShadow: `
-                  0px 1px 0px var(--mantine-color-pink-7), 
-                  0px 2px 0px var(--mantine-color-pink-7), 
-                  0px 3px 0px var(--mantine-color-pink-7)`,
 			}}
 		>
 			3D
@@ -73,7 +109,7 @@ function Login() {
 	);
 
 	return (
-		<Box h="100%">
+		<Box ref={root} h="100%">
 			<ContributionBackground />
 			<LoadingOverlay
 				visible={loading.current ?? false}
@@ -84,34 +120,42 @@ function Login() {
 			<Center h="100%">
 				<Flex gap={20}>
 					<Center>
-						<Stack gap={0}>
-							<Title order={4}>{import.meta.env.PUBLIC_APP_NAME}</Title>
-							<Title>Your Contribution</Title>
-							<Title>Story in {_3D}</Title>
+						<Stack gap={30}>
+							<div className="logo">
+								<div className="stack mona-sans-wide title github-text">
+									<span className="slide-up neon-blue">GITHUB</span>
+									<span className="slide-up neon-blue">GITHUB</span>
+									<span className="slide-up neon-blue">GITHUB</span>
+									<span className="slide-up pink-text">GITHUB</span>
+								</div>
+								<div className="stack mona-sans-wide title skyline-text">
+									<span className="slide-down neon-pink">SKYLINE</span>
+									<span className="slide-down neon-pink">SKYLINE</span>
+									<span className="slide-down neon-pink">SKYLINE</span>
+									<span className="slide-down pink-text">SKYLINE</span>
+								</div>
+							</div>
+							<Stack className="caption">
+								<div className="caption-item mona-sans-wide">YOUR CONTRIBUTION STORY IN 3D</div>
+								<Button
+									className="caption-item"
+									component="a"
+									href={import.meta.env.PUBLIC_WORKER_URL}
+									fullWidth={true}
+								>
+									Login to Github
+								</Button>
+								<Button
+									className="caption-item"
+									component="a"
+									href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
+									fullWidth={true}
+								>
+									Login to Cloud Enterprise
+								</Button>
+							</Stack>
 						</Stack>
 					</Center>
-					<Divider variant="dotted" orientation="vertical" />
-					<Card radius={"xs"} miw={400}>
-						<Stack miw={200}>
-							<Center mb={5}>
-								<Title order={4}>Login</Title>
-							</Center>
-							<Button
-								component="a"
-								href={import.meta.env.PUBLIC_WORKER_URL}
-								fullWidth={true}
-							>
-								Login to Github
-							</Button>
-							<Button
-								component="a"
-								href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
-								fullWidth={true}
-							>
-								Login to Cloud Enterprise
-							</Button>
-						</Stack>
-					</Card>
 				</Flex>
 
 				<Affix position={{ bottom: 15, right: 15 }}>
