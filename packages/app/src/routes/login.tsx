@@ -9,13 +9,15 @@ import {
 } from "@mantine/core";
 import { IconBrandGithubFilled } from "@tabler/icons-react";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import { animate, createScope, createTimeline, Scope, stagger } from "animejs";
+import { animate, createScope, createTimeline, type Scope, stagger } from "animejs";
 import { useEffect, useRef } from "react";
 import { isAuthenticated, resolveToken } from "../api/auth";
 import ContributionBackground from "../components/contribution_background";
 import "../styles/login.css";
 import "../styles/page.css";
 
+
+const REDIRECT_STORAGE_KEY = "skyline.redirectAfterLogin";
 
 type LoginSearchParams = {
 	code?: string;
@@ -43,29 +45,47 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
 	const router = useRouter();
-	const { code } = Route.useSearch();
+	const { code, redirect: redirectUrl } = Route.useSearch();
 	const loading = useRef<boolean | null>(null);
 
-	const root = useRef(null);
-	const scope = useRef<Scope | null>(null);
-
+    
+	// Persist redirect across OAuth flow
 	useEffect(() => {
-		const handleRedirect = async (code: string) => {
-			await resolveToken(code);
-			await router.invalidate();
+        if (redirectUrl) {
+            sessionStorage.setItem(REDIRECT_STORAGE_KEY, redirectUrl);
+		}
+	}, [redirectUrl]);
+    
+	useEffect(() => {
+        const handleRedirect = async (code: string) => {
+            await resolveToken(code);
+			const storedRedirect = sessionStorage.getItem(REDIRECT_STORAGE_KEY);
+			if (storedRedirect) {
+                sessionStorage.removeItem(REDIRECT_STORAGE_KEY);
+				window.location.replace(storedRedirect);
+				return;
+			}
+			if (redirectUrl && typeof redirectUrl === "string") {
+                window.location.replace(redirectUrl);
+				return;
+			}
+			await router.navigate({ to: "/", replace: true });
 		};
 		if (code !== undefined && !loading.current) {
 			loading.current = true;
 			handleRedirect(code);
 		}
 	}, []);
+    
+    const root = useRef(null);
+    const scope = useRef<Scope | null>(null);
 
 	useEffect(() => {
-		if (loading.current) {
-			return;
+        if (loading.current) {
+            return;
 		}
 		scope.current = createScope({ root }).add(() => {
-			const slideinfade = animate(".logo", {
+            const slideinfade = animate(".logo", {
 				ease: "outExpo",
 				opacity: 1,
 				gap: "1rem",
@@ -141,7 +161,9 @@ function Login() {
 								<Button
 									className="caption-item"
 									component="a"
-									href={import.meta.env.PUBLIC_WORKER_URL}
+									href={`${import.meta.env.PUBLIC_WORKER_URL}?redirect=${encodeURIComponent(
+									    redirectUrl ?? window.location.href,
+								    )}`}
 									fullWidth={true}
 								>
 									Login to Github
@@ -149,7 +171,9 @@ function Login() {
 								<Button
 									className="caption-item"
 									component="a"
-									href={import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}
+									href={`${import.meta.env.PUBLIC_WORKER_ENTERPRISE_URL}?redirect=${encodeURIComponent(
+									    redirectUrl ?? window.location.href,
+								    )}`}
 									fullWidth={true}
 								>
 									Login to Cloud Enterprise
