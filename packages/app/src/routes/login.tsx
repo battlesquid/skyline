@@ -68,24 +68,25 @@ function Login() {
 			const slideinfade = animate(".logo", {
 				ease: "outExpo",
 				opacity: 1,
-				gap: "1rem"
+				gap: "1rem",
+                duration: 500
 			});
 
 			createTimeline()
 				.sync(slideinfade)
 				.add(".slide-up", {
-					ease: "outExpo",
+					ease: "cubicBezier(.28,1,0,1)",
 					y: stagger("-1.5rem"),
-					delay: stagger(100),
+					delay: stagger(10),
 					marginTop: "4.5rem"
 				})
 
 			createTimeline()
 				.sync(slideinfade)
 				.add(".slide-down", {
-					ease: "outExpo",
+					ease: "cubicBezier(.28,1,0,1)",
 					y: stagger("1.5rem",),
-					delay: stagger(100, {
+					delay: stagger(10, {
 						reversed: true
 					}),
 					marginBottom: "4.5rem"
