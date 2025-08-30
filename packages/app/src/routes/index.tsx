@@ -5,6 +5,7 @@ import { EditorAppShell } from "../components/appshell";
 import { createParametersStore, ParametersContext } from "../stores/parameters";
 import "../styles/editor.css";
 import { preloadDefaultFonts } from "../stores/fonts";
+import { getInitialInputsFromUrl } from "../share/urlShare";
 
 export const Route = createFileRoute("/")({
 	component: Editor,
@@ -28,8 +29,9 @@ export const Route = createFileRoute("/")({
 
 export function Editor() {
 	const profile = Route.useLoaderData();
+	const initialFromUrl = getInitialInputsFromUrl(window.location.href);
 	const store = useRef(
-		createParametersStore({ name: profile?.login ?? "" }),
+		createParametersStore({ name: profile?.login ?? "", ...initialFromUrl }),
 	).current;
 
 	return (

@@ -7,6 +7,7 @@ import { Skyline } from "../three/skyline";
 import { HoverCard } from "./hover_card";
 import { Sidebar } from "./sidebar";
 import { SkylineControls } from "./skyline_controls";
+import { useUrlStateSync } from "../hooks/useUrlState";
 
 export interface EditorAppShellProps {
 	profile: UserProfile | null;
@@ -25,6 +26,8 @@ export function EditorAppShell({ profile }: EditorAppShellProps) {
 		start,
 		end,
 	});
+
+	useUrlStateSync();
 
 	return (
 		<AppShell
