@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
-import { useParametersContext } from "../stores/parameters";
 import {
-	URL_PARAM_KEY,
-	toFull,
-	toMinimal,
 	encodeShareState,
 	getInitialInputsFromUrl,
+	toFull,
+	toMinimal,
+	URL_PARAM_KEY,
 } from "../share/urlShare";
+import { useParametersContext } from "../stores/parameters";
 
 export function useUrlStateSync() {
 	const inputs = useParametersContext((s) => s.inputs);

@@ -2,12 +2,12 @@ import { AppShell, LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { UserProfile } from "../api/auth";
 import { useExtendedQuery } from "../hooks/useExtendedQuery";
+import { useUrlStateSync } from "../hooks/useUrlState";
 import { useParametersContext } from "../stores/parameters";
 import { Skyline } from "../three/skyline";
 import { HoverCard } from "./hover_card";
 import { Sidebar } from "./sidebar";
 import { SkylineControls } from "./skyline_controls";
-import { useUrlStateSync } from "../hooks/useUrlState";
 
 export interface EditorAppShellProps {
 	profile: UserProfile | null;
